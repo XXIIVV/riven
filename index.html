@@ -7,14 +7,12 @@
 </head>
 <body>
   <script>
-    var node1 = new Node("node1");
-    var node2 = new Node("node2");
     var Ø = new Ø();
-
-    node1.connect(node2);
-
-    node1.bang();
-
+    Ø.create("node1");
+    Ø.create("node2");
+    Ø.connect("node1","node2");
+    Ø.bang("node1");
+    Ø.graph();
   </script>
 </body>
 </html>
