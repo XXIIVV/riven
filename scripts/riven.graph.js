@@ -19,45 +19,62 @@ function Ø()
 
   function draw(node)
   {
-    var grid_size = 20;
-
-    var x = node.rect.x*grid_size;
-    var y = node.rect.y*grid_size;
-    var w = node.rect.w*grid_size;
-    var h = node.rect.h*grid_size;
+    var rect = get_rect(node);
 
     var ports_html = "";
     for(id in node.ports.in){
       var pos = get_port_position(node.ports.in[id])
-      ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="4" fill="black"/>`
+      if(node.ports.in[id].route){
+        var target = get_port_position(node.ports.in[id].route);
+        ports_html += `<line x1="${pos.x}" y1="${pos.y}" x2="${target.x}" y2="${target.y}" stroke-width="2" stroke='black' stroke-linecap="round"/>`;
+      }
+      ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="4" class='port input ${node.ports.in[id].route ? "route" : ""}'/>`
+      ports_html += `<text x="${pos.x+5}" y="${pos.y+15}">${id}</text>`
     }
     for(id in node.ports.out){
       var pos = get_port_position(node.ports.out[id])
-      ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="4" fill="black"/>`
       if(node.ports.out[id].route){
         var target = get_port_position(node.ports.out[id].route);
         ports_html += `<line x1="${pos.x}" y1="${pos.y}" x2="${target.x}" y2="${target.y}" stroke-width="2" stroke='black' stroke-linecap="round"/>`;
       }
+      ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="4" class='port output ${node.ports.out[id].route ? "route" : ""}'/>`
+      ports_html += `<text x="${pos.x+5}" y="${pos.y+15}">${id}</text>`
     }
 
     return `
-    <text x="${x}" y="${y+h+(grid_size)}" font-size='11' font-family='input_mono_regular' stroke-width='0' fill='#000'>${node.id}</text>
-    <circle cx='${x}' cy="${y}" r="2" fill="black"/>
-    <rect x=${x} y=${y} width="${w}" height="${h}" title="alt" stroke="#000" fill="none" stroke-width="1.5"/>
+    <text x="${rect.x}" y="${rect.y+rect.h+15}">${node.id}</text>
+    <circle cx='${rect.x}' cy="${rect.y}" r="2" fill="black"/>
+    <rect x=${rect.x} y=${rect.y} width="${rect.w}" height="${rect.h}" title="alt" stroke="#000" fill="none" stroke-width="1.5"/>
     ${ports_html}`
   }
 
   function get_port_position(port)
   {
     var is_in = Object.keys(port.host.ports.in).indexOf(port.id) > -1 ? true : false
-    var grid_size = 20;
-    var x = port.host.rect.x*grid_size;
-    var y = port.host.rect.y*grid_size;
-    var w = port.host.rect.w*grid_size;
-    var h = port.host.rect.h*grid_size;
-    var spacing = h/(Object.keys(port.host.ports[is_in ? "in" : "out"]).length)
+    
+    var grid_size = 10;
+    var rect = get_rect(port.host)
+    var spacing = rect.h/(Object.keys(port.host.ports[is_in ? "in" : "out"]).length)
     var count = Object.keys(port.host.ports[is_in ? "in" : "out"]).indexOf(port.id)
 
-    return {x:is_in ? x : x+w,y:y+(count*spacing)+(spacing/2)}
+    return {x:is_in ? rect.x : rect.x+rect.w,y:rect.y+(count*spacing)+(spacing/2)}
+  }
+
+  function get_rect(node)
+  {
+    var rect = node.parent ? get_rect(node.parent) : node.rect
+
+    var x = (node.rect.x/100) * rect.w;
+    var y = (node.rect.y/100) * rect.h;
+    var w = (node.rect.w/100) * rect.w;
+    var h = (node.rect.h/100) * rect.h;
+
+    if(node.parent){
+      var offset = get_rect(node.parent);
+      x += offset.x;
+      y += offset.y;
+    }
+
+    return {x:x,y:y,w:w,h:h}
   }
 }
