@@ -28,8 +28,8 @@ function Ø()
         var target = get_port_position(node.ports.in[id].route);
         ports_html += `<line x1="${pos.x}" y1="${pos.y}" x2="${target.x}" y2="${target.y}" stroke-width="2" stroke='black' stroke-linecap="round"/>`;
       }
-      ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="4" class='port input ${node.ports.in[id].route ? "route" : ""}'/>`
-      ports_html += `<text x="${pos.x+5}" y="${pos.y+15}">${id}</text>`
+      ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="2.5" class='port input ${node.ports.in[id].route ? "route" : ""}'/>`
+      ports_html += `<text class='input' x="${pos.x-10}" y="${pos.y+2}">${id}</text>`
     }
     for(id in node.ports.out){
       var pos = get_port_position(node.ports.out[id])
@@ -37,8 +37,8 @@ function Ø()
         var target = get_port_position(node.ports.out[id].route);
         ports_html += `<line x1="${pos.x}" y1="${pos.y}" x2="${target.x}" y2="${target.y}" stroke-width="2" stroke='black' stroke-linecap="round"/>`;
       }
-      ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="4" class='port output ${node.ports.out[id].route ? "route" : ""}'/>`
-      ports_html += `<text x="${pos.x+5}" y="${pos.y+15}">${id}</text>`
+      ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="2.5" class='port output ${node.ports.out[id].route ? "route" : ""}'/>`
+      ports_html += `<text class='output' x="${pos.x+10}" y="${pos.y+2}">${id}</text>`
     }
 
     return `

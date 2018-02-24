@@ -1,6 +1,6 @@
 svg { padding:40px; }
-svg circle.port.input { fill:red;stroke:red; stroke-width:2; }
-svg circle.port.input.route { fill:white; stroke:red; stroke-width:2; }
-svg circle.port.output { fill:black;stroke:black; stroke-width:2; }
-svg circle.port.output.route { fill:white; stroke:black; stroke-width:2; }
-svg text { fill:black; font-family: 'input_mono_regular'; font-size:9px; }
+svg circle.port { fill:black;stroke:black; stroke-width:2; }
+svg circle.port.route { fill:white; stroke:black; stroke-width:2; }
+svg text { fill:black; font-family: 'input_mono_regular'; font-size:9px;  }
+svg text.input { text-anchor: end }
+svg text.output { text-anchor: start }
