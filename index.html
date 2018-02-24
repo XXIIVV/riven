@@ -12,9 +12,9 @@
 <body>
   <script>
     var Ø = new Ø();
-    Ø.create("root","node1",{x:2,y:2,w:6,h:4},{in:["any"],out:["any","test","test2"]});
-    Ø.create("root","node2",{x:10,y:2,w:4,h:4},{in:["any"],out:["any"]});
-    Ø.connect({id:"node1",port:"any"},{id:"node2",port:"test2"});
+    Ø.create("root","node1",{x:2,y:2,w:6,h:4},{in:["any1","second"],out:["any2","test","test2"]});
+    Ø.create("root","node2",{x:10,y:2,w:4,h:4},{in:["any1"],out:["any2","last_one"]});
+    Ø.connect({id:"node1",port:"test2"},{id:"node2",port:"any1"});
     Ø.bang("node1");
 
     Ø.graph();

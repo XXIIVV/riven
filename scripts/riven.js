@@ -10,7 +10,15 @@ function Riven()
 
   this.connect = function(a,b)
   {
-    // this.network[a].connect(this.network[b])
+    var node_a = this.network[a.id]
+    var port_a = node_a.ports.out[a.port];
+    if(!node_a){ console.warn(`Unknown node: ${a.id}`); return;}
+    if(!port_a){ console.warn(`Unknown port: ${a.port}`); return;}
+    var node_b = this.network[b.id]
+    var port_b = node_b.ports.in[b.port];
+    if(!node_b){ console.warn(`Unknown node: ${b.id}`); return;}
+    if(!port_b){ console.warn(`Unknown port: ${b.port}`); return;}
+    port_a.connect(port_b);
   }
 
   this.bang = function(a)
@@ -22,12 +30,12 @@ function Riven()
   {
     this.parent = parent;
     this.id = id;
-    this.ports = {in:[],out:[]};
+    this.ports = {in:{},out:{}};
     for(direction in ports){
       var p = ports[direction];
       for(id in p){
         var port = p[id];
-        this.ports[direction].push(new Port(this,port))
+        this.ports[direction][port] = new Port(this,port)
       }
     }
     this.rect = rect;
@@ -49,6 +57,7 @@ function Riven()
     {
       this.host = host;
       this.id = id;
+      this.route = null;
 
       this.pos = function()
       {
@@ -58,6 +67,11 @@ function Riven()
         var h = this.host.rect.h*grid_size;
         var spacing = h/(this.ports.in.length)
         return {x:x,y:y+(id*spacing)+(spacing/2)}; //`<circle cx='${x}' cy="${y+(id*spacing)+(spacing/2)}" r="4" fill="black"/>`
+      }
+
+      this.connect = function(b)
+      {
+        this.route = b
       }
     }
   }
