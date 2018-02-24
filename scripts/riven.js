@@ -3,9 +3,23 @@ function Riven()
   var grid_size = 20;
   this.network = {}; // root:new Node(null,"root",{x:0,y:0,w:300,h:200})
 
-  this.create = function(parent,name,rect,ports)
+  this.create = function(parent,name,rect,p = ["entry","exit"])
   {
-    this.network[name] = new Node(this.network[parent],name,rect,ports)
+    var node = new Node(this.network[parent],name,rect)
+    var ports = [];
+    for(id in p){
+      var port_id = p[id];
+      ports.push(new Port(node,port_id))
+    }
+    node.ports = ports
+    this.network[name] = node
+  }
+
+  this.clone = function(parent,name,rect,type)
+  {
+    var node = new BasicNode(this.network[parent],name,rect)   
+    this.network[name] = node
+    node.setup();
   }
 
   this.connect = function(a,b)
@@ -26,50 +40,71 @@ function Riven()
     this.network[a].bang();
   }
 
-  function Node(parent,id,rect={x:0,y:0,w:5,h:5},ports={in:[],out:[]})
+  function Node(parent,id,rect={x:0,y:0,w:5,h:5},ports=[])
   {
     this.parent = parent;
     this.id = id;
-    this.ports = {in:{},out:{}};
-    for(direction in ports){
-      var p = ports[direction];
-      for(id in p){
-        var port = p[id];
-        this.ports[direction][port] = new Port(this,port)
-      }
-    }
+    this.ports = ports
     this.rect = rect;
-
-    this.connect = function(b)
-    {
-      this.ports.out = b
-    }
 
     this.bang = function()
     {
       console.log("bang",this.id)
     }
 
-    function Port(host,id)
+    this.port = function(target)
     {
-      this.host = host;
-      this.id = id;
-      this.route = null;
-
-      this.pos = function()
-      {
-        var x = this.host.rect.x*grid_size;
-        var y = this.host.rect.y*grid_size;
-        var w = this.host.rect.w*grid_size;
-        var h = this.host.rect.h*grid_size;
-        var spacing = h/(this.ports.in.length)
-        return {x:x,y:y+(id*spacing)+(spacing/2)}; 
-      }
-
-      this.connect = function(b)
-      {
-        this.route = b
+      for(id in this.ports){
+        var port = this.ports[id];
+        if(port.id == target){ return port; }
       }
     }
   }
+
+  function Port(host,id)
+  {
+    this.host = host;
+    this.id = id;
+    this.route = null;
+
+    this.pos = function()
+    {
+      var x = this.host.rect.x*grid_size;
+      var y = this.host.rect.y*grid_size;
+      var w = this.host.rect.w*grid_size;
+      var h = this.host.rect.h*grid_size;
+      var spacing = h/(this.ports.in.length)
+      return {x:x,y:y+(id*spacing)+(spacing/2)}; 
+    }
+
+    this.connect = function(b)
+    {
+      this.route = Ø(b)
+    }
+  }
+
+  function BasicNode(parent,id,rect={x:0,y:0,w:5,h:5})
+  {
+    Node.call(this,parent,id,rect,{in:["entry"],out:["exit"]});
+
+    this.setup = function()
+    {
+      this.ports.in.entry.connect(this.ports.out.exit)
+    }
+  }
 }
+
+function Ø(s,network = RIVEN.network)
+{
+  if(s.indexOf(" ") > -1){
+    var node_id = s.split(" ")[0];
+    var port_id = s.split(" ")[1];
+    console.log(node_id,port_id)
+    return network[node_id].port(port_id);
+  }
+  else{
+    return network[node_id];
+  }
+}
+
+

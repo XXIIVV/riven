@@ -1,4 +1,4 @@
-function Ø()
+function Riven_Graph()
 {
   Riven.call(this);
 
@@ -22,23 +22,15 @@ function Ø()
     var rect = get_rect(node);
 
     var ports_html = "";
-    for(id in node.ports.in){
-      var pos = get_port_position(node.ports.in[id])
-      if(node.ports.in[id].route){
-        var target = get_port_position(node.ports.in[id].route);
+    for(id in node.ports){
+      var port = node.ports[id]
+      var pos = get_port_position(port)
+      if(port.route){
+        var target = get_port_position(port.route);
         ports_html += `<line x1="${pos.x}" y1="${pos.y}" x2="${target.x}" y2="${target.y}" stroke-width="2" stroke='black' stroke-linecap="round"/>`;
       }
-      ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="2.5" class='port input ${node.ports.in[id].route ? "route" : ""}'/>`
-      ports_html += `<text class='input' x="${pos.x-10}" y="${pos.y+2}">${id}</text>`
-    }
-    for(id in node.ports.out){
-      var pos = get_port_position(node.ports.out[id])
-      if(node.ports.out[id].route){
-        var target = get_port_position(node.ports.out[id].route);
-        ports_html += `<line x1="${pos.x}" y1="${pos.y}" x2="${target.x}" y2="${target.y}" stroke-width="2" stroke='black' stroke-linecap="round"/>`;
-      }
-      ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="2.5" class='port output ${node.ports.out[id].route ? "route" : ""}'/>`
-      ports_html += `<text class='output' x="${pos.x+10}" y="${pos.y+2}">${id}</text>`
+      ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="1.5" class='port input ${node.ports[id] && node.ports[id].route ? "route" : ""}'/>`
+      ports_html += `<text class='input' x="${pos.x-10}" y="${pos.y}">${port.id}</text>`
     }
 
     return `
@@ -49,15 +41,17 @@ function Ø()
   }
 
   function get_port_position(port)
-  {
-    var is_in = Object.keys(port.host.ports.in).indexOf(port.id) > -1 ? true : false
-    
-    var grid_size = 10;
+  {    
     var rect = get_rect(port.host)
-    var spacing = rect.h/(Object.keys(port.host.ports[is_in ? "in" : "out"]).length)
-    var count = Object.keys(port.host.ports[is_in ? "in" : "out"]).indexOf(port.id)
-
-    return {x:is_in ? rect.x : rect.x+rect.w,y:rect.y+(count*spacing)+(spacing/2)}
+    var space = rect.h/(port.host.ports.length-1);
+    var index = 0
+    var space = rect.h/(port.host.ports.length-1);
+    for(id in port.host.ports){
+      if(port.host.ports[id].id == port.id){
+        index = id
+      }
+    }
+    return {x:rect.x,y:rect.y+(index*space)}
   }
 
   function get_rect(node)

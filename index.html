@@ -11,32 +11,27 @@
 </head>
 <body>
   <script>
-    var Ø = new Ø();
+    var RIVEN = new Riven_Graph();
 
-    Ø.create(null,"root",{x:0,y:0,w:300,h:200},{in:["entry"],out:["exit"]})
+    RIVEN.create(null,"root",{x:0,y:0,w:300,h:200},["entry","exit"])
 
-    Ø.create("root","node1",{x:10,y:50,w:10,h:20},{in:["entry"],out:["any2","exit","test2"]});
-    Ø.create("root","node2",{x:50,y:20,w:10,h:20},{in:["any1"],out:["any2","last_one"]});
-    Ø.create("root","node3",{x:75,y:20,w:10,h:20},{in:["some_in"],out:["exit"]});
-    Ø.create("root","node4",{x:50,y:60,w:10,h:20},{in:["some_in"],out:["some_out"]});
+    RIVEN.create("root","node1",{x:10,y:25,w:10,h:20},["entry","blue","red","exit"]);
+    RIVEN.create("root","node2",{x:30,y:50,w:10,h:20});
+    RIVEN.create("root","node3",{x:50,y:50,w:10,h:20});
 
-    Ø.create("node1","node5",{x:30,y:30,w:40,h:40},{in:["entry"],out:["exit"]});
+    RIVEN.create("node1","nested",{x:50,y:25,w:25,h:50});
 
-    Ø.connect({id:"node1",port:"any2"},{id:"node2",port:"any1"});
-    Ø.connect({id:"node2",port:"any2"},{id:"node3",port:"some_in"});
-    Ø.connect({id:"node1",port:"test2"},{id:"node4",port:"some_in"});
+    Ø("node1 exit").connect("node2 entry")
+    Ø("node2 exit").connect("node3 entry")
+    Ø("root entry").connect("node1 entry")
+    Ø("node3 exit").connect("root exit")
 
-    Ø.connect({id:"root",port:"entry"},{id:"node1",port:"entry"});
-    Ø.connect({id:"node1",port:"entry"},{id:"node5",port:"entry"});
-    Ø.connect({id:"node5",port:"exit"},{id:"node1",port:"exit"});
+    Ø("node1 entry").connect("nested entry")
+    Ø("nested exit").connect("node1 exit")
 
-    Ø.connect({id:"node3",port:"exit"},{id:"root",port:"exit"});
+    RIVEN.graph();
 
-    Ø.bang("node1");
-
-    Ø.graph();
-
-    document.body.appendChild(Ø.el)
+    document.body.appendChild(RIVEN.el)
   </script>
 </body>
 </html>
