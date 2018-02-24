@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <script src="scripts/riven.js"></script>
+  <script src="scripts/riven.graph.js"></script>
   <link rel="stylesheet" type="text/css" href="links/reset.css"/>
   <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
   <link rel="stylesheet" type="text/css" href="links/main.css"/>
@@ -13,7 +14,7 @@
     var Ø = new Ø();
     Ø.create("root","node1",{x:2,y:2,w:4,h:4},{in:["any"],out:["any","test","test2"]});
     Ø.create("root","node2",{x:10,y:2,w:4,h:4},{in:["any"],out:["any"]});
-    Ø.connect({id:"node1",port:"any"},{id:"node2",port:"any"});
+    Ø.connect({id:"node1",port:"any"},{id:"node2",port:"test2"});
     Ø.bang("node1");
     Ø.graph();
 
