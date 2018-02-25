@@ -35,7 +35,7 @@ function Riven_Graph()
     }
 
     return `
-    <text x="${rect.x}" y="${rect.y+rect.h+15}">${node.id}</text>
+    <text x="${rect.x}" y="${rect.y+rect.h+13}">${node.id}</text>
     <circle cx='${rect.x}' cy="${rect.y}" r="2" fill="black"/>
     <rect x=${rect.x} y=${rect.y} width="${rect.w}" height="${rect.h}" title="alt" stroke="#000" fill="none"/>
     ${ports_html}`

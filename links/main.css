@@ -1,7 +1,9 @@
-body { padding:60px; overflow: hidden; background-image: url(../media/assets/grid.svg)}
+body { padding:60px; overflow: hidden; background-image: url(../media/assets/grid.svg); background-color:#111;}
 svg { padding:10px; width:calc(100vw - 80px); height:calc(100vh - 80px); }
-svg circle.port { fill:black;stroke:black; }
-svg circle.port.route { fill:white; stroke:black; }
-svg text { fill:black; font-family: 'input_mono_regular'; font-size:9px;  }
+svg circle.port { fill:black;stroke:white; }
+svg circle.port.route { fill:white; stroke:white; }
+svg line { stroke:white;  }
+svg rect { stroke:#444;  }
+svg text { fill:white; font-family: 'input_mono_regular'; font-size:9px; text-transform: uppercase; }
 svg text.input { text-anchor: end }
 svg text.output { text-anchor: start }

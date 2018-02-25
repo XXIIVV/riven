@@ -6,3 +6,6 @@
 - Basic return function
 - Entry/Exit points
 - Position ports on node rect
+- Curved paths
+- `Ø("node1").connect("node2")` should select the last port, and connect it to the first port.
+- Click-drag interaction on canvas
