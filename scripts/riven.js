@@ -1,23 +1,20 @@
+// NETWORK MANAGER
+
 function Riven()
 {
   var grid_size = 20;
   this.network = {}; // root:new Node(null,"root",{x:0,y:0,w:300,h:200})
 
-  this.create = function(parent,name,rect,p = ["in","out"])
+  this.create = function(name,rect)
   {
-    var node = new Node(this.network[parent],name,rect)
-    var ports = [];
-    for(id in p){
-      var port_id = p[id];
-      ports.push(new Port(node,port_id))
-    }
-    node.ports = ports
+    var node = new Node(name,rect)
     this.network[name] = node
+    node.setup();
   }
 
-  this.clone = function(parent,name,rect,type)
+  this.clone = function(name,rect,type)
   {
-    var node = new BasicNode(this.network[parent],name,rect)   
+    var node = new type(name,rect)  
     this.network[name] = node
     node.setup();
   }
@@ -39,37 +36,67 @@ function Riven()
   {
     this.network[a].bang();
   }
+}
 
-  function Node(parent,id,rect={x:0,y:0,w:5,h:5},ports=[])
+// QUERY
+
+function Ø(s,network = RIVEN.network)
+{
+  if(s.indexOf(" ") > -1){
+    var node_id = s.split(" ")[0];
+    var port_id = s.split(" ")[1];
+    return network[node_id] && network[node_id].port(port_id) ? network[node_id].port(port_id) : null;
+  }
+  else{
+    return network[s];
+  }
+}
+
+// NODE
+
+function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
+{
+  this.id = id;
+  this.ports = ports
+  this.rect = rect;
+
+  this.rect.w = this.rect.w ? this.rect.w : 0
+  this.rect.h = this.rect.h ? this.rect.h : 0
+
+  this.setup = function()
   {
-    this.parent = parent;
-    this.id = id;
-    this.ports = ports
-    this.rect = rect;
+    this.ports.push(new Port(this,"in"))
+    this.ports.push(new Port(this,"out"))
+  }
 
-    this.connect = function(q)
-    {
-      this.port("in").connect(Ø(`${q} o`));
-    }
+  this.connect = function(q)
+  {
+    this.port("in").connect(Ø(`${q} o`));
+  }
 
-    this.query = function(q)
-    {
-      console.log(`query: ${this.id} ${q}`)
-      var port = this.port("out")
-      for(route_id in port.routes){
-        var route = port.routes[route_id];
-        route.host.query(q)
+  this.install = function(port_id)
+  {
+    this.ports.push(new Port(this,port_id))
+  }
+
+  this.query = function(q)
+  {
+    console.log(`${this.id} transit ${q}`)
+    var port = this.port("out")
+    for(route_id in port.routes){
+      var route = port.routes[route_id];
+      if(route){
+        route.host.query(q)  
       }
     }
+  }
 
-    this.port = function(target)
-    {
-      for(id in this.ports){
-        var port = this.ports[id];
-        if(port.id == target){ return port; }
-      }
+  this.port = function(target)
+  {
+    for(id in this.ports){
+      var port = this.ports[id];
+      if(port.id == target){ return port; }
     }
-
   }
 
   function Port(host,id)
@@ -92,29 +119,5 @@ function Riven()
     {
       this.routes.push(Ø(b))
     }
-  }
-
-  function BasicNode(parent,id,rect={x:0,y:0,w:5,h:5})
-  {
-    Node.call(this,parent,id,rect);
-
-    this.setup = function()
-    {
-      this.ports.push(new Port(this,"i"))
-      this.ports.push(new Port(this,"purple"))
-      this.ports.push(new Port(this,"o"))
-    }
-  }
-}
-
-function Ø(s,network = RIVEN.network)
-{
-  if(s.indexOf(" ") > -1){
-    var node_id = s.split(" ")[0];
-    var port_id = s.split(" ")[1];
-    return network[node_id] && network[node_id].port(port_id) ? network[node_id].port(port_id) : null;
-  }
-  else{
-    return network[s];
   }
 }

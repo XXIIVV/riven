@@ -26,12 +26,13 @@ function Riven_Graph()
       if(port.routes.length > 0){
         for(route_id in port.routes){
           var route = port.routes[route_id];
-          var target = get_port_position(route);
-          ports_html += `<line x1="${pos.x}" y1="${pos.y}" x2="${target.x}" y2="${target.y}" stroke='black' stroke-linecap="round"/>`;
+          if(route){
+            var target = get_port_position(route);
+            ports_html += `<line x1="${pos.x}" y1="${pos.y}" x2="${target.x}" y2="${target.y}" stroke='black' stroke-linecap="round"/>`;  
+          }
         }
       }
       ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="1.5" class='port input ${node.ports[id] && node.ports[id].route ? "route" : ""}'/>`
-      // ports_html += id != 0 && id != node.ports.length-1 ? `<text class='input' x="${pos.x-10}" y="${pos.y}">(${id})${port.id}</text>` : ""
     }
 
     return `
@@ -46,7 +47,7 @@ function Riven_Graph()
     var rect = get_rect(port.host)
     var space = rect.h/(port.host.ports.length-1);
     var index = 0
-    var space = rect.h/(port.host.ports.length-1);
+    var space = port.host.ports.length > 1 ? rect.h/(port.host.ports.length-1) : 0;
     for(id in port.host.ports){
       if(port.host.ports[id].id == port.id){
         index = id
@@ -58,7 +59,7 @@ function Riven_Graph()
   function get_rect(node)
   {
     var grid = 20;
-    var rect = node.parent ? get_rect(node.parent) : node.rect
+    var rect = node.rect
 
     var x = node.rect.x * grid;
     var y = node.rect.y * grid;
@@ -66,9 +67,9 @@ function Riven_Graph()
     var h = node.rect.h * grid;
 
     if(node.parent){
-      var offset = get_rect(node.parent);
-      x += offset.x;
-      y += offset.y;
+      // var offset = get_rect(node.parent);
+      // x += offset.x;
+      // y += offset.y;
     }
 
     return {x:x,y:y,w:w,h:h}
