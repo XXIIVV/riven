@@ -28,7 +28,7 @@ function Riven_Graph()
           var route = port.routes[route_id];
           if(route){
             var target = get_port_position(route.port);
-            ports_html += `<line x1="${pos.x}" y1="${pos.y}" x2="${target.x}" y2="${target.y}" class='route ${route.type}'/>`;  
+            ports_html += draw_connection(pos,target,route.type)
           }
         }
       }
@@ -36,10 +36,37 @@ function Riven_Graph()
     }
 
     return `
-    <text x="${rect.x}" y="${rect.y+rect.h+13}">${node.id}</text>
+    <text x="${rect.x+10}" y="${rect.y+rect.h+3}">${node.id}</text>
     <circle cx='${rect.x}' cy="${rect.y}" r="2" fill="black"/>
     <rect x=${rect.x} y=${rect.y} width="${rect.w}" height="${rect.h}" title="alt" stroke="#000" fill="none"/>
     ${ports_html}`
+  }
+
+  function draw_connection(a,b,type)
+  {
+    var grid = 20/2;
+    var path = ""
+
+    if(a.x > b.x){
+      if(a.y > b.y){
+        path = `M${a.x},${a.y} L${a.x-grid},${b.y-grid} L${b.x+(grid*7)},${b.y-grid} L${b.x+grid},${b.y-grid} L${b.x},${b.y}`
+      }
+      else{
+        path = `M${a.x},${a.y} L${a.x-grid},${b.y-grid} L${b.x+(grid*7)},${b.y-grid} L${b.x+grid},${b.y-grid} L${b.x},${b.y}`  
+      }
+    }
+    else if(a.x < b.x){
+      if(a.y > b.y){
+        path = `M${a.x},${a.y} L${a.x+grid},${b.y-grid} L${b.x-grid},${b.y-grid} L${b.x},${b.y}`
+      }
+      else{
+        path = `M${a.x},${a.y} L${a.x+grid},${b.y-grid} L${b.x-grid},${b.y-grid} L${b.x},${b.y}`  
+      }
+    }
+    else{
+      path = `M${a.x},${a.y} L${b.x},${b.y}`  
+    }
+    return `<path d="${path}" class='route ${type}'/>`
   }
 
   function get_port_position(port)

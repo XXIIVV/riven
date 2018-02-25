@@ -12,3 +12,6 @@
 - 2+3=5 example
 - Re-implement child nodes
 - Connection types
+  - Request
+  - Bang
+  - Transit

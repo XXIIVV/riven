@@ -1,14 +1,14 @@
 body { padding:20px; overflow: hidden; background-image: url(../media/assets/grid.svg); background-color:#111;}
 svg { padding:10px; width:calc(100vw - 80px); height:calc(100vh - 80px); }
-svg circle.port { fill:black;stroke:white; }
-svg circle.port.route { fill:white; stroke:white; }
-svg line { stroke:white;  }
+svg circle.port { fill:white }
+svg circle.port.route { fill:white; }
+svg path { stroke:white; fill:none; stroke-width:1.5;stroke-linejoin: round; stroke-linecap: round  }
 svg rect { stroke:#444;  }
-svg text { fill:white; font-family: 'input_mono_regular'; font-size:9px; text-transform: uppercase; }
+svg text { fill:white; font-family: 'input_mono_medium'; font-size:9px; text-transform: uppercase; }
 svg text.input { text-anchor: end }
 svg text.output { text-anchor: start }
 
-svg line.route {  }
-svg line.route.bang { stroke-dasharray: 1,5 }
-svg line.route.request { stroke-dasharray: 5,2 }
-svg line.route.transit { stroke:red; }
+svg path.route { stroke:white; }
+svg path.route.bang { stroke-dasharray: 0,10  }
+svg path.route.request { stroke-dasharray: 0,3 }
+svg path.route.transit { }

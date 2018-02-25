@@ -18,19 +18,27 @@
     Ø("model").create({x:3,y:1,w:2,h:2});
     Ø("view").create({x:7,y:1,w:2,h:2});
 
-    Ø("console").cast(ConsoleNode,{x:11,y:9})
-    Ø("val1").cast(ValueNode,{x:3,y:8})
-    Ø("val2").cast(ValueNode,{x:3,y:10})
-    Ø("sum").cast(SumNode,{x:7,y:9})
-    Ø("bang").cast(BangNode,{x:7,y:12})
+    Ø("error").cast(ConsoleNode,{x:13,y:8})
+    Ø("console").cast(ConsoleNode,{x:13,y:9})
+    Ø("val1").cast(ValueNode,{x:3,y:7})
+    Ø("val2").cast(ValueNode,{x:3,y:8})
+    Ø("val3").cast(ValueNode,{x:3,y:9})
+    Ø("val4").cast(ValueNode,{x:3,y:10})
+    Ø("val5").cast(ValueNode,{x:3,y:11})
+    Ø("sum").cast(SumNode,{x:8,y:9})
+    Ø("bang").cast(BangNode,{x:8,y:15})
 
     Ø("entry out").connect("model in")
     Ø("model out").connect("view in")
     // Ø("view out").connect("console in")
 
-    Ø("val1 out").connect("sum in","request")
-    Ø("val2 out").connect("sum in","request")
+    Ø("sum in").connect("val1 out","request")
+    Ø("sum in").connect("val2 out","request")
+    Ø("sum in").connect("val3 out","request")
+    Ø("sum in").connect("val4 out","request")
+    Ø("sum in").connect("val5 out","request")
     Ø("sum out").connect("console in")
+    Ø("sum out").connect("error in")
     Ø("bang out").connect("sum in","bang")
 
     Ø("entry").query("hello")

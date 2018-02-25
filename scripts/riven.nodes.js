@@ -26,6 +26,11 @@ function ValueNode(id,rect={x:0,y:0,w:0,h:0})
   {
     console.info(`console: ${q}`)
   }
+
+  this.request = function()
+  {
+    return 2;
+  }
 }
 
 function SumNode(id,rect={x:0,y:0,w:0,h:0})
@@ -38,9 +43,19 @@ function SumNode(id,rect={x:0,y:0,w:0,h:0})
     this.install("in")
   }
 
-  this.query = function(q)
+  this.bang = function()
   {
-    console.info(`console: ${q}`)
+    var value = 0
+    for(id in this.ports){
+      var port = this.ports[id];
+      for(route_id in port.routes){
+        var route = port.routes[route_id];
+        if(route.type == "request"){
+          value += route.port.host.request()
+        }
+      }
+    }
+    this.query(value);
   }
 }
 
