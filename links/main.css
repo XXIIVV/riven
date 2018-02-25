@@ -1,5 +1,5 @@
-body { padding:60px; overflow: hidden; }
-svg { padding:40px; width:calc(100vw - 80px); height:calc(100vh - 80px); }
+body { padding:60px; overflow: hidden; background-image: url(../media/assets/grid.svg)}
+svg { padding:10px; width:calc(100vw - 80px); height:calc(100vh - 80px); }
 svg circle.port { fill:black;stroke:black; }
 svg circle.port.route { fill:white; stroke:black; }
 svg text { fill:black; font-family: 'input_mono_regular'; font-size:9px;  }

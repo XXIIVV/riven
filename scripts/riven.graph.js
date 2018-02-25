@@ -57,12 +57,13 @@ function Riven_Graph()
 
   function get_rect(node)
   {
+    var grid = 20;
     var rect = node.parent ? get_rect(node.parent) : node.rect
 
-    var x = (node.rect.x/100) * rect.w;
-    var y = (node.rect.y/100) * rect.h;
-    var w = (node.rect.w/100) * rect.w;
-    var h = (node.rect.h/100) * rect.h;
+    var x = node.rect.x * grid;
+    var y = node.rect.y * grid;
+    var w = node.rect.w * grid;
+    var h = node.rect.h * grid;
 
     if(node.parent){
       var offset = get_rect(node.parent);
