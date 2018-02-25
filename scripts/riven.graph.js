@@ -3,8 +3,6 @@ function Riven_Graph()
   Riven.call(this);
 
   this.el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  this.el.style.width = "100vw"
-  this.el.style.height = "100vh"
 
   this.graph = function()
   {
@@ -25,18 +23,21 @@ function Riven_Graph()
     for(id in node.ports){
       var port = node.ports[id]
       var pos = get_port_position(port)
-      if(port.route){
-        var target = get_port_position(port.route);
-        ports_html += `<line x1="${pos.x}" y1="${pos.y}" x2="${target.x}" y2="${target.y}" stroke-width="2" stroke='black' stroke-linecap="round"/>`;
+      if(port.routes.length > 0){
+        for(route_id in port.routes){
+          var route = port.routes[route_id];
+          var target = get_port_position(route);
+          ports_html += `<line x1="${pos.x}" y1="${pos.y}" x2="${target.x}" y2="${target.y}" stroke='black' stroke-linecap="round"/>`;
+        }
       }
       ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="1.5" class='port input ${node.ports[id] && node.ports[id].route ? "route" : ""}'/>`
-      ports_html += `<text class='input' x="${pos.x-10}" y="${pos.y}">${port.id}</text>`
+      // ports_html += id != 0 && id != node.ports.length-1 ? `<text class='input' x="${pos.x-10}" y="${pos.y}">(${id})${port.id}</text>` : ""
     }
 
     return `
     <text x="${rect.x}" y="${rect.y+rect.h+15}">${node.id}</text>
     <circle cx='${rect.x}' cy="${rect.y}" r="2" fill="black"/>
-    <rect x=${rect.x} y=${rect.y} width="${rect.w}" height="${rect.h}" title="alt" stroke="#000" fill="none" stroke-width="1.5"/>
+    <rect x=${rect.x} y=${rect.y} width="${rect.w}" height="${rect.h}" title="alt" stroke="#000" fill="none"/>
     ${ports_html}`
   }
 
@@ -51,7 +52,7 @@ function Riven_Graph()
         index = id
       }
     }
-    return {x:rect.x,y:rect.y+(index*space)}
+    return {x:index==port.host.ports.length-1 ? parseInt(rect.x+rect.w) : parseInt(rect.x),y:parseInt(rect.y+(index*space))}
   }
 
   function get_rect(node)

@@ -13,15 +13,18 @@
   <script>
     var RIVEN = new Riven_Graph();
 
-    RIVEN.create(null,"root",{x:0,y:0,w:300,h:200},["entry","exit"])
+    RIVEN.create(null,"root",{x:0,y:0,w:300,h:200})
 
-    RIVEN.create("root","node1",{x:10,y:25,w:10,h:20},["entry","blue","red","exit"]);
+    RIVEN.create("root","node1",{x:10,y:50,w:10,h:20});
     RIVEN.create("root","node2",{x:30,y:50,w:10,h:20});
     RIVEN.create("root","node3",{x:50,y:50,w:10,h:20});
 
-    RIVEN.create("node1","nested",{x:50,y:25,w:25,h:50});
+    RIVEN.clone("root","clone",{x:30,y:20,w:10,h:20},"base");
+
+    RIVEN.create("node1","nested",{x:30,y:30,w:40,h:40});
 
     Ø("node1 exit").connect("node2 entry")
+    Ø("node1 exit").connect("clone entry")
     Ø("node2 exit").connect("node3 entry")
     Ø("root entry").connect("node1 entry")
     Ø("node3 exit").connect("root exit")

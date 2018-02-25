@@ -65,7 +65,7 @@ function Riven()
   {
     this.host = host;
     this.id = id;
-    this.route = null;
+    this.routes = [];
 
     this.pos = function()
     {
@@ -79,17 +79,19 @@ function Riven()
 
     this.connect = function(b)
     {
-      this.route = Ø(b)
+      this.routes.push(Ø(b))
     }
   }
 
   function BasicNode(parent,id,rect={x:0,y:0,w:5,h:5})
   {
-    Node.call(this,parent,id,rect,{in:["entry"],out:["exit"]});
+    Node.call(this,parent,id,rect);
 
     this.setup = function()
     {
-      this.ports.in.entry.connect(this.ports.out.exit)
+      this.ports.push(new Port(this,"entry"))
+      this.ports.push(new Port(this,"purple"))
+      this.ports.push(new Port(this,"exit"))
     }
   }
 }
@@ -99,7 +101,6 @@ function Ø(s,network = RIVEN.network)
   if(s.indexOf(" ") > -1){
     var node_id = s.split(" ")[0];
     var port_id = s.split(" ")[1];
-    console.log(node_id,port_id)
     return network[node_id].port(port_id);
   }
   else{
