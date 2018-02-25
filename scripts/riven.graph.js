@@ -27,8 +27,8 @@ function Riven_Graph()
         for(route_id in port.routes){
           var route = port.routes[route_id];
           if(route){
-            var target = get_port_position(route);
-            ports_html += `<line x1="${pos.x}" y1="${pos.y}" x2="${target.x}" y2="${target.y}" stroke='black' stroke-linecap="round"/>`;  
+            var target = get_port_position(route.port);
+            ports_html += `<line x1="${pos.x}" y1="${pos.y}" x2="${target.x}" y2="${target.y}" class='route ${route.type}'/>`;  
           }
         }
       }

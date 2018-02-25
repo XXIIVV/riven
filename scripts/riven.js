@@ -108,9 +108,22 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
     for(route_id in port.routes){
       var route = port.routes[route_id];
       if(route){
-        route.host.query(q)  
+        route.port.host.query(q)  
       }
     }
+  }
+
+  this.bang = function()
+  {
+    console.log(`${this.id} bang!`)
+    var port = this.port("out")
+    if(!port){ return; }
+    for(route_id in port.routes){
+      var route = port.routes[route_id];
+      if(route){
+        route.port.host.bang()  
+      }
+    }    
   }
 
   this.port = function(target)
@@ -137,9 +150,9 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
       return {x:x,y:y+(id*spacing)+(spacing/2)}; 
     }
 
-    this.connect = function(b)
+    this.connect = function(b,type = "transit")
     {
-      this.routes.push(Ø(b))
+      this.routes.push({type:type,port:Ø(b)})
     }
   }
 }

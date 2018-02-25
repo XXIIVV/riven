@@ -7,3 +7,8 @@ svg rect { stroke:#444;  }
 svg text { fill:white; font-family: 'input_mono_regular'; font-size:9px; text-transform: uppercase; }
 svg text.input { text-anchor: end }
 svg text.output { text-anchor: start }
+
+svg line.route {  }
+svg line.route.bang { stroke-dasharray: 1,5 }
+svg line.route.request { stroke-dasharray: 5,2 }
+svg line.route.transit { stroke:red; }

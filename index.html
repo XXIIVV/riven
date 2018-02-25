@@ -18,13 +18,24 @@
     Ø("model").create({x:3,y:1,w:2,h:2});
     Ø("view").create({x:7,y:1,w:2,h:2});
 
-    Ø("console").cast(ConsoleNode,{x:11,y:3})
+    Ø("console").cast(ConsoleNode,{x:11,y:9})
+    Ø("val1").cast(ValueNode,{x:3,y:8})
+    Ø("val2").cast(ValueNode,{x:3,y:10})
+    Ø("sum").cast(SumNode,{x:7,y:9})
+    Ø("bang").cast(BangNode,{x:7,y:12})
 
     Ø("entry out").connect("model in")
     Ø("model out").connect("view in")
-    Ø("view out").connect("console in")
+    // Ø("view out").connect("console in")
+
+    Ø("val1 out").connect("sum in","request")
+    Ø("val2 out").connect("sum in","request")
+    Ø("sum out").connect("console in")
+    Ø("bang out").connect("sum in","bang")
 
     Ø("entry").query("hello")
+
+    Ø("bang").bang();
 
     RIVEN.graph();
 
