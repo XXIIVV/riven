@@ -5,6 +5,12 @@ function Riven()
   var grid_size = 20;
   this.network = {}; // root:new Node(null,"root",{x:0,y:0,w:300,h:200})
 
+  this.inject = function(node)
+  {
+    this.network[node.id] = node
+    node.setup();
+  }
+
   this.create = function(name,rect)
   {
     var node = new Node(name,rect)
@@ -47,8 +53,11 @@ function Ø(s,network = RIVEN.network)
     var port_id = s.split(" ")[1];
     return network[node_id] && network[node_id].port(port_id) ? network[node_id].port(port_id) : null;
   }
-  else{
+  else if(network[s]){
     return network[s];
+  }
+  else{
+    return new Node(s);
   }
 }
 
@@ -59,7 +68,6 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
   this.id = id;
   this.ports = ports
   this.rect = rect;
-
   this.rect.w = this.rect.w ? this.rect.w : 0
   this.rect.h = this.rect.h ? this.rect.h : 0
 
@@ -67,6 +75,20 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
   {
     this.ports.push(new Port(this,"in"))
     this.ports.push(new Port(this,"out"))
+    this.rect.w = this.rect.w ? this.rect.w : 0
+    this.rect.h = this.rect.h ? this.rect.h : 0
+  }
+
+  this.create = function(rect)
+  {
+    this.rect = rect
+    RIVEN.inject(this)
+  }
+
+  this.cast = function(type,rect)
+  {
+    var node = new type(this.id,rect)  
+    RIVEN.inject(node);
   }
 
   this.connect = function(q)

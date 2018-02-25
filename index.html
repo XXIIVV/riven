@@ -14,11 +14,11 @@
   <script>
     var RIVEN = new Riven_Graph();
 
-    RIVEN.create("entry",{x:1,y:1,w:0,h:0});
-    RIVEN.create("model",{x:3,y:1,w:2,h:2});
-    RIVEN.create("view",{x:7,y:1,w:2,h:2});
+    Ø("entry").create({x:1,y:1});
+    Ø("model").create({x:3,y:1,w:2,h:2});
+    Ø("view").create({x:7,y:1,w:2,h:2});
 
-    RIVEN.clone("console",{x:11,y:3},ConsoleNode);
+    Ø("console").cast(ConsoleNode,{x:11,y:3})
 
     Ø("entry out").connect("model in")
     Ø("model out").connect("view in")
