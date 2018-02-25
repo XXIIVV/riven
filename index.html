@@ -13,24 +13,31 @@
   <script>
     var RIVEN = new Riven_Graph();
 
-    RIVEN.create(null,"root",{x:0,y:0,w:40,h:20})
+    // RIVEN.create(null,"root",{x:0,y:0,w:40,h:20})
 
-    RIVEN.create("root","node1",{x:1,y:1,w:4,h:4});
-    RIVEN.create("root","node2",{x:10,y:1,w:4,h:4});
-    RIVEN.create("root","node3",{x:20,y:5,w:4,h:4});
+    RIVEN.create(null,"entry",{x:1,y:1,w:0,h:0});
 
-    RIVEN.clone("root","clone",{x:10,y:8,w:4,h:4},"base");
+    RIVEN.create("null","model",{x:3,y:1,w:2,h:2});
+    RIVEN.create("null","view",{x:7,y:1,w:2,h:2});
+    // RIVEN.create("null","node2",{x:10,y:1,w:4,h:4});
+    // RIVEN.create("null","node3",{x:20,y:5,w:4,h:4});
 
-    RIVEN.create("node1","nested",{x:1,y:1,w:2,h:2});
+    // RIVEN.clone("null","clone",{x:10,y:8,w:4,h:4},"base");
 
-    Ø("node1 exit").connect("node2 entry")
-    Ø("node1 exit").connect("clone entry")
-    Ø("node2 exit").connect("node3 entry")
-    Ø("root entry").connect("node1 entry")
-    Ø("node3 exit").connect("root exit")
+    // RIVEN.create("node1","nested",{x:1,y:1,w:2,h:2});
 
-    Ø("node1 entry").connect("nested entry")
-    Ø("nested exit").connect("node1 exit")
+    Ø("entry out").connect("model in")
+    Ø("model out").connect("view in")
+    // Ø("node1 exit").connect("node2 entry")
+    // Ø("node1 exit").connect("clone entry")
+    // Ø("node2 exit").connect("node3 entry")
+    // Ø("root entry").connect("node1 entry")
+    // Ø("node3 exit").connect("root exit")
+
+    // Ø("node1 entry").connect("nested entry")
+    // Ø("nested exit").connect("node1 exit")
+
+    Ø("entry").query("hello")
 
     RIVEN.graph();
 

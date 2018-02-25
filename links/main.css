@@ -1,4 +1,4 @@
-body { padding:60px; overflow: hidden; background-image: url(../media/assets/grid.svg); background-color:#111;}
+body { padding:20px; overflow: hidden; background-image: url(../media/assets/grid.svg); background-color:#111;}
 svg { padding:10px; width:calc(100vw - 80px); height:calc(100vh - 80px); }
 svg circle.port { fill:black;stroke:white; }
 svg circle.port.route { fill:white; stroke:white; }

@@ -3,7 +3,7 @@ function Riven()
   var grid_size = 20;
   this.network = {}; // root:new Node(null,"root",{x:0,y:0,w:300,h:200})
 
-  this.create = function(parent,name,rect,p = ["entry","exit"])
+  this.create = function(parent,name,rect,p = ["in","out"])
   {
     var node = new Node(this.network[parent],name,rect)
     var ports = [];
@@ -47,9 +47,19 @@ function Riven()
     this.ports = ports
     this.rect = rect;
 
-    this.bang = function()
+    this.connect = function(q)
     {
-      console.log("bang",this.id)
+      this.port("in").connect(Ø(`${q} o`));
+    }
+
+    this.query = function(q)
+    {
+      console.log(`query: ${this.id} ${q}`)
+      var port = this.port("out")
+      for(route_id in port.routes){
+        var route = port.routes[route_id];
+        route.host.query(q)
+      }
     }
 
     this.port = function(target)
@@ -59,6 +69,7 @@ function Riven()
         if(port.id == target){ return port; }
       }
     }
+
   }
 
   function Port(host,id)
@@ -89,9 +100,9 @@ function Riven()
 
     this.setup = function()
     {
-      this.ports.push(new Port(this,"entry"))
+      this.ports.push(new Port(this,"i"))
       this.ports.push(new Port(this,"purple"))
-      this.ports.push(new Port(this,"exit"))
+      this.ports.push(new Port(this,"o"))
     }
   }
 }
@@ -101,11 +112,9 @@ function Ø(s,network = RIVEN.network)
   if(s.indexOf(" ") > -1){
     var node_id = s.split(" ")[0];
     var port_id = s.split(" ")[1];
-    return network[node_id].port(port_id);
+    return network[node_id] && network[node_id].port(port_id) ? network[node_id].port(port_id) : null;
   }
   else{
-    return network[node_id];
+    return network[s];
   }
 }
-
-
