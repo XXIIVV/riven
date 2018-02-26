@@ -81,6 +81,7 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
   {
     this.rect = rect
     RIVEN.inject(this)
+    return this
   }
 
   this.cast = function(type,rect)
@@ -96,9 +97,9 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
     Ø(`${this.id} in`).connect(`${this.children[0].id} in`);
   }
 
-  this.connect = function(q)
+  this.connect = function(q,type)
   {
-    this.port("out").connect(`${q} in`);
+    this.port("out").connect(`${q} in`,type);
   }
 
   this.install = function(port_id)
@@ -108,7 +109,7 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
 
   this.query = function(q)
   {
-    console.log(`${this.id} transit ${q}`)
+    console.log(`${this.id} transit`,q)
     var port = this.port("out")
     for(route_id in port.routes){
       var route = port.routes[route_id];

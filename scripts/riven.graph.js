@@ -24,11 +24,11 @@ function Riven_Graph()
     var ports_html = "";
     for(id in node.ports){
       var port = node.ports[id]
-      var pos = get_port_position(port)
+      var pos = port ? get_port_position(port) : {x:0,y:0}
       for(route_id in port.routes){
         var route = port.routes[route_id];
         if(route){
-          ports_html += draw_connection(pos,get_port_position(route.port),route.type)
+          ports_html += route.port ? draw_connection(pos,get_port_position(route.port),route.type) : ""
         }
       }
       ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="${PORT_SIZE}" class='port input ${node.ports[id] && node.ports[id].route ? "route" : ""}'/>`
@@ -36,10 +36,20 @@ function Riven_Graph()
 
     return `
     <g id='node_${node.id}'>
-    <text x="${rect.x+6}" y="${rect.y+rect.h-7.5}">${node.id}</text>
-    <rect x=${rect.x} y=${rect.y} width="${rect.w}" height="${rect.h}" title="alt" stroke="#000" fill="none"/>
-    <circle cx='${rect.x}' cy="${rect.y}" r="1.5" class='node'/>
+      <rect x=${rect.x} y=${rect.y} width="${rect.w}" height="${rect.h}" title="alt" stroke="#000" fill="none"/>
+      <circle cx='${rect.x}' cy="${rect.y}" r="1.5" class='node'/>
+      <text x="${rect.x+6}" y="${rect.y+rect.h-7.5}">${node.id}</text>
     ${ports_html}</g>`
+  }
+
+  function distance(a,b)
+  {
+    return Math.sqrt( (a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y) );
+  }
+
+  function diagonal(a,b)
+  {
+    return a.x == b.x || a.y == b.y || a.y - a.x == b.y - b.x || b.y - a.x == a.y - b.x
   }
 
   function draw_connection(a,b,type)
@@ -47,7 +57,7 @@ function Riven_Graph()
     var grid = 20;
     var path = ""
 
-    if(a.x == b.x || a.y == b.y || a.y - a.x == b.y - b.x || b.y - a.x == a.y - b.x){
+    if(distance(a,b) < 110 && diagonal(a,b)){
       path = `M${a.x},${a.y} L${b.x},${b.y}`  
     }
     else if(a.x > b.x){
@@ -64,7 +74,7 @@ function Riven_Graph()
   }
 
   function get_port_position(port)
-  {    
+  {
     var rect = get_rect(port.host)
     var space = rect.h/(port.host.ports.length-1);
     var index = 0

@@ -111,6 +111,13 @@ function RouterNode(id,rect={x:0,y:0,w:0,h:0})
 
   this.query = function(q)
   {
-    
+    var payload = {hash:window.location.hash.substring(1).toLowerCase()}
+    var port = this.port("out")
+    for(route_id in port.routes){
+      var route = port.routes[route_id];
+      if(route){
+        route.port.host.query({page:q.hash})  
+      }
+    }
   }
 }

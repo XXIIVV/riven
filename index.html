@@ -15,25 +15,59 @@
     var RIVEN = new Riven_Graph();
 
     // General
-    Ø("entry").cast(ParentNode,{x:1,y:1,w:6,h:5});
-    Ø("model").create({x:7,y:4,w:14,h:14});
+    Ø("entry").cast(ParentNode,{x:1,y:1,w:6,h:7});
+    Ø("model").create({x:7,y:4,w:14,h:11});
     Ø("view").create({x:33,y:15,w:14,h:14});
     Ø("render").cast(RenderNode,{x:36,y:1});
-
-    // Ø("model out").connect("view in")
-    // Ø("view out").connect("render in")
 
     // Entry
     Ø("request").cast(RequestNode,{x:1,y:2})
     Ø("router").cast(RouterNode,{x:1,y:3})
-    Ø("entry_console").cast(ConsoleNode,{x:1,y:4})
+    Ø("entry_log").cast(ConsoleNode,{x:1,y:5})
     Ø("entry").assoc(Ø("request"))
     Ø("entry").assoc(Ø("router"))
-    Ø("entry").assoc(Ø("entry_console"))
+    Ø("entry").assoc(Ø("entry_log"))
 
     Ø("router").connect("model")
     Ø("request").connect("router")
-    Ø("router").connect("entry_console")
+    Ø("router").connect("entry_log")
+
+    // Model
+
+    Ø("model_log").cast(ConsoleNode,{x:1,y:9})
+    
+    Ø("model").assoc(Ø("parser").create({x:1,y:2}))
+
+    Ø("model").assoc(Ø("db_ingredients").create({x:6,y:3}))
+    Ø("model").assoc(Ø("db_recipes").create({x:6,y:2}))
+
+    Ø("model").assoc(Ø("model_log"))
+    Ø("model").assoc(Ø("model_home").create({x:5,y:5}))
+    Ø("model").assoc(Ø("model_about").create({x:5,y:6}))
+    Ø("model").assoc(Ø("model_ingredients").create({x:5,y:7}))
+    Ø("model").assoc(Ø("model_recipes").create({x:5,y:8}))
+
+    Ø("parser").connect("model_log")
+    Ø("parser").connect("model_home")
+    Ø("parser").connect("model_about")
+    Ø("parser").connect("model_ingredients")
+    Ø("parser").connect("model_recipes")
+
+    Ø("model_home").connect("db_ingredients","request")
+    Ø("model_about").connect("db_ingredients","request")
+    Ø("model_ingredients").connect("db_ingredients","request")
+    Ø("model_recipes").connect("db_ingredients","request")
+    Ø("model_home").connect("db_recipes","request")
+    Ø("model_about").connect("db_recipes","request")
+    Ø("model_ingredients").connect("db_recipes","request")
+    Ø("model_recipes").connect("db_recipes","request")
+
+    // VIEW
+
+    Ø("view").assoc(Ø("view_home").create({x:7,y:4}))
+    Ø("view").assoc(Ø("view_about").create({x:7,y:5}))
+    Ø("view").assoc(Ø("view_ingredients").create({x:7,y:6}))
+    Ø("view").assoc(Ø("view_recipes").create({x:7,y:7}))
 
     document.body.appendChild(RIVEN.el)
     document.body.appendChild(RIVEN.render_el)
