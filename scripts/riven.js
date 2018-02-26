@@ -2,6 +2,8 @@
 
 function Riven()
 {
+  this.render_el = document.createElement("div");
+  this.render_el.id = "render"
   var grid_size = 20;
   this.network = {}; // root:new Node(null,"root",{x:0,y:0,w:300,h:200})
 

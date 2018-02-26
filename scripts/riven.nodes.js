@@ -74,3 +74,18 @@ function BangNode(id,rect={x:0,y:0,w:0,h:0})
     console.info(`console: ${q}`)
   }
 }
+
+function RenderNode(id,rect={x:0,y:0,w:0,h:0})
+{
+  Node.call(this,id,rect);
+
+  this.setup = function()
+  {
+    this.install("in")
+  }
+
+  this.query = function(q)
+  {
+    document.getElementById("render").innerHTML = q
+  }
+}

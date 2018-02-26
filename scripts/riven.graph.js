@@ -10,12 +10,12 @@ function Riven_Graph()
 
     for(id in this.network){
       var node = this.network[id];
-      html += draw(node);
+      html += draw_node(node);
     }
     this.el.innerHTML = html;
   }
 
-  function draw(node)
+  function draw_node(node)
   {
     var rect = get_rect(node);
 
@@ -23,49 +23,41 @@ function Riven_Graph()
     for(id in node.ports){
       var port = node.ports[id]
       var pos = get_port_position(port)
-      if(port.routes.length > 0){
-        for(route_id in port.routes){
-          var route = port.routes[route_id];
-          if(route){
-            var target = get_port_position(route.port);
-            ports_html += draw_connection(pos,target,route.type)
-          }
+      for(route_id in port.routes){
+        var route = port.routes[route_id];
+        if(route){
+          ports_html += draw_connection(pos,get_port_position(route.port),route.type)
         }
       }
       ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="1.5" class='port input ${node.ports[id] && node.ports[id].route ? "route" : ""}'/>`
     }
 
     return `
-    <text x="${rect.x+10}" y="${rect.y+rect.h+3}">${node.id}</text>
-    <circle cx='${rect.x}' cy="${rect.y}" r="2" fill="black"/>
+    <g id='node_${node.id}'>
+    <text x="${rect.x+5}" y="${rect.y+rect.h-7.5}">${node.id}</text>
     <rect x=${rect.x} y=${rect.y} width="${rect.w}" height="${rect.h}" title="alt" stroke="#000" fill="none"/>
-    ${ports_html}`
+    <circle cx='${rect.x}' cy="${rect.y}" r="1.5" class='node'/>
+    ${ports_html}</g>`
   }
 
   function draw_connection(a,b,type)
   {
-    var grid = 20/2;
+    var grid = 20;
     var path = ""
 
-    if(a.x > b.x){
-      if(a.y > b.y){
-        path = `M${a.x},${a.y} L${a.x-grid},${b.y-grid} L${b.x+(grid*7)},${b.y-grid} L${b.x+grid},${b.y-grid} L${b.x},${b.y}`
-      }
-      else{
-        path = `M${a.x},${a.y} L${a.x-grid},${b.y-grid} L${b.x+(grid*7)},${b.y-grid} L${b.x+grid},${b.y-grid} L${b.x},${b.y}`  
-      }
+    if(a.x == b.x || a.y == b.y || a.y - a.x == b.y - b.x || b.y - a.x == a.y - b.x){
+      path = `M${a.x},${a.y} L${b.x},${b.y}`  
+    }
+    else if(a.x > b.x){
+      path = (a.y > b.y) ? `M${a.x},${a.y} L${a.x},${b.y+grid} L${a.x-grid},${b.y} L${b.x},${b.y}` : `M${a.x},${a.y} L${a.x},${b.y-grid} L${a.x-grid},${b.y} L${b.x},${b.y}`  
     }
     else if(a.x < b.x){
-      if(a.y > b.y){
-        path = `M${a.x},${a.y} L${a.x+grid},${b.y-grid} L${b.x-grid},${b.y-grid} L${b.x},${b.y}`
-      }
-      else{
-        path = `M${a.x},${a.y} L${a.x+grid},${b.y-grid} L${b.x-grid},${b.y-grid} L${b.x},${b.y}`  
-      }
+      path = (a.y > b.y) ? `M${a.x},${a.y} L${a.x},${b.y+grid} L${a.x+grid},${b.y} L${b.x},${b.y}` : `M${a.x},${a.y} L${a.x},${b.y-grid} L${a.x+grid},${b.y} L${b.x},${b.y}`  
     }
     else{
       path = `M${a.x},${a.y} L${b.x},${b.y}`  
     }
+
     return `<path d="${path}" class='route ${type}'/>`
   }
 
