@@ -94,7 +94,7 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
   {
     node.parent = this;
     this.children.push(node);
-    Ø(`${this.id} in`).connect(`${this.children[0].id} in`);
+    // Ø(`${this.id} in`).connect(`${this.children[0].id} in`);
   }
 
   this.connect = function(q,type)

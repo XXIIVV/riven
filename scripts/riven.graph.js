@@ -57,7 +57,10 @@ function Riven_Graph()
     var grid = 20;
     var path = ""
 
-    if(distance(a,b) < 110 && diagonal(a,b)){
+    if(a.x == b.x || a.y == b.y){
+      path = `M${a.x},${a.y} L${b.x},${b.y}`  
+    }
+    else if(distance(a,b) < 110 && diagonal(a,b)){
       path = `M${a.x},${a.y} L${b.x},${b.y}`  
     }
     else if(a.x > b.x){

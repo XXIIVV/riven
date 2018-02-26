@@ -13,46 +13,37 @@
 <body>
   <script>
     var RIVEN = new Riven_Graph();
+    
+    Ø("mouse").create({x:0,y:3})
+    Ø("request").cast(RequestNode,{x:4,y:0})
+    Ø("console").cast(ConsoleNode,{x:38,y:15})
 
     // General
-    Ø("entry").cast(ParentNode,{x:1,y:1,w:6,h:7});
-    Ø("model").create({x:7,y:4,w:14,h:11});
-    Ø("view").create({x:33,y:15,w:14,h:14});
-    Ø("render").cast(RenderNode,{x:36,y:1});
+    Ø("entry").cast(ParentNode,{x:3,y:1,w:6,h:12});
+    Ø("model").create({x:9,y:1,w:13,h:12});
+    Ø("view").create({x:22,y:1,w:15,h:12});
+    Ø("render").cast(RenderNode,{x:38,y:8});
 
     // Entry
-    Ø("request").cast(RequestNode,{x:1,y:2})
-    Ø("router").cast(RouterNode,{x:1,y:3})
-    Ø("entry_log").cast(ConsoleNode,{x:1,y:5})
-    Ø("entry").assoc(Ø("request"))
+    Ø("router").cast(RouterNode,{x:1,y:2})
     Ø("entry").assoc(Ø("router"))
-    Ø("entry").assoc(Ø("entry_log"))
-
-    Ø("router").connect("model")
-    Ø("request").connect("router")
-    Ø("router").connect("entry_log")
+    // Ø("entry").assoc(Ø("console"))
 
     // Model
 
-    Ø("model_log").cast(ConsoleNode,{x:1,y:9})
-    
     Ø("model").assoc(Ø("parser").create({x:1,y:2}))
+    Ø("model").assoc(Ø("db_ingredients").create({x:5,y:3}))
+    Ø("model").assoc(Ø("db_recipes").create({x:5,y:2}))
+    Ø("model").assoc(Ø("model_home").create({x:5,y:5,w:7,h:1}))
+    Ø("model").assoc(Ø("model_about").create({x:5,y:6,w:7,h:1}))
+    Ø("model").assoc(Ø("model_ingredients").create({x:5,y:7,w:7,h:1}))
+    Ø("model").assoc(Ø("model_recipes").create({x:5,y:8,w:7,h:1}))
 
-    Ø("model").assoc(Ø("db_ingredients").create({x:6,y:3}))
-    Ø("model").assoc(Ø("db_recipes").create({x:6,y:2}))
-
-    Ø("model").assoc(Ø("model_log"))
-    Ø("model").assoc(Ø("model_home").create({x:5,y:5}))
-    Ø("model").assoc(Ø("model_about").create({x:5,y:6}))
-    Ø("model").assoc(Ø("model_ingredients").create({x:5,y:7}))
-    Ø("model").assoc(Ø("model_recipes").create({x:5,y:8}))
-
-    Ø("parser").connect("model_log")
+    Ø("parser").connect("console")
     Ø("parser").connect("model_home")
     Ø("parser").connect("model_about")
     Ø("parser").connect("model_ingredients")
     Ø("parser").connect("model_recipes")
-
     Ø("model_home").connect("db_ingredients","request")
     Ø("model_about").connect("db_ingredients","request")
     Ø("model_ingredients").connect("db_ingredients","request")
@@ -62,12 +53,39 @@
     Ø("model_ingredients").connect("db_recipes","request")
     Ø("model_recipes").connect("db_recipes","request")
 
-    // VIEW
+    // View
+    Ø("view").assoc(Ø("template").create({x:10,y:4}))
 
-    Ø("view").assoc(Ø("view_home").create({x:7,y:4}))
-    Ø("view").assoc(Ø("view_about").create({x:7,y:5}))
-    Ø("view").assoc(Ø("view_ingredients").create({x:7,y:6}))
-    Ø("view").assoc(Ø("view_recipes").create({x:7,y:7}))
+    Ø("view").assoc(Ø("header").create({x:2,y:2}))
+    Ø("view").assoc(Ø("body").create({x:2,y:3}))
+    Ø("view").assoc(Ø("footer").create({x:2,y:4}))
+
+    Ø("view").assoc(Ø("view_home").create({x:2,y:5,w:7,h:1}))
+    Ø("view").assoc(Ø("view_about").create({x:2,y:6,w:7,h:1}))
+    Ø("view").assoc(Ø("view_ingredients").create({x:2,y:7,w:7,h:1}))
+    Ø("view").assoc(Ø("view_recipes").create({x:2,y:8,w:7,h:1}))
+
+    Ø("template").connect("header","request")
+    Ø("template").connect("body","request")
+    Ø("template").connect("footer","request")
+
+    Ø("template").connect("console")
+    Ø("model_home").connect("view_home")
+    Ø("model_about").connect("view_about")
+    Ø("model_ingredients").connect("view_ingredients")
+    Ø("model_recipes").connect("view_recipes")
+
+    Ø("view_home").connect("template")
+    Ø("view_about").connect("template")
+    Ø("view_ingredients").connect("template")
+    Ø("view_recipes").connect("template")
+
+    Ø("router").connect("parser")
+    Ø("router").connect("console")
+    Ø("template").connect("render")
+
+    Ø("request").connect("router")
+    Ø("mouse").connect("router")
 
     document.body.appendChild(RIVEN.el)
     document.body.appendChild(RIVEN.render_el)

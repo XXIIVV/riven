@@ -1,17 +1,17 @@
-body { padding:20px; overflow: hidden; background-image: url(../media/assets/grid.svg); background-color:#111; font-family: 'input_mono_medium'; font-size:9px;}
-svg { padding:10px; width:calc(100vw - 80px); height:calc(100vh - 80px); }
+body { padding:20px; overflow: hidden; background-image: url(../media/assets/grid.svg); background-color:#111; font-family: 'input_mono_medium'; font-size:9px; background-size:20px 20px;}
+svg { padding:70px; width:calc(100vw - 80px); height:calc(100vh - 80px); }
 svg circle.node { fill:#777; }
 svg circle.port { fill:white; stroke:none; }
 svg circle.port.route { fill:white;stroke:none; }
 svg path { stroke:white; fill:none; stroke-width:1.5;stroke-linejoin: round; stroke-linecap: round  }
-svg rect { stroke:#444;  stroke-width:1.5; }
+svg rect { stroke:#fff;  stroke-width:1; }
 svg text { fill:white;  text-transform: uppercase; }
 svg text.input { text-anchor: end }
 svg text.output { text-anchor: start }
 
 svg path.route { stroke:white;stroke-dasharray: 4.5,3.5  }
 svg path.route.bang { stroke-dasharray: 0,3.5  }
-svg path.route.request { stroke:#444;stroke-dasharray: 0,3.5 }
+svg path.route.request { stroke-dasharray: 0,5 }
 svg path.route.transit { }
 
 #render { background:white; display: block; position:fixed; bottom:0px; left:0px; padding:10px; }
