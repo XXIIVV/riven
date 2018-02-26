@@ -98,7 +98,7 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
 
   this.connect = function(q)
   {
-    this.port("in").connect(Ø(`${q} o`));
+    this.port("out").connect(`${q} in`);
   }
 
   this.install = function(port_id)

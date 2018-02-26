@@ -15,18 +15,25 @@
     var RIVEN = new Riven_Graph();
 
     // General
-    Ø("entry").cast(ParentNode,{x:1,y:1,w:14,h:14});
-    Ø("model").create({x:17,y:17,w:14,h:14});
+    Ø("entry").cast(ParentNode,{x:1,y:1,w:6,h:5});
+    Ø("model").create({x:7,y:4,w:14,h:14});
     Ø("view").create({x:33,y:15,w:14,h:14});
     Ø("render").cast(RenderNode,{x:36,y:1});
 
-    Ø("entry out").connect("model in")
-    Ø("model out").connect("view in")
-    Ø("view out").connect("render in")
+    // Ø("model out").connect("view in")
+    // Ø("view out").connect("render in")
 
     // Entry
-    Ø("parser").create({x:1,y:3})
-    Ø("entry").assoc(Ø("parser"))
+    Ø("request").cast(RequestNode,{x:1,y:2})
+    Ø("router").cast(RouterNode,{x:1,y:3})
+    Ø("entry_console").cast(ConsoleNode,{x:1,y:4})
+    Ø("entry").assoc(Ø("request"))
+    Ø("entry").assoc(Ø("router"))
+    Ø("entry").assoc(Ø("entry_console"))
+
+    Ø("router").connect("model")
+    Ø("request").connect("router")
+    Ø("router").connect("entry_console")
 
     document.body.appendChild(RIVEN.el)
     document.body.appendChild(RIVEN.render_el)

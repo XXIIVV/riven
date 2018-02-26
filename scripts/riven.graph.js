@@ -2,6 +2,8 @@ function Riven_Graph()
 {
   Riven.call(this);
 
+  var PORT_SIZE = 2;
+
   this.el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 
   this.graph = function()
@@ -29,12 +31,12 @@ function Riven_Graph()
           ports_html += draw_connection(pos,get_port_position(route.port),route.type)
         }
       }
-      ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="1.5" class='port input ${node.ports[id] && node.ports[id].route ? "route" : ""}'/>`
+      ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="${PORT_SIZE}" class='port input ${node.ports[id] && node.ports[id].route ? "route" : ""}'/>`
     }
 
     return `
     <g id='node_${node.id}'>
-    <text x="${rect.x+5}" y="${rect.y+rect.h-7.5}">${node.id}</text>
+    <text x="${rect.x+6}" y="${rect.y+rect.h-7.5}">${node.id}</text>
     <rect x=${rect.x} y=${rect.y} width="${rect.w}" height="${rect.h}" title="alt" stroke="#000" fill="none"/>
     <circle cx='${rect.x}' cy="${rect.y}" r="1.5" class='node'/>
     ${ports_html}</g>`

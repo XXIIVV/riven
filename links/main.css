@@ -9,7 +9,7 @@ svg text { fill:white;  text-transform: uppercase; }
 svg text.input { text-anchor: end }
 svg text.output { text-anchor: start }
 
-svg path.route { stroke:white; }
+svg path.route { stroke:white;stroke-dasharray: 10,4  }
 svg path.route.bang { stroke-dasharray: 0,10  }
 svg path.route.request { stroke-dasharray: 0,3 }
 svg path.route.transit { }
