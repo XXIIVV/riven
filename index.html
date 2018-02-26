@@ -14,31 +14,31 @@
   <script>
     var RIVEN = new Riven_Graph();
     
-    Ø("console").cast(ConsoleNode,{x:40,y:15})
+    Ø("console").cast(ConsoleNode,{x:41,y:12})
 
     // General
-    Ø("entry").cast(ParentNode,{x:2,y:1,w:6,h:12});
+    Ø("entry").cast(ParentNode,{x:1,y:2,w:8,h:12});
     Ø("model").cast(ParentNode,{x:9,y:2,w:13,h:12});
-    Ø("view").cast(ParentNode,{x:22,y:2,w:17,h:12});
+    Ø("view").cast(ParentNode,{x:26,y:2,w:18,h:12});
     Ø("render").cast(RenderNode,{x:40,y:8});
 
     // Entry
     Ø("entry").assoc([
-      Ø("router").cast(RouterNode,{x:1,y:1}),
-      Ø("mouse").create({x:0,y:0}),
-      Ø("request").cast(RequestNode,{x:4,y:0})
+      Ø("request").cast(RequestNode,{x:1,y:2}),
+      Ø("mouse").create({x:1,y:4}),
+      Ø("router").cast(RouterNode,{x:4,y:3,w:3,h:1})
     ])
 
     // Model
 
     Ø("model").assoc([
-      Ø("parser").create({x:1,y:2}),
-      Ø("db_ingredients").create({x:6,y:3}),
-      Ø("db_recipes").create({x:6,y:2}),
-      Ø("model_home").create({x:5,y:5,w:7,h:1}),
-      Ø("model_about").create({x:5,y:6,w:7,h:1}),
-      Ø("model_ingredients").create({x:5,y:7,w:7,h:1}),
-      Ø("model_recipes").create({x:5,y:8,w:7,h:1})
+      Ø("parser").cast(ParserNode,{x:2,y:3,w:5,h:1}),
+      Ø("db_ingredients").create({x:1,y:7}),
+      Ø("db_recipes").create({x:1,y:6}),
+      Ø("model_home").create({x:8,y:5,w:7,h:1}),
+      Ø("model_about").create({x:8,y:6,w:7,h:1}),
+      Ø("model_ingredients").create({x:8,y:7,w:7,h:1}),
+      Ø("model_recipes").create({x:8,y:8,w:7,h:1})
     ])
 
     // View
@@ -53,16 +53,19 @@
       Ø("view_recipes").create({x:2,y:8,w:7,h:1})
     ])
 
-    Ø("parser").connect(["console","model_home","model_about","model_ingredients","model_recipes"])
-    Ø("model_home").connect("db_ingredients","request")
-    Ø("model_about").connect("db_ingredients","request")
-    Ø("model_ingredients").connect("db_ingredients","request")
-    Ø("model_recipes").connect("db_ingredients","request")
-    Ø("model_home").connect("db_recipes","request")
-    Ø("model_about").connect("db_recipes","request")
-    Ø("model_ingredients").connect("db_recipes","request")
-    Ø("model_recipes").connect("db_recipes","request")
-
+    // Ø("parser").connect(["console","model_home","model_about","model_ingredients","model_recipes"])
+    // Ø("parser").connect(["console"])
+    Ø("db_ingredients").connect("parser db","request")
+    Ø("db_recipes").connect("parser db","request")
+    // Ø("parser db").connect(["db_ingredients in","db_recipes in"],"request")
+    // Ø("model_home").connect("db_ingredients","request")
+    // Ø("model_about").connect("db_ingredients","request")
+    // Ø("model_ingredients").connect("db_ingredients","request")
+    // Ø("model_recipes").connect("db_ingredients","request")
+    // Ø("model_home").connect("db_recipes","request")
+    // Ø("model_about").connect("db_recipes","request")
+    // Ø("model_ingredients").connect("db_recipes","request")
+    // Ø("model_recipes").connect("db_recipes","request")
 
     Ø("template").connect(["header","body","footer"],"request")
 

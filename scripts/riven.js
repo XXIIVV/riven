@@ -19,13 +19,6 @@ function Riven()
     node.setup();
   }
 
-  this.clone = function(name,rect,type)
-  {
-    var node = new type(name,rect)  
-    this.network[name] = node
-    node.setup();
-  }
-
   this.connect = function(a,b)
   {
     var node_a = this.network[a.id]
@@ -88,7 +81,7 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
   {
     var node = new type(this.id,rect)  
     RIVEN.inject(node);
-    return this
+    return node
   }
 
   // Associate one of many nodes
@@ -119,6 +112,7 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
 
   this.install = function(port_id,is_input)
   {
+    console.log(this.id,port_id)
     this.ports.push(new Port(this,port_id,is_input))
   }
 
@@ -131,6 +125,13 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
       if(route){
         route.port.host.query(q)  
       }
+    }
+  }
+
+  this.broadcast = function(payload)
+  {
+    for(port_id in this.ports){
+      this.ports[port_id].broadcast(payload);
     }
   }
 
@@ -167,6 +168,16 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
     this.connect = function(b,type = "transit")
     {
       this.routes.push({type:type,port:Ø(b)})
+    }
+
+    this.broadcast = function(payload) // Send to all routes
+    {
+      if(this.is_input){ return; }
+      for(route_id in this.routes){
+        var route = this.routes[route_id];
+        if(!route){ continue; }
+        route.port.host.query(payload)  
+      }
     }
   }
 }

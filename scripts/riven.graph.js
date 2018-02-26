@@ -40,22 +40,27 @@ function Riven_Graph()
   {
     var rect = get_rect(node);
 
-    var ports_html = "";
+    var html = "";
     for(id in node.ports){
-      var port = node.ports[id]
-      var pos = port ? get_port_position(port) : {x:0,y:0}
-      ports_html += `
-      <g id='port_${port.id}'>
-        <circle cx='${pos.x}' cy="${pos.y}" r="${parseInt(port.is_input ? GRID_SIZE/6 : GRID_SIZE/4)}" class='port input ${node.ports[id] && node.ports[id].route ? "route" : ""}'/>
-        <text x="${pos.x+(GRID_SIZE/2)}" y="${pos.y+3}">${port.id != 'in' && port.id != 'out' ? port.id : ''}</text>
-      </g>`
+      html += draw_port(node.ports[id]);
     }
 
     return `
     <g id='node_${node.id}'>
-      <rect x=${rect.x} y=${rect.y-(GRID_SIZE/2)} width="${rect.w}" height="${rect.h}" class='${node.children.length == 0 ? "fill" : ""}'/>
+      <rect rx='2' ry='2' x=${rect.x} y=${rect.y-(GRID_SIZE/2)} width="${rect.w}" height="${rect.h}" class='${node.children.length == 0 ? "fill" : ""}'/>
       <text x="${rect.x+(GRID_SIZE/2)}" y="${rect.y+3}">${node.id}</text>
-      ${ports_html}
+      ${html}
+    </g>`
+  }
+
+  function draw_port(port)
+  {
+    var rect = get_rect(port.host);
+    var pos = port ? get_port_position(port) : {x:0,y:0}
+    return `
+    <g id='${port.host.id}_port_${port.id}'>
+      <circle cx='${pos.x}' cy="${pos.y}" r="${parseInt(GRID_SIZE/6)}" class='port ${port.is_input ? "input" : "output"} ${port.host.ports[id] && port.host.ports[id].route ? "route" : ""}'/>
+      <text x="${pos.x+(GRID_SIZE/2)}" y="${pos.y+3}">${port.id != 'in' && port.id != 'out' ? port.id : ''}</text>
     </g>`
   }
 
@@ -97,14 +102,20 @@ function Riven_Graph()
   {
     var rect = get_rect(port.host)
     var space = rect.h/(port.host.ports.length-1);
-    var index = 1
-    var space = port.host.ports.length > 1 ? rect.h/(port.host.ports.length-1) : 1;
+    var index = 0
+    var space = port.host.ports.length > 1 ? rect.h/(port.host.ports.length-1) : 0;
     for(id in port.host.ports){
       if(port.host.ports[id].id == port.id){
         index = id
       }
     }
-    return port.id == "in" || port.id == "out" ? rect : {x:rect.x,y:rect.y+((space*index)+GRID_SIZE)}
+    var horizontal = rect.x
+    var vertical = rect.y
+
+    if(!port.is_input){
+      horizontal = rect.x+rect.w
+    }
+    return port.id == "in" || port.id == "out" ? {x:horizontal,y:vertical} : {x:horizontal,y:rect.y+((index)*GRID_SIZE)}
   }
 
   function get_rect(node)

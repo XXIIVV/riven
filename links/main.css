@@ -3,6 +3,7 @@ svg { padding:50px 10px; width:calc(100vw - 80px); height:calc(100vh - 80px); }
 svg circle.node { fill:#777; }
 svg circle.port { fill:#111; stroke:white; stroke-width:1; }
 svg circle.port.route { fill:white;stroke:none; }
+svg circle.port.input { fill:white; }
 svg path { stroke:white; fill:none; stroke-width:1;stroke-linejoin: round; stroke-linecap: round  }
 svg rect { stroke:#fff;  stroke-width:1; fill:none; }
 svg rect.fill { fill:#111; }
