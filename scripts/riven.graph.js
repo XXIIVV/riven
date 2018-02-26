@@ -86,9 +86,9 @@ function Riven_Graph()
     var h = node.rect.h * grid;
 
     if(node.parent){
-      // var offset = get_rect(node.parent);
-      // x += offset.x;
-      // y += offset.y;
+      var offset = get_rect(node.parent);
+      x += offset.x;
+      y += offset.y;
     }
 
     return {x:x,y:y,w:w,h:h}

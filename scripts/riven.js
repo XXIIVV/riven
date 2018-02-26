@@ -4,7 +4,6 @@ function Riven()
 {
   this.render_el = document.createElement("div");
   this.render_el.id = "render"
-  var grid_size = 20;
   this.network = {}; // root:new Node(null,"root",{x:0,y:0,w:300,h:200})
 
   this.inject = function(node)
@@ -39,11 +38,6 @@ function Riven()
     if(!port_b){ console.warn(`Unknown port: ${b.port}`); return;}
     port_a.connect(port_b);
   }
-
-  this.bang = function(a)
-  {
-    this.network[a].bang();
-  }
 }
 
 // QUERY
@@ -72,6 +66,8 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
   this.rect = rect;
   this.rect.w = this.rect.w ? this.rect.w : 0
   this.rect.h = this.rect.h ? this.rect.h : 0
+  this.parent = null;
+  this.children = [];
 
   this.setup = function()
   {
@@ -91,6 +87,13 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
   {
     var node = new type(this.id,rect)  
     RIVEN.inject(node);
+  }
+
+  this.assoc = function(node)
+  {
+    node.parent = this;
+    this.children.push(node);
+    Ø(`${this.id} in`).connect(`${this.children[0].id} in`);
   }
 
   this.connect = function(q)
@@ -117,15 +120,7 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
 
   this.bang = function()
   {
-    console.log(`${this.id} bang!`)
-    var port = this.port("out")
-    if(!port){ return; }
-    for(route_id in port.routes){
-      var route = port.routes[route_id];
-      if(route){
-        route.port.host.bang()  
-      }
-    }    
+    this.query(true)
   }
 
   this.port = function(target)

@@ -89,3 +89,20 @@ function RenderNode(id,rect={x:0,y:0,w:0,h:0})
     document.getElementById("render").innerHTML = q
   }
 }
+
+function ParentNode(id,rect={x:0,y:0,w:0,h:0})
+{
+  Node.call(this,id,rect);
+
+  this.setup = function()
+  {
+    this.install("in")
+    this.install("out")
+    // this.port("in").connect(this.children[0].port("in"))
+  }
+
+  this.query = function(q)
+  {
+    this.children[0].query(q);
+  }
+}

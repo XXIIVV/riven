@@ -14,19 +14,24 @@
   <script>
     var RIVEN = new Riven_Graph();
 
-    Ø("entry").create({x:1,y:1});
-    Ø("model").create({x:3,y:1,w:2,h:2});
-    Ø("view").create({x:7,y:1,w:2,h:2});
-    Ø("render").cast(RenderNode,{x:11,y:3});
+    // General
+    Ø("entry").cast(ParentNode,{x:1,y:1,w:14,h:14});
+    Ø("model").create({x:17,y:17,w:14,h:14});
+    Ø("view").create({x:33,y:15,w:14,h:14});
+    Ø("render").cast(RenderNode,{x:36,y:1});
 
     Ø("entry out").connect("model in")
     Ø("model out").connect("view in")
     Ø("view out").connect("render in")
 
+    // Entry
+    Ø("parser").create({x:1,y:3})
+    Ø("entry").assoc(Ø("parser"))
+
     document.body.appendChild(RIVEN.el)
     document.body.appendChild(RIVEN.render_el)
 
-    Ø("entry").query("hello")
+    Ø("entry").bang()
 
     RIVEN.graph();
   </script>
