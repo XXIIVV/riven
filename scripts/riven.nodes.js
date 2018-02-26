@@ -87,11 +87,6 @@ function ParentNode(id,rect={x:0,y:0,w:0,h:0})
   {
 
   }
-  
-  this.query = function(q)
-  {
-    this.children[0].query(q);
-  }
 }
 
 function RequestNode(id,rect={x:0,y:0,w:0,h:0})

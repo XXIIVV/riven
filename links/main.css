@@ -15,4 +15,6 @@ svg path.route.bang { stroke-dasharray: 10,2  }
 svg path.route.request { stroke-dasharray: 2,2 }
 svg path.route.transit { }
 
+svg g:hover text { fill:red; cursor: pointer; }
+
 #render { background:white; display: block; position:fixed; bottom:0px; left:0px; padding:10px; }

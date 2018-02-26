@@ -88,18 +88,33 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
   {
     var node = new type(this.id,rect)  
     RIVEN.inject(node);
+    return this
   }
 
-  this.assoc = function(node)
+  // Associate one of many nodes
+  this.assoc = function(n)
   {
-    node.parent = this;
-    this.children.push(node);
-    // Ø(`${this.id} in`).connect(`${this.children[0].id} in`);
+    if(n instanceof Array){
+      for(id in n){
+        this.assoc(n[id])
+      }
+    }
+    else{
+      n.parent = this;
+      this.children.push(n);  
+    }
   }
 
   this.connect = function(q,type)
   {
-    this.port("out").connect(`${q} in`,type);
+    if(q instanceof Array){
+      for(id in q){
+        this.connect(q[id],type)
+      }
+    }
+    else{
+      this.port("out").connect(`${q} in`,type);  
+    }
   }
 
   this.install = function(port_id,is_input)
