@@ -2,7 +2,7 @@ function Riven_Graph()
 {
   Riven.call(this);
 
-  var PORT_SIZE = 2;
+  var GRID_SIZE = 20
 
   this.el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 
@@ -12,9 +12,32 @@ function Riven_Graph()
 
     for(id in this.network){
       var node = this.network[id];
+      html += draw_routes(node);
+    }
+    for(id in this.network){
+      var node = this.network[id];
       html += draw_node(node);
     }
     this.el.innerHTML = html;
+  }
+
+  function draw_routes(node)
+  {
+    var rect = get_rect(node);
+
+    var html = "";
+    for(id in node.ports){
+      var port = node.ports[id]
+      var pos = port ? get_port_position(port) : {x:0,y:0}
+      for(route_id in port.routes){
+        var route = port.routes[route_id];
+        if(route){
+          html += route.port ? draw_connection(pos,get_port_position(route.port),route.type) : ""
+        }
+      }
+    }
+
+    return html
   }
 
   function draw_node(node)
@@ -25,21 +48,19 @@ function Riven_Graph()
     for(id in node.ports){
       var port = node.ports[id]
       var pos = port ? get_port_position(port) : {x:0,y:0}
-      for(route_id in port.routes){
-        var route = port.routes[route_id];
-        if(route){
-          ports_html += route.port ? draw_connection(pos,get_port_position(route.port),route.type) : ""
-        }
-      }
-      ports_html += `<circle cx='${pos.x}' cy="${pos.y}" r="${PORT_SIZE}" class='port input ${node.ports[id] && node.ports[id].route ? "route" : ""}'/>`
+      ports_html += `
+      <g id='port_${port.id}'>
+        <circle cx='${pos.x}' cy="${pos.y}" r="${parseInt(port.is_input ? GRID_SIZE/6 : GRID_SIZE/4)}" class='port input ${node.ports[id] && node.ports[id].route ? "route" : ""}'/>
+        <text x="${pos.x+10}" y="${pos.y+3}">${port.id != 'in' && port.id != 'out' ? port.id : ''}</text>
+      </g>`
     }
 
     return `
     <g id='node_${node.id}'>
-      <rect x=${rect.x} y=${rect.y} width="${rect.w}" height="${rect.h}" title="alt" stroke="#000" fill="none"/>
-      <circle cx='${rect.x}' cy="${rect.y}" r="1.5" class='node'/>
-      <text x="${rect.x+6}" y="${rect.y+rect.h-7.5}">${node.id}</text>
-    ${ports_html}</g>`
+      <rect x=${rect.x} y=${rect.y-(GRID_SIZE/2)} width="${rect.w}" height="${rect.h}" class='${node.children.length == 0 ? "fill" : ""}'/>
+      <text x="${rect.x+10}" y="${rect.y+3}">${node.id}</text>
+      ${ports_html}
+    </g>`
   }
 
   function distance(a,b)
@@ -80,14 +101,14 @@ function Riven_Graph()
   {
     var rect = get_rect(port.host)
     var space = rect.h/(port.host.ports.length-1);
-    var index = 0
-    var space = port.host.ports.length > 1 ? rect.h/(port.host.ports.length-1) : 0;
+    var index = 1
+    var space = port.host.ports.length > 1 ? rect.h/(port.host.ports.length-1) : 1;
     for(id in port.host.ports){
       if(port.host.ports[id].id == port.id){
         index = id
       }
     }
-    return {x:index==port.host.ports.length-1 ? parseInt(rect.x+rect.w) : parseInt(rect.x),y:parseInt(rect.y+(index*space))}
+    return port.id == "in" || port.id == "out" ? rect : {x:rect.x,y:rect.y+((space*index)+GRID_SIZE)}
   }
 
   function get_rect(node)

@@ -14,26 +14,26 @@
   <script>
     var RIVEN = new Riven_Graph();
     
-    Ø("mouse").create({x:0,y:3})
+    Ø("mouse").create({x:0,y:4})
     Ø("request").cast(RequestNode,{x:4,y:0})
-    Ø("console").cast(ConsoleNode,{x:38,y:15})
+    Ø("console").cast(ConsoleNode,{x:40,y:15})
 
     // General
-    Ø("entry").cast(ParentNode,{x:3,y:1,w:6,h:12});
-    Ø("model").create({x:9,y:1,w:13,h:12});
-    Ø("view").create({x:22,y:1,w:15,h:12});
-    Ø("render").cast(RenderNode,{x:38,y:8});
+    Ø("entry").cast(ParentNode,{x:3,y:2,w:6,h:12});
+    Ø("model").create({x:9,y:2,w:13,h:12});
+    Ø("view").create({x:22,y:2,w:17,h:12});
+    Ø("render").cast(RenderNode,{x:40,y:8});
 
     // Entry
-    Ø("router").cast(RouterNode,{x:1,y:2})
+    Ø("router").cast(RouterNode,{x:1,y:1})
     Ø("entry").assoc(Ø("router"))
     // Ø("entry").assoc(Ø("console"))
 
     // Model
 
     Ø("model").assoc(Ø("parser").create({x:1,y:2}))
-    Ø("model").assoc(Ø("db_ingredients").create({x:5,y:3}))
-    Ø("model").assoc(Ø("db_recipes").create({x:5,y:2}))
+    Ø("model").assoc(Ø("db_ingredients").create({x:6,y:3}))
+    Ø("model").assoc(Ø("db_recipes").create({x:6,y:2}))
     Ø("model").assoc(Ø("model_home").create({x:5,y:5,w:7,h:1}))
     Ø("model").assoc(Ø("model_about").create({x:5,y:6,w:7,h:1}))
     Ø("model").assoc(Ø("model_ingredients").create({x:5,y:7,w:7,h:1}))
@@ -54,11 +54,11 @@
     Ø("model_recipes").connect("db_recipes","request")
 
     // View
-    Ø("view").assoc(Ø("template").create({x:10,y:4}))
+    Ø("view").assoc(Ø("template").create({x:10,y:3}))
 
-    Ø("view").assoc(Ø("header").create({x:2,y:2}))
-    Ø("view").assoc(Ø("body").create({x:2,y:3}))
-    Ø("view").assoc(Ø("footer").create({x:2,y:4}))
+    Ø("view").assoc(Ø("header").create({x:14,y:2}))
+    Ø("view").assoc(Ø("body").create({x:14,y:3}))
+    Ø("view").assoc(Ø("footer").create({x:14,y:4}))
 
     Ø("view").assoc(Ø("view_home").create({x:2,y:5,w:7,h:1}))
     Ø("view").assoc(Ø("view_about").create({x:2,y:6,w:7,h:1}))
@@ -90,7 +90,7 @@
     document.body.appendChild(RIVEN.el)
     document.body.appendChild(RIVEN.render_el)
 
-    Ø("entry").bang()
+    Ø("request").query()
 
     RIVEN.graph();
   </script>

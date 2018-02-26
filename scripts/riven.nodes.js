@@ -4,7 +4,8 @@ function ConsoleNode(id,rect={x:0,y:0,w:0,h:0})
 
   this.setup = function()
   {
-    this.install("in")
+    this.install("in",true)
+    this.install("error",true)
   }
 
   this.query = function(q)

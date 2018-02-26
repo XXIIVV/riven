@@ -71,8 +71,8 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
 
   this.setup = function()
   {
-    this.ports.push(new Port(this,"in"))
     this.ports.push(new Port(this,"out"))
+    this.ports.push(new Port(this,"in",true))
     this.rect.w = this.rect.w ? this.rect.w : 0
     this.rect.h = this.rect.h ? this.rect.h : 0
   }
@@ -102,9 +102,9 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
     this.port("out").connect(`${q} in`,type);
   }
 
-  this.install = function(port_id)
+  this.install = function(port_id,is_input)
   {
-    this.ports.push(new Port(this,port_id))
+    this.ports.push(new Port(this,port_id,is_input))
   }
 
   this.query = function(q)
@@ -132,10 +132,11 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
     }
   }
 
-  function Port(host,id)
+  function Port(host,id,is_input = false)
   {
     this.host = host;
     this.id = id;
+    this.is_input = is_input;
     this.routes = [];
 
     this.pos = function()
