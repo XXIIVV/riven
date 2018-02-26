@@ -83,6 +83,11 @@ function ParentNode(id,rect={x:0,y:0,w:0,h:0})
 {
   Node.call(this,id,rect);
 
+  this.setup = function()
+  {
+
+  }
+  
   this.query = function(q)
   {
     this.children[0].query(q);

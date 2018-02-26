@@ -14,20 +14,19 @@
   <script>
     var RIVEN = new Riven_Graph();
     
-    Ø("mouse").create({x:0,y:4})
+    Ø("mouse").create({x:0,y:0})
     Ø("request").cast(RequestNode,{x:4,y:0})
     Ø("console").cast(ConsoleNode,{x:40,y:15})
 
     // General
     Ø("entry").cast(ParentNode,{x:3,y:2,w:6,h:12});
-    Ø("model").create({x:9,y:2,w:13,h:12});
-    Ø("view").create({x:22,y:2,w:17,h:12});
+    Ø("model").cast(ParentNode,{x:9,y:2,w:13,h:12});
+    Ø("view").cast(ParentNode,{x:22,y:2,w:17,h:12});
     Ø("render").cast(RenderNode,{x:40,y:8});
 
     // Entry
     Ø("router").cast(RouterNode,{x:1,y:1})
     Ø("entry").assoc(Ø("router"))
-    // Ø("entry").assoc(Ø("console"))
 
     // Model
 
@@ -54,7 +53,7 @@
     Ø("model_recipes").connect("db_recipes","request")
 
     // View
-    Ø("view").assoc(Ø("template").create({x:10,y:3}))
+    Ø("view").assoc(Ø("template").create({x:10,y:3,w:4,h:1}))
 
     Ø("view").assoc(Ø("header").create({x:14,y:2}))
     Ø("view").assoc(Ø("body").create({x:14,y:3}))
