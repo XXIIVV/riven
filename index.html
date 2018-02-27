@@ -31,16 +31,22 @@
     // Model
 
     // var model = new Model();
-    // Ø("model").cast(ParentNode,{x:9,y:2}).assoc([
-    //   Ø("parser").cast(ParserNode,{x:0,y:4,w:5,h:1}),
-    //   Ø("ingredients").cast(DatabaseNode,{x:1,y:8}),
-    //   Ø("recipes").cast(DatabaseNode,{x:1,y:7}),
-    //   Ø("model_home").cast(model.home,{x:7,y:2,w:7,h:1}),
-    //   Ø("model_about").create({x:7,y:3,w:7,h:1}),
-    //   Ø("model_ingredients").create({x:7,y:4,w:7,h:1}),
-    //   Ø("model_recipes").create({x:7,y:5,w:7,h:1}),
-    //   Ø("model_404").create({x:7,y:6,w:7,h:1})
-    // ])
+    Ø("model").mesh({x:15,y:2},[
+      Ø("parser").create({x:2,y:4}),
+      Ø("ingredients").create({x:6,y:16}),
+      Ø("recipes").create({x:6,y:12}),
+      Ø("model_home").create({x:10,y:2}),
+      Ø("model_about").create({x:10,y:6}),
+      Ø("model_ingredients").create({x:10,y:10}),
+      Ø("model_recipes").create({x:10,y:14}),
+      Ø("model_404").create({x:10,y:18})
+    ])
+
+    Ø("router").connect("parser")
+
+    Ø("parser").connect("recipes",ROUTE_TYPES.request)
+    Ø("parser").connect("ingredients",ROUTE_TYPES.request)
+    // Ø("router").connect("parser")
 
     // // View
     // Ø("view").cast(ParentNode,{x:26,y:2}).assoc([
@@ -57,7 +63,7 @@
     // Ø("render").cast(RenderNode,{x:45,y:6})
     // Ø("console").cast(ConsoleNode,{x:45,y:12})
 
-    // Ø("parser").connect(["console error","model_home","model_about","model_ingredients","model_recipes","model_404"])
+    Ø("parser").connect(["console error","model_home","model_about","model_ingredients","model_recipes","model_404"])
     // Ø("parser db").connect("ingredients in",ROUTE_TYPES.request)
     // Ø("parser db").connect("recipes in",ROUTE_TYPES.request)
 
@@ -77,7 +83,6 @@
     // Ø("view_recipes").connect("templater")
     // Ø("view_404").connect("templater")
 
-    // Ø("router").connect("parser")
     // Ø("router").connect("console")
     // Ø("templater").connect("render")
 
@@ -86,7 +91,7 @@
 
     document.body.appendChild(RIVEN.el)
 
-    Ø("request").query()
+    // Ø("request").query()
 
     RIVEN.graph();
   </script>

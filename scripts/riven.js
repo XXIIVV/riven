@@ -98,7 +98,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2},ports=[])
       }
     }
     else{
-      this.port("out").connect(`${q} in`,type);  
+      this.port(type == ROUTE_TYPES.request ? "request" : "out").connect(`${q} ${type == ROUTE_TYPES.request ? "answer" : "in"}`,type);  
     }
   }
 
@@ -224,7 +224,7 @@ function Mesh(id,rect)
       bounds.x = node.rect.x > bounds.x ? node.rect.x : bounds.x
       bounds.y = node.rect.y > bounds.y ? node.rect.y : bounds.y
     }
-    this.rect.w = bounds.x+3;
+    this.rect.w = bounds.x+4;
     this.rect.h = bounds.y+5;
   }
 }

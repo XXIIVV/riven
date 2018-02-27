@@ -48,7 +48,7 @@ function Riven_Graph()
     return `
     <g class='node' id='node_${node.id}'>
       <rect rx='2' ry='2' x=${rect.x} y=${rect.y-(GRID_SIZE/2)} width="${rect.w}" height="${rect.h}" class='${node.children.length == 0 ? "fill" : ""}'/>
-      <text x="${rect.x+(rect.w/2)}" y="${rect.y+rect.w+(GRID_SIZE/2)}">${node.id}</text>
+      <text x="${rect.x+(rect.w/2)}" y="${rect.y+rect.h+(GRID_SIZE/2)}">${node.id}</text>
       ${html}
     </g>`
   }
@@ -69,6 +69,11 @@ function Riven_Graph()
 
   function draw_connection(a,b,type)
   {
+    return a.type == PORT_TYPES.output ? draw_connection_output(a,b) : draw_connection_request(a,b)
+  }
+
+  function draw_connection_output(a,b)
+  {
     var pos_a = get_port_position(a)
     var pos_b = get_port_position(b)
     var pos_m = middle(pos_a,pos_b)
@@ -82,7 +87,28 @@ function Riven_Graph()
     path += `Q ${pos_c2.x},${pos_c2.y} ${pos_b.x-GRID_SIZE},${pos_b.y}`
     path += `L${pos_b.x},${pos_b.y}`
 
-    return `<path d="${path}" class='route ${type}'/>`
+    return `<path d="${path}" class='route output'/>`
+  }
+
+  function draw_connection_request(a,b)
+  {
+    var pos_a = get_port_position(a)
+    var pos_b = get_port_position(b)
+    var pos_m = middle(pos_a,pos_b)
+    var pos_c1 = {x:(pos_m.x+(pos_a.x+GRID_SIZE))/2,y:pos_a.y}
+    var pos_c2 = {x:(pos_m.x+(pos_b.x-GRID_SIZE))/2,y:pos_b.y}
+
+    var path = ""
+
+    path += `M${pos_a.x},${pos_a.y} L${pos_a.x+GRID_SIZE},${pos_a.y} `
+    path += `Q${pos_c1.x},${pos_c1.y} ${pos_m.x},${pos_m.y} `
+    path += `Q ${pos_c2.x},${pos_c2.y} ${pos_b.x-GRID_SIZE},${pos_b.y}`
+    path += `L${pos_b.x},${pos_b.y}`
+
+    return `<path d="${path}" class='route request'/>
+    <circle cx='${pos_c1.x}' cy='${pos_c1.y}' r='2' fill='red'></circle>
+    <circle cx='${pos_m.x}' cy='${pos_m.y}' r='2' fill='green'></circle>
+    <circle cx='${pos_c2.x}' cy='${pos_c2.y}' r='2' fill='red'></circle>`
   }
 
   function get_port_position(port)
