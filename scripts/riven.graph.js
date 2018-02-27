@@ -58,6 +58,9 @@ function Riven_Graph()
     var pos = port ? get_port_position(port) : {x:0,y:0}
     var shape = `<circle cx='${pos.x}' cy="${pos.y}" r="${parseInt(GRID_SIZE/6)}" class='port ${port.type} ${port.host.ports[id] && port.host.ports[id].route ? "route" : ""}'/>`
 
+    if(port.type == PORT_TYPES.request){
+      shape = `<path d='${draw_diamond(pos)}' class='port ${port.type} ${port.host.ports[id] && port.host.ports[id].route ? "route" : ""}' />`;
+    }
     return `
     <g id='${port.host.id}_port_${port.id}'>
       ${shape}
@@ -101,7 +104,7 @@ function Riven_Graph()
       if(p.id == port.id){ break }
     }
     var horizontal = port.type == PORT_TYPES.output ? rect.x+rect.w : rect.x
-    var vertical = rect.y + ((offset[p.type]-1)*GRID_SIZE)
+    var vertical = rect.y + ((offset[p.type == PORT_TYPES.request || p.type == PORT_TYPES.input ? PORT_TYPES.input : p.type]-1)*GRID_SIZE)
     return {x:horizontal,y:vertical}
   }
 
@@ -132,5 +135,11 @@ function Riven_Graph()
   function diagonal(a,b)
   {
     return a.x == b.x || a.y == b.y || a.y - a.x == b.y - b.x || b.y - a.x == a.y - b.x
+  }
+
+  function draw_diamond(pos)
+  {
+    var r = GRID_SIZE/6
+    return `M${pos.x-(r)},${pos.y} L${pos.x},${pos.y-(r)} L${pos.x+(r)},${pos.y} L${pos.x},${pos.y+(r)} Z`
   }
 }

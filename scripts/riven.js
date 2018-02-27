@@ -1,6 +1,7 @@
 // NETWORK MANAGER
 
 var PORT_TYPES = {default:"default",input:"input",output:"output",request:"request"}
+var ROUTE_TYPES = {default:"default",request:"request"}
 
 function Riven()
 {
@@ -87,7 +88,6 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
     return node
   }
 
-  // Associate one of many nodes
   this.assoc = function(n)
   {
     if(n instanceof Array){
@@ -137,6 +137,16 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
     }
   }
 
+  this.request = function(node)
+  {
+    console.log("Leeching")
+  }
+
+  this.answer = function(query)
+  {
+    return "missing answer"
+  }
+
   this.bang = function()
   {
     this.query(true)
@@ -170,16 +180,29 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
     this.connect = function(b,type = "transit")
     {
       this.routes.push({type:type,port:Ø(b)})
+      // Ø(b).routes.push({type:type,port:this})
     }
 
     this.broadcast = function(payload) // Send to all routes
     {
-      if(this.port_type){ return; }
+      // if(this.port_type != PORT_TYPES.output){ return; }
       for(route_id in this.routes){
         var route = this.routes[route_id];
         if(!route){ continue; }
         route.port.host.query(payload)  
       }
+    }
+
+    this.request = function(target,q)
+    {
+      for(route_id in this.routes){
+        var route = this.routes[route_id];
+        if(!route || route.type != ROUTE_TYPES.request){ continue; }
+        if(route.port.host.id == target){
+          return route.port.host.answer()
+        }
+      }
+      return null;
     }
   }
 }

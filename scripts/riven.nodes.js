@@ -131,6 +131,23 @@ function ParserNode(id,rect) // Find the model type from the database
 
   this.query = function(q)
   {
-    console.log(this,q)
+    var recipes = this.port("db").request("db_recipes")
+    console.log("??",recipes)
+  }
+}
+
+
+function DatabaseNode(id,rect) // Find the model type from the database
+{
+  Node.call(this,id,rect);
+
+  this.setup = function()
+  {
+    this.install("in",PORT_TYPES.input)
+  }
+
+  this.answer = function(q)
+  {
+    return {cake:{ingredients:[]}}
   }
 }
