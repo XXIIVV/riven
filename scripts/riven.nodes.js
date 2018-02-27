@@ -93,24 +93,6 @@ function ParentNode(id,rect={x:0,y:0,w:0,h:0})
   }
 }
 
-function RequestNode(id,rect)
-{
-  Node.call(this,id,rect);
-
-  this.setup = function()
-  {
-    this.install("out",PORT_TYPES.output)
-  }
-
-  this.query = function()
-  {
-    var hash = window.location.hash;
-    var target = hash.substring(1).replace(/[^0-9a-z]/gi," ").trim().toLowerCase()
-    var payload = {hash:hash,target:target}
-    this.broadcast(payload)
-  }
-}
-
 function RouterNode(id,rect)
 {
   Node.call(this,id,rect);

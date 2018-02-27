@@ -1,6 +1,6 @@
 // NETWORK MANAGER
 
-var PORT_TYPES = {default:"default",input:"input",output:"output",request:"request"}
+var PORT_TYPES = {default:"default",input:"input",output:"output",request:"request",answer:"answer"}
 var ROUTE_TYPES = {default:"default",request:"request"}
 
 function Riven()
@@ -47,6 +47,8 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
   {
     this.ports.push(new Port(this,"out",PORT_TYPES.output))
     this.ports.push(new Port(this,"in",PORT_TYPES.input))
+    this.ports.push(new Port(this,"answer",PORT_TYPES.answer))
+    this.ports.push(new Port(this,"request",PORT_TYPES.request))
     this.rect.w = this.rect.w ? this.rect.w : 0
     this.rect.h = this.rect.h ? this.rect.h : 0
   }
