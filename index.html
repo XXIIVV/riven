@@ -14,16 +14,9 @@
   <script>
     var RIVEN = new Riven_Graph();
     
-    Ø("console").cast(ConsoleNode,{x:41,y:12})
-
-    // General
-    Ø("entry").cast(ParentNode,{x:1,y:2,w:8,h:12});
-    Ø("model").cast(ParentNode,{x:9,y:2,w:13,h:12});
-    Ø("view").cast(ParentNode,{x:26,y:2,w:18,h:12});
-    Ø("render").cast(RenderNode,{x:40,y:8});
 
     // Entry
-    Ø("entry").assoc([
+    Ø("entry").cast(ParentNode,{x:1,y:2,w:8,h:12}).assoc([
       Ø("request").cast(RequestNode,{x:1,y:2}),
       Ø("mouse").create({x:1,y:4}),
       Ø("router").cast(RouterNode,{x:4,y:3,w:3,h:1})
@@ -31,54 +24,52 @@
 
     // Model
 
-    Ø("model").assoc([
+    Ø("model").cast(ParentNode,{x:9,y:2,w:17,h:12}).assoc([
       Ø("parser").cast(ParserNode,{x:2,y:3,w:5,h:1}),
-      Ø("db_ingredients").cast(DatabaseNode,{x:1,y:7}),
-      Ø("db_recipes").cast(DatabaseNode,{x:1,y:6}),
-      Ø("model_home").create({x:8,y:5,w:7,h:1}),
-      Ø("model_about").create({x:8,y:6,w:7,h:1}),
-      Ø("model_ingredients").create({x:8,y:7,w:7,h:1}),
-      Ø("model_recipes").create({x:8,y:8,w:7,h:1})
+      Ø("db_ingredients").cast(DatabaseNode,{x:3,y:7}),
+      Ø("db_recipes").cast(DatabaseNode,{x:3,y:6}),
+      Ø("model_home").create({x:9,y:1,w:7,h:1}),
+      Ø("model_about").create({x:9,y:2,w:7,h:1}),
+      Ø("model_ingredients").create({x:9,y:3,w:7,h:1}),
+      Ø("model_recipes").create({x:9,y:4,w:7,h:1}),
+      Ø("model_404").create({x:9,y:5,w:7,h:1})
     ])
 
     // View
-    Ø("view").assoc([
-      Ø("template").create({x:10,y:3,w:4,h:1}),
-      Ø("header").create({x:14,y:2}),
-      Ø("body").create({x:14,y:3}),
-      Ø("footer").create({x:14,y:4}),
-      Ø("view_home").create({x:2,y:5,w:7,h:1}),
-      Ø("view_about").create({x:2,y:6,w:7,h:1}),
-      Ø("view_ingredients").create({x:2,y:7,w:7,h:1}),
-      Ø("view_recipes").create({x:2,y:8,w:7,h:1})
+    Ø("view").cast(ParentNode,{x:26,y:2,w:18,h:12}).assoc([
+      Ø("template").cast(TemplateNode,{x:11,y:4,w:4,h:1}),
+      Ø("header").create({x:12,y:7}),
+      Ø("body").create({x:12,y:8}),
+      Ø("footer").create({x:12,y:9}),
+      Ø("view_home").create({x:2,y:2,w:7,h:1}),
+      Ø("view_about").create({x:2,y:3,w:7,h:1}),
+      Ø("view_ingredients").create({x:2,y:4,w:7,h:1}),
+      Ø("view_recipes").create({x:2,y:5,w:7,h:1}),
+      Ø("view_404").create({x:2,y:6,w:7,h:1})
     ])
 
-    // Ø("parser").connect(["console","model_home","model_about","model_ingredients","model_recipes"])
-    // Ø("parser").connect(["console"])
+    Ø("render").cast(RenderNode,{x:45,y:6})
+    Ø("console").cast(ConsoleNode,{x:45,y:12})
+
+    Ø("parser").connect(["model_home","model_about","model_ingredients","model_recipes","model_404"])
     Ø("parser db").connect("db_ingredients in",ROUTE_TYPES.request)
     Ø("parser db").connect("db_recipes in",ROUTE_TYPES.request)
-    // Ø("parser db").connect(["db_ingredients in","db_recipes in"],"request")
-    // Ø("model_home").connect("db_ingredients","request")
-    // Ø("model_about").connect("db_ingredients","request")
-    // Ø("model_ingredients").connect("db_ingredients","request")
-    // Ø("model_recipes").connect("db_ingredients","request")
-    // Ø("model_home").connect("db_recipes","request")
-    // Ø("model_about").connect("db_recipes","request")
-    // Ø("model_ingredients").connect("db_recipes","request")
-    // Ø("model_recipes").connect("db_recipes","request")
 
-    Ø("template").connect(["header","body","footer"],"request")
+    Ø("template elements").connect("header in",ROUTE_TYPES.request)
+    Ø("template elements").connect("body in",ROUTE_TYPES.request)
+    Ø("template elements").connect("footer in",ROUTE_TYPES.request)
 
-    Ø("template").connect("console")
     Ø("model_home").connect("view_home")
     Ø("model_about").connect("view_about")
     Ø("model_ingredients").connect("view_ingredients")
     Ø("model_recipes").connect("view_recipes")
+    Ø("model_404").connect("view_404")
 
     Ø("view_home").connect("template")
     Ø("view_about").connect("template")
     Ø("view_ingredients").connect("template")
     Ø("view_recipes").connect("template")
+    Ø("view_404").connect("template")
 
     Ø("router").connect("parser")
     Ø("router").connect("console")

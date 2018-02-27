@@ -70,7 +70,6 @@ function Riven_Graph()
 
   function draw_connection(a,b,type)
   {
-    var grid = 20;
     var path = ""
 
     if(a.x == b.x || a.y == b.y){
@@ -80,10 +79,10 @@ function Riven_Graph()
       path = `M${a.x},${a.y} L${b.x},${b.y}`  
     }
     else if(a.x > b.x){
-      path = (a.y > b.y) ? `M${a.x},${a.y} L${a.x},${b.y+grid} L${a.x-grid},${b.y} L${b.x},${b.y}` : `M${a.x},${a.y} L${a.x},${b.y-grid} L${a.x-grid},${b.y} L${b.x},${b.y}`  
+      path = (a.y > b.y) ? `M${a.x},${a.y} L${a.x},${b.y+GRID_SIZE} L${a.x-GRID_SIZE},${b.y} L${b.x},${b.y}` : `M${a.x},${a.y} L${a.x},${b.y-GRID_SIZE} L${a.x-GRID_SIZE},${b.y} L${b.x},${b.y}`  
     }
     else if(a.x < b.x){
-      path = (a.y > b.y) ? `M${a.x},${a.y} L${a.x},${b.y+grid} L${a.x+grid},${b.y} L${b.x},${b.y}` : `M${a.x},${a.y} L${a.x},${b.y-grid} L${a.x+grid},${b.y} L${b.x},${b.y}`  
+      path = (a.y > b.y) ? `M${a.x},${a.y} L${a.x},${b.y+GRID_SIZE} L${a.x+GRID_SIZE},${b.y} L${b.x},${b.y}` : `M${a.x},${a.y} L${a.x},${b.y-GRID_SIZE} L${a.x+GRID_SIZE},${b.y} L${b.x},${b.y}`  
     }
     else{
       path = `M${a.x},${a.y} L${b.x},${b.y}`  
@@ -110,13 +109,12 @@ function Riven_Graph()
 
   function get_rect(node)
   {
-    var grid = 20;
     var rect = node.rect
 
-    var x = node.rect.x * grid;
-    var y = node.rect.y * grid;
-    var w = node.rect.w * grid;
-    var h = node.rect.h * grid;
+    var x = node.rect.x * GRID_SIZE;
+    var y = node.rect.y * GRID_SIZE;
+    var w = node.rect.w * GRID_SIZE;
+    var h = node.rect.h * GRID_SIZE;
 
     if(node.parent){
       var offset = get_rect(node.parent);

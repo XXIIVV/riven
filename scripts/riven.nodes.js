@@ -132,10 +132,20 @@ function ParserNode(id,rect) // Find the model type from the database
   this.query = function(q)
   {
     var recipes = this.port("db").request("db_recipes")
-    console.log("??",recipes)
+    var ingredients = this.port("db").request("db_ingredients")
+
+    var payload = "Something"
+    if(q == "home"){
+      this.port("out").signal("model_home").query("homepage data");
+    }
+    if(recipes[q]){
+      this.port("out").signal("model_recipes").query("recipe data");
+    }
+    else{
+      this.port("out").signal(`model_404`).query("404 data")
+    }
   }
 }
-
 
 function DatabaseNode(id,rect) // Find the model type from the database
 {
@@ -149,5 +159,22 @@ function DatabaseNode(id,rect) // Find the model type from the database
   this.answer = function(q)
   {
     return {cake:{ingredients:[]}}
+  }
+}
+
+function TemplateNode(id,rect) // Find the model type from the database
+{
+  Node.call(this,id,rect);
+
+  this.setup = function()
+  {
+    this.install("out",PORT_TYPES.output)
+    this.install("in",PORT_TYPES.input)
+    this.install("elements",PORT_TYPES.request)
+    this.rect.h = 2
+  }
+
+  this.query = function(q)
+  {
   }
 }

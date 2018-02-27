@@ -204,5 +204,16 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
       }
       return null;
     }
+
+    this.signal = function(target,q)
+    {
+      for(route_id in this.routes){
+        var route = this.routes[route_id];
+        if(route.port.host.id == target){
+          return route.port.host
+        }
+      }
+      return null;
+    }
   }
 }
