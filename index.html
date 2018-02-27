@@ -19,10 +19,11 @@
     // Entry
     var entry = new Entry();
 
-    Ø("mouse").create({x:2,y:8})
-
-    Ø("request").create({x:0,y:3})
-    Ø("router").create({x:8,y:6})
+    Ø("entry").mesh({x:2,y:2},[
+      Ø("request").create({x:1,y:3}),
+      Ø("router").create({x:8,y:6}),
+      Ø("mouse").create({x:2,y:8})
+    ])
 
     Ø("request").connect("router")
     Ø("mouse").connect("router")

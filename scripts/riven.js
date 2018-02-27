@@ -33,7 +33,7 @@ function Ø(s,network = RIVEN.network)
 
 // NODE
 
-function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
+function Node(id,rect={x:0,y:0,w:2,h:2},ports=[])
 {
   this.id = id;
   this.ports = ports
@@ -53,9 +53,10 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
     this.rect.h = this.rect.h ? this.rect.h : 0
   }
 
-  this.create = function(rect)
+  this.create = function(pos)
   {
-    this.rect = rect
+    this.rect.x = pos.x
+    this.rect.y = pos.y
     RIVEN.add(this);
     return this
   }
@@ -67,17 +68,26 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
     return node
   }
 
-  this.assoc = function(n)
+  this.mesh = function(pos,n)
   {
+    var node = new Mesh(this.id,pos)  
+    node.rect.x = pos.x
+    node.rect.y = pos.y
+    RIVEN.add(node);
+
     if(n instanceof Array){
       for(id in n){
-        this.assoc(n[id])
+        n[id].parent = node;
+        node.children.push(n[id]);  
+        node.update();
       }
     }
     else{
-      n.parent = this;
-      this.children.push(n);  
+      n.parent = node;
+      node.children.push(n);  
+      node.update();
     }
+    return node;
   }
 
   this.connect = function(q,type)
@@ -195,5 +205,26 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
       }
       return null;
     }
+  }
+}
+
+function Mesh(id,rect) 
+{
+  Node.call(this,id,rect);
+
+  this.setup = function()
+  {
+  }
+
+  this.update = function()
+  {
+    var bounds = {x:0,y:0};
+    for(id in this.children){
+      var node = this.children[id];
+      bounds.x = node.rect.x > bounds.x ? node.rect.x : bounds.x
+      bounds.y = node.rect.y > bounds.y ? node.rect.y : bounds.y
+    }
+    this.rect.w = bounds.x+3;
+    this.rect.h = bounds.y+5;
   }
 }

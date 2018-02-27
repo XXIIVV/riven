@@ -74,7 +74,7 @@ function Riven_Graph()
     var pos_m = middle(pos_a,pos_b)
     var pos_c1 = {x:(pos_m.x+(pos_a.x+GRID_SIZE))/2,y:pos_a.y}
     var pos_c2 = {x:(pos_m.x+(pos_b.x-GRID_SIZE))/2,y:pos_b.y}
-    
+
     var path = ""
 
     path += `M${pos_a.x},${pos_a.y} L${pos_a.x+GRID_SIZE},${pos_a.y} `
@@ -116,8 +116,8 @@ function Riven_Graph()
 
     var x = node.rect.x * GRID_SIZE;
     var y = node.rect.y * GRID_SIZE;
-    var w = 2 * GRID_SIZE;
-    var h = 2 * GRID_SIZE;
+    var w = node.rect.w * GRID_SIZE;
+    var h = node.rect.h * GRID_SIZE;
 
     if(node.parent){
       var offset = get_rect(node.parent);
