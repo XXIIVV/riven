@@ -93,6 +93,11 @@ function RequestNode(id,rect)
 {
   Node.call(this,id,rect);
 
+  this.setup = function()
+  {
+    this.install("out",true)
+  }
+
   this.query = function()
   {
     var hash = window.location.hash;
@@ -118,8 +123,7 @@ function ParserNode(id,rect) // Find the model type from the database
 
   this.setup = function()
   {
-    console.log("!")
-    // this.install("out",true)
+    this.install("out")
     this.install("in",true)
     this.install("db",true)
     this.rect.h = 2

@@ -102,20 +102,34 @@ function Riven_Graph()
   {
     var rect = get_rect(port.host)
     var space = rect.h/(port.host.ports.length-1);
-    var index = 0
     var space = port.host.ports.length > 1 ? rect.h/(port.host.ports.length-1) : 0;
+    var offset = {in:0,out:0}
     for(id in port.host.ports){
-      if(port.host.ports[id].id == port.id){
-        index = id
+      var p = port.host.ports[id]
+      if(p.is_input){
+        offset.in += 1
+      }
+      else{
+        offset.out += 1 
+      }
+      if(p.id == port.id){
+        break
       }
     }
     var horizontal = rect.x
     var vertical = rect.y
 
+    if(port.is_input){
+      vertical += (offset.in-1)*GRID_SIZE
+    }
+    else{
+      vertical += (offset.out-1)*GRID_SIZE
+    }
+
     if(!port.is_input){
       horizontal = rect.x+rect.w
     }
-    return port.id == "in" || port.id == "out" ? {x:horizontal,y:vertical} : {x:horizontal,y:rect.y+((index)*GRID_SIZE)}
+    return {x:horizontal,y:vertical}
   }
 
   function get_rect(node)

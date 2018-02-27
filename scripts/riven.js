@@ -112,7 +112,6 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
 
   this.install = function(port_id,is_input)
   {
-    console.log(this.id,port_id)
     this.ports.push(new Port(this,port_id,is_input))
   }
 
