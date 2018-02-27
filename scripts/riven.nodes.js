@@ -127,7 +127,6 @@ function ParserNode(id,rect) // Find the model type from the database
 
   this.setup = function()
   {
-    console.log("!!")
     this.install("out",PORT_TYPES.output)
     this.install("in",PORT_TYPES.input)
     this.install("db",PORT_TYPES.request)
@@ -183,5 +182,16 @@ function TemplaterNode(id,rect) // Find the model type from the database
   {
     var header = this.port("elements").request("header")
     console.log(header)
+  }
+}
+
+function ElementNode(id,rect) // Find the model type from the database
+{
+  Node.call(this,id,rect);
+
+  this.setup = function()
+  {
+    this.install("in",PORT_TYPES.input)
+    this.install("out",PORT_TYPES.output)
   }
 }

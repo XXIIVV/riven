@@ -5,6 +5,8 @@
   <script src="scripts/riven.js"></script>
   <script src="scripts/riven.graph.js"></script>
   <script src="scripts/riven.nodes.js"></script>
+  <script src="scripts/site/entry.js"></script>
+  <script src="scripts/site/model.js"></script>
   <link rel="stylesheet" type="text/css" href="links/reset.css"/>
   <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
   <link rel="stylesheet" type="text/css" href="links/main.css"/>
@@ -15,6 +17,7 @@
     var RIVEN = new Riven_Graph();
     
     // Entry
+    var entry = new Entry();
     Ø("entry").cast(ParentNode,{x:1,y:2}).assoc([
       Ø("request").cast(RequestNode,{x:0,y:3}),
       Ø("mouse").create({x:0,y:5}),
@@ -23,11 +26,12 @@
 
     // Model
 
+    var model = new Model();
     Ø("model").cast(ParentNode,{x:9,y:2}).assoc([
       Ø("parser").cast(ParserNode,{x:0,y:4,w:5,h:1}),
       Ø("ingredients").cast(DatabaseNode,{x:1,y:8}),
       Ø("recipes").cast(DatabaseNode,{x:1,y:7}),
-      Ø("model_home").create({x:7,y:2,w:7,h:1}),
+      Ø("model_home").cast(model.home,{x:7,y:2,w:7,h:1}),
       Ø("model_about").create({x:7,y:3,w:7,h:1}),
       Ø("model_ingredients").create({x:7,y:4,w:7,h:1}),
       Ø("model_recipes").create({x:7,y:5,w:7,h:1}),
@@ -37,26 +41,24 @@
     // View
     Ø("view").cast(ParentNode,{x:26,y:2}).assoc([
       Ø("templater").cast(TemplaterNode,{x:9,y:4,w:4,h:1}),
-      Ø("header").create({x:10,y:7}),
-      Ø("body").create({x:10,y:8}),
-      Ø("footer").create({x:10,y:9}),
-      Ø("view_home").create({x:0,y:2,w:7,h:1}),
-      Ø("view_about").create({x:0,y:3,w:7,h:1}),
-      Ø("view_ingredients").create({x:0,y:4,w:7,h:1}),
-      Ø("view_recipes").create({x:0,y:5,w:7,h:1}),
-      Ø("view_404").create({x:0,y:6,w:7,h:1})
+      Ø("header").cast(ElementNode,{x:10,y:7}),
+      Ø("footer").cast(ElementNode,{x:10,y:8}),
+      Ø("view_home").cast(ElementNode,{x:0,y:2,w:7,h:1}),
+      Ø("view_about").cast(ElementNode,{x:0,y:3,w:7,h:1}),
+      Ø("view_ingredients").cast(ElementNode,{x:0,y:4,w:7,h:1}),
+      Ø("view_recipes").cast(ElementNode,{x:0,y:5,w:7,h:1}),
+      Ø("view_404").cast(ElementNode,{x:0,y:6,w:7,h:1})
     ])
 
     Ø("render").cast(RenderNode,{x:45,y:6})
     Ø("console").cast(ConsoleNode,{x:45,y:12})
 
-    Ø("parser").connect(["console","model_home","model_about","model_ingredients","model_recipes","model_404"])
+    Ø("parser").connect(["console error","model_home","model_about","model_ingredients","model_recipes","model_404"])
     Ø("parser db").connect("ingredients in",ROUTE_TYPES.request)
     Ø("parser db").connect("recipes in",ROUTE_TYPES.request)
 
     Ø("templater").connect("console preview",ROUTE_TYPES.request)
     Ø("templater elements").connect("header in",ROUTE_TYPES.request)
-    Ø("templater elements").connect("body in",ROUTE_TYPES.request)
     Ø("templater elements").connect("footer in",ROUTE_TYPES.request)
 
     Ø("model_home").connect("view_home")

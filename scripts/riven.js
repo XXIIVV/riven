@@ -62,7 +62,6 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
   {
     var node = new type(this.id,rect)  
     RIVEN.add(node);
-    console.log(node)
     return node
   }
 
