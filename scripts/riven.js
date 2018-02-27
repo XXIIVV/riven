@@ -5,35 +5,12 @@ var ROUTE_TYPES = {default:"default",request:"request"}
 
 function Riven()
 {
-  this.render_el = document.createElement("div");
-  this.render_el.id = "render"
-  this.network = {}; // root:new Node(null,"root",{x:0,y:0,w:300,h:200})
+  this.network = {}
 
-
-  this.inject = function(node)
+  this.add = function(node)
   {
+    node.setup();
     this.network[node.id] = node
-    node.setup();
-  }
-
-  this.create = function(name,rect)
-  {
-    var node = new Node(name,rect)
-    this.network[name] = node
-    node.setup();
-  }
-
-  this.connect = function(a,b)
-  {
-    var node_a = this.network[a.id]
-    var port_a = node_a.ports.out[a.port] ? node_a.ports.out[a.port] : node_a.ports.in[a.port];
-    if(!node_a){ console.warn(`Unknown node: ${a.id}`); return;}
-    if(!port_a){ console.warn(`Unknown port: ${a.port}`); return;}
-    var node_b = this.network[b.id]
-    var port_b = node_b.ports.in[b.port] ? node_b.ports.in[b.port] : node_b.ports.out[b.port];
-    if(!node_b){ console.warn(`Unknown node: ${b.id}`); return;}
-    if(!port_b){ console.warn(`Unknown port: ${b.port}`); return;}
-    port_a.connect(port_b);
   }
 }
 
@@ -77,14 +54,15 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
   this.create = function(rect)
   {
     this.rect = rect
-    RIVEN.inject(this)
+    RIVEN.add(this);
     return this
   }
 
   this.cast = function(type,rect)
   {
     var node = new type(this.id,rect)  
-    RIVEN.inject(node);
+    RIVEN.add(node);
+    console.log(node)
     return node
   }
 
@@ -158,6 +136,7 @@ function Node(id,rect={x:0,y:0,w:5,h:5},ports=[])
       var port = this.ports[id];
       if(port.id == target){ return port; }
     }
+    console.warn(`Unknown "${target}" port for ${this.id}.`,this,this.ports)
   }
 
   function Port(host,id,type = PORT_TYPES.default)

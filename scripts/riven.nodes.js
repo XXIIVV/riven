@@ -6,6 +6,7 @@ function ConsoleNode(id,rect={x:0,y:0,w:3,h:2})
   {
     this.install("in",PORT_TYPES.input)
     this.install("error",PORT_TYPES.input)
+    this.install("preview",PORT_TYPES.input)
   }
 
   this.query = function(q)
@@ -68,6 +69,9 @@ function RenderNode(id,rect={x:0,y:0,w:0,h:0})
 {
   Node.call(this,id,rect);
 
+  this.render_el = document.createElement("div");
+  this.render_el.id = "render"
+
   this.setup = function()
   {
     this.install("in",PORT_TYPES.input)
@@ -75,7 +79,7 @@ function RenderNode(id,rect={x:0,y:0,w:0,h:0})
 
   this.query = function(q)
   {
-    document.getElementById("render").innerHTML = q
+    this.render_el.innerHTML = q
   }
 }
 
@@ -123,6 +127,7 @@ function ParserNode(id,rect) // Find the model type from the database
 
   this.setup = function()
   {
+    console.log("!!")
     this.install("out",PORT_TYPES.output)
     this.install("in",PORT_TYPES.input)
     this.install("db",PORT_TYPES.request)
@@ -131,8 +136,8 @@ function ParserNode(id,rect) // Find the model type from the database
 
   this.query = function(q)
   {
-    var recipes = this.port("db").request("db_recipes")
-    var ingredients = this.port("db").request("db_ingredients")
+    var recipes = this.port("db").request("recipes")
+    var ingredients = this.port("db").request("ingredients")
 
     var payload = "Something"
     if(q == "home"){
@@ -162,7 +167,7 @@ function DatabaseNode(id,rect) // Find the model type from the database
   }
 }
 
-function TemplateNode(id,rect) // Find the model type from the database
+function TemplaterNode(id,rect) // Find the model type from the database
 {
   Node.call(this,id,rect);
 
@@ -176,5 +181,7 @@ function TemplateNode(id,rect) // Find the model type from the database
 
   this.query = function(q)
   {
+    var header = this.port("elements").request("header")
+    console.log(header)
   }
 }
