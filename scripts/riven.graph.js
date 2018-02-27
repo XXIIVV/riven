@@ -33,7 +33,7 @@ function Riven_Graph()
         }
       }
     }
-    return html
+    return `<g id='routes'>${html}</g>`
   }
 
   function draw_node(node)
@@ -55,23 +55,14 @@ function Riven_Graph()
 
   function draw_port(port)
   {
-    var rect = get_rect(port.host);
     var pos = port ? get_port_position(port) : {x:0,y:0}
+    var shape = `<circle cx='${pos.x}' cy="${pos.y}" r="${parseInt(GRID_SIZE/6)}" class='port ${port.type} ${port.host.ports[id] && port.host.ports[id].route ? "route" : ""}'/>`
+
     return `
     <g id='${port.host.id}_port_${port.id}'>
-      <circle cx='${pos.x}' cy="${pos.y}" r="${parseInt(GRID_SIZE/6)}" class='port ${port.is_input ? "input" : "output"} ${port.host.ports[id] && port.host.ports[id].route ? "route" : ""}'/>
+      ${shape}
       <text x="${pos.x+(GRID_SIZE/2)}" y="${pos.y+3}">${port.id != 'in' && port.id != 'out' ? port.id : ''}</text>
     </g>`
-  }
-
-  function distance(a,b)
-  {
-    return Math.sqrt( (a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y) );
-  }
-
-  function diagonal(a,b)
-  {
-    return a.x == b.x || a.y == b.y || a.y - a.x == b.y - b.x || b.y - a.x == a.y - b.x
   }
 
   function draw_connection(a,b,type)
@@ -103,32 +94,14 @@ function Riven_Graph()
     var rect = get_rect(port.host)
     var space = rect.h/(port.host.ports.length-1);
     var space = port.host.ports.length > 1 ? rect.h/(port.host.ports.length-1) : 0;
-    var offset = {in:0,out:0}
+    var offset = {input:0,output:0,request:0}
     for(id in port.host.ports){
       var p = port.host.ports[id]
-      if(p.is_input){
-        offset.in += 1
-      }
-      else{
-        offset.out += 1 
-      }
-      if(p.id == port.id){
-        break
-      }
+      offset[p.type == PORT_TYPES.request || p.type == PORT_TYPES.input ? PORT_TYPES.input : p.type] += 1
+      if(p.id == port.id){ break }
     }
-    var horizontal = rect.x
-    var vertical = rect.y
-
-    if(port.is_input){
-      vertical += (offset.in-1)*GRID_SIZE
-    }
-    else{
-      vertical += (offset.out-1)*GRID_SIZE
-    }
-
-    if(!port.is_input){
-      horizontal = rect.x+rect.w
-    }
+    var horizontal = port.type == PORT_TYPES.output ? rect.x+rect.w : rect.x
+    var vertical = rect.y + ((offset[p.type]-1)*GRID_SIZE)
     return {x:horizontal,y:vertical}
   }
 
@@ -149,5 +122,15 @@ function Riven_Graph()
     }
 
     return {x:x,y:y,w:w,h:h}
+  }
+
+  function distance(a,b)
+  {
+    return Math.sqrt( (a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y) );
+  }
+
+  function diagonal(a,b)
+  {
+    return a.x == b.x || a.y == b.y || a.y - a.x == b.y - b.x || b.y - a.x == a.y - b.x
   }
 }

@@ -4,8 +4,8 @@ function ConsoleNode(id,rect={x:0,y:0,w:3,h:2})
 
   this.setup = function()
   {
-    this.install("in",true)
-    this.install("error",true)
+    this.install("in",PORT_TYPES.input)
+    this.install("error",PORT_TYPES.input)
   }
 
   this.query = function(q)
@@ -20,7 +20,7 @@ function ValueNode(id,rect={x:0,y:0,w:0,h:0})
 
   this.setup = function()
   {
-    this.install("out")
+    this.install("out",PORT_TYPES.output)
   }
 
   this.query = function(q)
@@ -70,7 +70,7 @@ function RenderNode(id,rect={x:0,y:0,w:0,h:0})
 
   this.setup = function()
   {
-    this.install("in")
+    this.install("in",PORT_TYPES.input)
   }
 
   this.query = function(q)
@@ -95,7 +95,7 @@ function RequestNode(id,rect)
 
   this.setup = function()
   {
-    this.install("out",true)
+    this.install("out",PORT_TYPES.output)
   }
 
   this.query = function()
@@ -123,9 +123,9 @@ function ParserNode(id,rect) // Find the model type from the database
 
   this.setup = function()
   {
-    this.install("out")
-    this.install("in",true)
-    this.install("db",true)
+    this.install("out",PORT_TYPES.output)
+    this.install("in",PORT_TYPES.input)
+    this.install("db",PORT_TYPES.request)
     this.rect.h = 2
   }
 
