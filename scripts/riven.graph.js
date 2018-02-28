@@ -29,7 +29,7 @@ function Riven_Graph()
       for(route_id in port.routes){
         var route = port.routes[route_id];
         if(!route){ continue; }
-        html += route.port ? draw_connection(port,route.port) : ""
+        html += route ? draw_connection(port,route) : ""
       }
     }
     return `<g id='routes'>${html}</g>`

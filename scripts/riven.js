@@ -2,7 +2,10 @@
 
 var PORT_TYPES = {default:"default",input:"input",output:"output",request:"request",answer:"answer"}
 var ROUTE_TYPES = {default:"default",request:"request"}
-var NODE_GLYPHS = {router:"M60,60 L60,60 L240,60 M120,120 A30,30 0 0,1 150,150 M150,150 A30,30 0 0,0 180,180 M180,180 L180,180 L240,180 M120,120 L120,120 L60,120 M60,240 L60,240 L240,240 M240,120 L240,120 L180,120 M60,180 L60,180 L120,180"}
+var NODE_GLYPHS = {
+  router:"M60,60 L60,60 L240,60 M120,120 A30,30 0 0,1 150,150 M150,150 A30,30 0 0,0 180,180 M180,180 L180,180 L240,180 M120,120 L120,120 L60,120 M60,240 L60,240 L240,240 M240,120 L240,120 L180,120 M60,180 L60,180 L120,180",
+  entry:"M60,150 L60,150 L240,150 L240,150 L150,240 M150,60 L150,60 L240,150"
+}
 
 function Riven()
 {
@@ -106,29 +109,51 @@ function Node(id,rect={x:0,y:0,w:2,h:2},ports=[])
     }
   }
 
+  // S/R
+
+  this.bang = function()
+  {
+    console.log(`${this.id} bang!`)
+    this.send(true)
+  }
+
+  this.send = function(payload)
+  {
+    console.log(`${this.id} sends`,payload)
+    this.port("out").send(payload)
+  }
+  
+  this.receive = function(q)
+  {
+    console.log(`${this.id} receives`,q)
+    var port = this.port("out")
+    for(route_id in port.routes){
+      var route = port.routes[route_id];
+      if(route){
+        route.host.receive(q)  
+      }
+    }
+  }
+
+  //
+
+  this.signal = function(target,q)
+  {
+    var port = this.port("out").routes
+    for(route_id in port.routes){
+      var route = port.routes[route_id];
+      if(route.port.host.id == target){
+        return route.port.host
+      }
+    }
+    return null;
+  }
+
   this.install = function(port_id,port_type)
   {
     this.ports.push(new Port(this,port_id,port_type))
   }
 
-  this.query = function(q)
-  {
-    console.log(`${this.id} transit`,q)
-    var port = this.port("out")
-    for(route_id in port.routes){
-      var route = port.routes[route_id];
-      if(route){
-        route.port.host.query(q)  
-      }
-    }
-  }
-
-  this.broadcast = function(payload)
-  {
-    for(port_id in this.ports){
-      this.ports[port_id].broadcast(payload);
-    }
-  }
 
   this.request = function(node)
   {
@@ -138,11 +163,6 @@ function Node(id,rect={x:0,y:0,w:2,h:2},ports=[])
   this.answer = function(query)
   {
     return "missing answer"
-  }
-
-  this.bang = function()
-  {
-    this.query(true)
   }
 
   this.port = function(target)
@@ -173,17 +193,18 @@ function Node(id,rect={x:0,y:0,w:2,h:2},ports=[])
 
     this.connect = function(b,type = "transit")
     {
-      this.routes.push({type:type,port:Ø(b)})
+      this.routes.push(Ø(b))
       // Ø(b).routes.push({type:type,port:this})
     }
 
-    this.broadcast = function(payload) // Send to all routes
+    this.send = function(payload) // Send to all routes
     {
-      // if(this.port_type != PORT_TYPES.output){ return; }
+      console.log(this)
+      if(this.type != PORT_TYPES.output){ return; }
       for(route_id in this.routes){
         var route = this.routes[route_id];
         if(!route){ continue; }
-        route.port.host.query(payload)  
+        route.host.receive(payload)
       }
     }
 
@@ -194,17 +215,6 @@ function Node(id,rect={x:0,y:0,w:2,h:2},ports=[])
         if(!route || route.type != ROUTE_TYPES.request){ continue; }
         if(route.port.host.id == target){
           return route.port.host.answer()
-        }
-      }
-      return null;
-    }
-
-    this.signal = function(target,q)
-    {
-      for(route_id in this.routes){
-        var route = this.routes[route_id];
-        if(route.port.host.id == target){
-          return route.port.host
         }
       }
       return null;

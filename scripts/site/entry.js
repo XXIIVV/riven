@@ -4,7 +4,12 @@ function Entry()
   {
     Node.call(this,id,rect);
 
-    this.glyph = "M60,150 L60,150 L240,150 L240,150 L150,240 M150,60 L150,60 L240,150"
+    this.glyph = NODE_GLYPHS.entry
+
+    this.bang = function(q = window.location.hash)
+    {
+      this.send(q)
+    }
   }
 
   this.mouse = function(id,rect)
@@ -19,10 +24,13 @@ function Entry()
 
     this.glyph = NODE_GLYPHS.router
       
-    this.query = function(q)
+    this.receive = function(q)
     {
       console.log(q)
-      // this.broadcast(q.target ? q.target : "home")
+      var hash = q;
+      var target = hash.substring(1).replace(/[^0-9a-z]/gi," ").trim().toLowerCase()
+      var payload = {hash:hash,target:target}
+      this.send(payload.target ? payload.target : "home")
     }
   }
 }
