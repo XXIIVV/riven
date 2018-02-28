@@ -21,9 +21,9 @@
     var entry = new Entry();
 
     Ø("entry").mesh({x:2,y:2},[
-      Ø("request").cast(entry.request,{x:1,y:3}),
+      Ø("request").cast(entry.request,{x:2,y:3}),
       Ø("router").cast(entry.router,{x:8,y:6}),
-      Ø("mouse").create({x:2,y:8})
+      Ø("mouse").cast(entry.mouse,{x:2,y:8})
     ])
 
     Ø("request").connect("router")
@@ -92,7 +92,7 @@
 
     document.body.appendChild(RIVEN.el)
 
-    // Ø("request").query()
+    Ø("request").query(window.location.hash)
 
     RIVEN.graph();
   </script>
