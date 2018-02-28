@@ -96,24 +96,18 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
       }
     }
     else{
-      // var port = this.ports[type == ROUTE_TYPES.request ? "request" : "out"];
-      console.log(this.ports)
       this.ports[type == ROUTE_TYPES.request ? "request" : "output"].connect(`${q} ${type == ROUTE_TYPES.request ? "answer" : "input"}`,type);  
     }
   }
 
-  this.signal = function(target,q)
+  this.signal = function(target)
   {
-    console.log("signal")
     for(port_id in this.ports){
       var port = this.ports[port_id]
-      console.log(port)
       for(route_id in port.routes){
         var route = port.routes[route_id];
-        console.log(route)
-        // if(route.host.id == target){
-        //   return route.port.host
-        // }
+        if(!route || !route.host || route.host.id != target){ continue; }
+        return route.host
       }
     }
     return null;
