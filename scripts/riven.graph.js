@@ -28,9 +28,8 @@ function Riven_Graph()
       var pos = port ? get_port_position(port) : {x:0,y:0}
       for(route_id in port.routes){
         var route = port.routes[route_id];
-        if(route){
-          html += route.port ? draw_connection(port,route.port) : ""
-        }
+        if(!route){ continue; }
+        html += route.port ? draw_connection(port,route.port) : ""
       }
     }
     return `<g id='routes'>${html}</g>`
@@ -40,39 +39,34 @@ function Riven_Graph()
   {
     var rect = get_rect(node);
 
-    var html = "";
-    for(id in node.ports){
-      html += draw_port(node.ports[id]);
-    }
-
     return `
     <g class='node ${node.is_mesh ? 'mesh' : ''}' id='node_${node.id}'>
       <rect rx='2' ry='2' x=${rect.x} y=${rect.y-(GRID_SIZE/2)} width="${rect.w}" height="${rect.h}" class='${node.children.length == 0 ? "fill" : ""}'/>
       <text x="${rect.x+(rect.w/2)}" y="${rect.y+rect.h+(GRID_SIZE/2)}">${node.id}</text>
-      ${html}
+      ${draw_ports(node)}
       ${draw_glyph(node)}
     </g>`
   }
 
+  function draw_ports(node)
+  {
+    var html = "";
+    for(id in node.ports){
+      html += draw_port(node.ports[id]);
+    }
+    return html
+  }
+
   function draw_glyph(node)
   {
-    if(node.is_mesh){ return "" }
     var rect = get_rect(node);
-    return `<path class='glyph' transform="translate(${rect.x+(GRID_SIZE/4)},${rect.y-(GRID_SIZE/4)}) scale(0.1)" d='${node.glyph}'/>`
+    return !node.is_mesh ? `<path class='glyph' transform="translate(${rect.x+(GRID_SIZE/4)},${rect.y-(GRID_SIZE/4)}) scale(0.1)" d='${node.glyph}'/>` : ""
   }
 
   function draw_port(port)
   {
     var pos = port ? get_port_position(port) : {x:0,y:0}
-    var shape = `<circle cx='${pos.x}' cy="${pos.y}" r="${parseInt(GRID_SIZE/6)}" class='port ${port.type} ${port.host.ports[id] && port.host.ports[id].route ? "route" : ""}'/>`
-
-    if(port.type == PORT_TYPES.request || port.type == PORT_TYPES.answer){
-      shape = `<path d='${draw_diamond(pos)}' class='port ${port.type} ${port.host.ports[id] && port.host.ports[id].route ? "route" : ""}' />`;
-    }
-    return `
-    <g id='${port.host.id}_port_${port.id}'>
-      ${shape}
-    </g>`
+    return `<g id='${port.host.id}_port_${port.id}'>${(port.type == PORT_TYPES.request || port.type == PORT_TYPES.answer)? `<path d='${draw_diamond(pos)}' class='port ${port.type} ${port.host.ports[id] && port.host.ports[id].route ? "route" : ""}' />` : `<circle cx='${pos.x}' cy="${pos.y}" r="${parseInt(GRID_SIZE/6)}" class='port ${port.type} ${port.host.ports[id] && port.host.ports[id].route ? "route" : ""}'/>`}</g>`
   }
 
   function draw_connection(a,b,type)
@@ -121,24 +115,18 @@ function Riven_Graph()
   function get_port_position(port)
   {
     var rect = get_rect(port.host)
-
     var offset = {x:0,y:0}
-
     if(port.type == PORT_TYPES.output){
-      offset.x += GRID_SIZE*2
-      offset.y += GRID_SIZE/2
+      offset = {x:GRID_SIZE*2,y:GRID_SIZE/2}
     }
     else if(port.type == PORT_TYPES.input){
-      offset.x += 0
-      offset.y += GRID_SIZE/2
+      offset = {x:0,y:GRID_SIZE/2}
     }
     else if(port.type == PORT_TYPES.answer){
-      offset.x += GRID_SIZE
-      offset.y -= GRID_SIZE*0.5
+      offset = {x:GRID_SIZE,y:-GRID_SIZE*0.5}
     }
     else if(port.type == PORT_TYPES.request){
-      offset.x += GRID_SIZE
-      offset.y += GRID_SIZE*1.5
+      offset = {x:GRID_SIZE,y:GRID_SIZE*1.5}
     }
     return {x:rect.x+offset.x,y:rect.y+offset.y}
   }
@@ -146,7 +134,6 @@ function Riven_Graph()
   function get_rect(node)
   {
     var rect = node.rect
-
     var x = node.rect.x * GRID_SIZE;
     var y = node.rect.y * GRID_SIZE;
     var w = node.rect.w * GRID_SIZE;
@@ -157,7 +144,6 @@ function Riven_Graph()
       x += offset.x;
       y += offset.y;
     }
-
     return {x:x,y:y,w:w,h:h}
   }
 
