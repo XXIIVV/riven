@@ -1,4 +1,4 @@
-# Riven
+# Ø(Riven)
 
 Riven is meant to be the bare minimum to a flow-based programming framework. Nodes have 2 ways of communicating with each other, one is a send/receive pattern, the other, a request/awnser pattern.
 
