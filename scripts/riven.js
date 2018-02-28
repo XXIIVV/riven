@@ -122,7 +122,11 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
 
   this.send = function(payload)
   {
-    this.ports.output.send(payload)
+    for(route_id in this.ports.output.routes){
+      var route = this.ports.output.routes[route_id];
+      if(!route){ continue; }
+      route.host.receive(payload)
+    }
   }
   
   this.receive = function(q)
@@ -146,17 +150,18 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
   this.request = function(q)
   {
     var payload = {};
-    var port = this.ports.request
-    for(route_id in port.routes){
-      var route = port.routes[route_id];
-      if(route){
-        payload[route.host.id] = route.host.listen(q)
-      }
+    for(route_id in this.ports.request.routes){
+      var route = this.ports.request.routes[route_id];
+      if(!route){ continue; }
+      var answer = route.host.listen(q)
+      if(!answer){ continue; }
+      payload[route.host.id] = answer
+      
     }
     return payload
   }
 
-  //
+  // PORT
 
   function Port(host,id,type = PORT_TYPES.default)
   {
@@ -179,29 +184,9 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
     {
       this.routes.push(Ø(b))
     }
-
-    this.send = function(payload) // Send to all routes
-    {
-      if(this.type != PORT_TYPES.output){ return; }
-      for(route_id in this.routes){
-        var route = this.routes[route_id];
-        if(!route){ continue; }
-        route.host.receive(payload)
-      }
-    }
-
-    this.request = function(target,q)
-    {
-      for(route_id in this.routes){
-        var route = this.routes[route_id];
-        if(!route || route.type != ROUTE_TYPES.request){ continue; }
-        if(route.port.host.id == target){
-          return route.port.host.listen()
-        }
-      }
-      return null;
-    }
   }
+
+  // MESH
 
   function Mesh(id,rect) 
   {
@@ -209,9 +194,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
 
     this.is_mesh = true;
 
-    this.setup = function()
-    {
-    }
+    this.setup = function(){}
 
     this.update = function()
     {

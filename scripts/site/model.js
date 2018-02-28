@@ -6,7 +6,7 @@ function Model()
 
     this.receive = function(q)
     {
-      var db = this.request();
+      var db = this.request("cake");
       console.log(db)
     }
   }
