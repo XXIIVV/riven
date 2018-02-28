@@ -49,7 +49,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
     this.ports.request = new Port(this,"request",PORT_TYPES.request)
   }
 
-  this.create = function(pos)
+  this.create = function(pos = {x:0,y:0})
   {
     this.rect.x = pos.x
     this.rect.y = pos.y
