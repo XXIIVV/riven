@@ -45,7 +45,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
   {
     this.ports.input = new Port(this,"in",PORT_TYPES.input)
     this.ports.output = new Port(this,"out",PORT_TYPES.output)
-    this.ports.answer = new Port(this,"answer",PORT_TYPES.answer)
+    this.ports.listen = new Port(this,"listen",PORT_TYPES.listen)
     this.ports.request = new Port(this,"request",PORT_TYPES.request)
   }
 
@@ -57,7 +57,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
     return this
   }
 
-  this.cast = function(type,pos)
+  this.cast = function(type,pos = {x:0,y:0})
   {
     var node = new type(this.id,rect)  
     this.rect.x = pos.x
@@ -96,7 +96,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
       }
     }
     else{
-      this.ports[type == ROUTE_TYPES.request ? "request" : "output"].connect(`${q} ${type == ROUTE_TYPES.request ? "answer" : "input"}`,type);  
+      this.ports[type == ROUTE_TYPES.request ? "request" : "output"].connect(`${q} ${type == ROUTE_TYPES.request ? "listen" : "input"}`,type);  
     }
   }
 
@@ -138,7 +138,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
 
   // REQUEST/ANSWER
 
-  this.answer = function(q)
+  this.listen = function(q)
   {
     return this.request(q)
   }
@@ -150,7 +150,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
     for(route_id in port.routes){
       var route = port.routes[route_id];
       if(route){
-        payload[route.host.id] = route.host.answer(q)
+        payload[route.host.id] = route.host.listen(q)
       }
     }
     return payload
@@ -196,7 +196,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
         var route = this.routes[route_id];
         if(!route || route.type != ROUTE_TYPES.request){ continue; }
         if(route.port.host.id == target){
-          return route.port.host.answer()
+          return route.port.host.listen()
         }
       }
       return null;
@@ -227,7 +227,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
   }
 }
 
-var PORT_TYPES = {default:"default",input:"input",output:"output",request:"request",answer:"answer"}
+var PORT_TYPES = {default:"default",input:"input",output:"output",request:"request",listen:"listen"}
 var ROUTE_TYPES = {default:"default",request:"request"}
 var NODE_GLYPHS = {
   default: "M150,60 L150,60 L60,150 L150,240 L240,150 Z",

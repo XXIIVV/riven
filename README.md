@@ -14,6 +14,8 @@ You are given a node selection tool `Ø()`, you can type the character with `alt
 
 `Ø("template output")` will select the output port of the template node.
 
+## Node
+
 ### Creating a basic node
 
 `Ø("parser").create()` will create a new node at 0,0. 
@@ -28,4 +30,32 @@ You are given a node selection tool `Ø()`, you can type the character with `alt
 
 ## Communication
 
-TODO..
+### Bang
+
+`Ø("template").bang()` will send *true* to all receiving connected nodes.
+
+### Send
+
+`Ø("template").send("hello")` will send *"hello"* to all receiving connected nodes.
+
+### Receive
+
+`Ø("template").receive("hello")` will receive *"hello"*, method is triggered by send().
+
+### Request
+
+`Ø("template").request("cake")` will request *"cake"* from all listening connected nodes.
+
+### Listen
+
+`Ø("template").listen("cake")` will listen for *"cake"*, method is triggered by request().
+
+### Signal
+
+To signal a target connected receiving/listening node, use `Ø("template").signal("parser").send("hello")`.
+
+# That's it!
+
+This framework does nothing else, but it does this well.
+Enjoy.
+
