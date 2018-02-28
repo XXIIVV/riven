@@ -212,6 +212,8 @@ function Mesh(id,rect)
 {
   Node.call(this,id,rect);
 
+  this.is_mesh = true;
+
   this.setup = function()
   {
   }

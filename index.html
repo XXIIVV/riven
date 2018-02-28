@@ -17,6 +17,7 @@
     var RIVEN = new Riven_Graph();
     
     // Entry
+
     var entry = new Entry();
 
     Ø("entry").mesh({x:2,y:2},[
@@ -33,8 +34,8 @@
     // var model = new Model();
     Ø("model").mesh({x:14,y:2},[
       Ø("parser").create({x:2,y:4}),
-      Ø("ingredients").create({x:2,y:14}),
-      Ø("recipes").create({x:5,y:14}),
+      Ø("ingredients").create({x:2,y:12}),
+      Ø("recipes").create({x:5,y:12}),
       Ø("model_home").create({x:14,y:2}),
       Ø("model_about").create({x:14,y:6}),
       Ø("model_ingredients").create({x:14,y:10}),
@@ -42,49 +43,47 @@
       Ø("model_404").create({x:14,y:18})
     ])
 
-    Ø("router").connect("parser")
-
+    Ø("parser").connect(["console error","model_home","model_about","model_ingredients","model_recipes","model_404"])
     Ø("parser").connect("recipes",ROUTE_TYPES.request)
     Ø("parser").connect("ingredients",ROUTE_TYPES.request)
+
+
+    Ø("router").connect("parser")
     // Ø("router").connect("parser")
 
     // // View
-    // Ø("view").cast(ParentNode,{x:26,y:2}).assoc([
-    //   Ø("templater").cast(TemplaterNode,{x:9,y:4,w:4,h:1}),
-    //   Ø("header").cast(ElementNode,{x:10,y:7}),
-    //   Ø("footer").cast(ElementNode,{x:10,y:8}),
-    //   Ø("view_home").cast(ElementNode,{x:0,y:2,w:7,h:1}),
-    //   Ø("view_about").cast(ElementNode,{x:0,y:3,w:7,h:1}),
-    //   Ø("view_ingredients").cast(ElementNode,{x:0,y:4,w:7,h:1}),
-    //   Ø("view_recipes").cast(ElementNode,{x:0,y:5,w:7,h:1}),
-    //   Ø("view_404").cast(ElementNode,{x:0,y:6,w:7,h:1})
-    // ])
+    Ø("view").mesh({x:32,y:2},[
+      Ø("templater").create({x:12,y:4}),
+      Ø("header").create({x:14,y:12}),
+      Ø("footer").create({x:10,y:12}),
+      Ø("view_home").create({x:2,y:2}),
+      Ø("view_about").create({x:2,y:6}),
+      Ø("view_ingredients").create({x:2,y:10}),
+      Ø("view_recipes").create({x:2,y:14}),
+      Ø("view_404").create({x:2,y:18})
+    ])
 
-    // Ø("render").cast(RenderNode,{x:45,y:6})
-    // Ø("console").cast(ConsoleNode,{x:45,y:12})
+    Ø("render").create({x:52,y:6})
+    Ø("console").create({x:52,y:14})
 
-    Ø("parser").connect(["console error","model_home","model_about","model_ingredients","model_recipes","model_404"])
-    // Ø("parser db").connect("ingredients in",ROUTE_TYPES.request)
-    // Ø("parser db").connect("recipes in",ROUTE_TYPES.request)
+    Ø("templater").connect("header",ROUTE_TYPES.request)
+    Ø("templater").connect("footer",ROUTE_TYPES.request)
 
-    // Ø("templater").connect("console preview")
-    // Ø("templater elements").connect("header in",ROUTE_TYPES.request)
-    // Ø("templater elements").connect("footer in",ROUTE_TYPES.request)
+    Ø("render").connect("console",ROUTE_TYPES.request)
 
-    // Ø("model_home").connect("view_home")
-    // Ø("model_about").connect("view_about")
-    // Ø("model_ingredients").connect("view_ingredients")
-    // Ø("model_recipes").connect("view_recipes")
-    // Ø("model_404").connect("view_404")
+    Ø("model_home").connect("view_home")
+    Ø("model_about").connect("view_about")
+    Ø("model_ingredients").connect("view_ingredients")
+    Ø("model_recipes").connect("view_recipes")
+    Ø("model_404").connect("view_404")
 
-    // Ø("view_home").connect("templater")
-    // Ø("view_about").connect("templater")
-    // Ø("view_ingredients").connect("templater")
-    // Ø("view_recipes").connect("templater")
-    // Ø("view_404").connect("templater")
+    Ø("view_home").connect("templater")
+    Ø("view_about").connect("templater")
+    Ø("view_ingredients").connect("templater")
+    Ø("view_recipes").connect("templater")
+    Ø("view_404").connect("templater")
 
-    // Ø("router").connect("console")
-    // Ø("templater").connect("render")
+    Ø("templater").connect("render")
 
     // Ø("request").connect("router")
     // Ø("mouse").connect("router")
