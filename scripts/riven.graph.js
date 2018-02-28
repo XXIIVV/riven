@@ -66,7 +66,7 @@ function Riven_Graph()
   function draw_port(port)
   {
     var pos = port ? get_port_position(port) : {x:0,y:0}
-    return `<g id='${port.host.id}_port_${port.id}'>${(port.type == PORT_TYPES.request || port.type == PORT_TYPES.answer)? `<path d='${draw_diamond(pos)}' class='port ${port.type} ${port.host.ports[id] && port.host.ports[id].route ? "route" : ""}' />` : `<circle cx='${pos.x}' cy="${pos.y}" r="${parseInt(GRID_SIZE/6)}" class='port ${port.type} ${port.host.ports[id] && port.host.ports[id].route ? "route" : ""}'/>`}</g>`
+    return `<g id='${port.host.id}_port_${port.id}'>${(port.type == PORT_TYPES.request || port.type == PORT_TYPES.listen)? `<path d='${draw_diamond(pos)}' class='port ${port.type} ${port.host.ports[id] && port.host.ports[id].route ? "route" : ""}' />` : `<circle cx='${pos.x}' cy="${pos.y}" r="${parseInt(GRID_SIZE/6)}" class='port ${port.type} ${port.host.ports[id] && port.host.ports[id].route ? "route" : ""}'/>`}</g>`
   }
 
   function draw_connection(a,b,type)
@@ -122,7 +122,7 @@ function Riven_Graph()
     else if(port.type == PORT_TYPES.input){
       offset = {x:0,y:GRID_SIZE/2}
     }
-    else if(port.type == PORT_TYPES.answer){
+    else if(port.type == PORT_TYPES.listen){
       offset = {x:GRID_SIZE,y:-GRID_SIZE*0.5}
     }
     else if(port.type == PORT_TYPES.request){
