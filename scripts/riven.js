@@ -170,16 +170,6 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
     this.type = type;
     this.routes = [];
 
-    this.pos = function()
-    {
-      var x = this.host.rect.x*grid_size;
-      var y = this.host.rect.y*grid_size;
-      var w = this.host.rect.w*grid_size;
-      var h = this.host.rect.h*grid_size;
-      var spacing = h/(this.ports.in.length)
-      return {x:x,y:y+(id*spacing)+(spacing/2)}; 
-    }
-
     this.connect = function(b,type = "transit")
     {
       this.routes.push(Ø(b))
