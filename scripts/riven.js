@@ -1,11 +1,6 @@
-// NETWORK MANAGER
 
-var PORT_TYPES = {default:"default",input:"input",output:"output",request:"request",answer:"answer"}
-var ROUTE_TYPES = {default:"default",request:"request"}
-var NODE_GLYPHS = {
-  router:"M60,60 L60,60 L240,60 M120,120 A30,30 0 0,1 150,150 M150,150 A30,30 0 0,0 180,180 M180,180 L180,180 L240,180 M120,120 L120,120 L60,120 M60,240 L60,240 L240,240 M240,120 L240,120 L180,120 M60,180 L60,180 L120,180",
-  entry:"M60,150 L60,150 L240,150 L240,150 L150,240 M150,60 L150,60 L240,150"
-}
+// Don't forget, the portal combination's in my journal. Good luck. — Catherine
+// NETWORK MANAGER
 
 function Riven()
 {
@@ -109,7 +104,24 @@ function Node(id,rect={x:0,y:0,w:2,h:2},ports=[])
     }
   }
 
-  // S/R
+  this.signal = function(target,q)
+  {
+    console.log("signal")
+    for(port_id in this.ports){
+      var port = this.ports[port_id]
+      console.log(port)
+      for(route_id in port.routes){
+        var route = port.routes[route_id];
+        console.log(route)
+        // if(route.host.id == target){
+        //   return route.port.host
+        // }
+      }
+    }
+    return null;
+  }
+
+  // SEND/RECEIVE
 
   this.bang = function()
   {
@@ -135,35 +147,35 @@ function Node(id,rect={x:0,y:0,w:2,h:2},ports=[])
     }
   }
 
-  //
+  // REQUEST/ANSWER
 
-  this.signal = function(target,q)
+  this.request = function(q)
   {
-    var port = this.port("out").routes
+    var payload = {};
+    var port = this.port("request")
     for(route_id in port.routes){
       var route = port.routes[route_id];
-      if(route.port.host.id == target){
-        return route.port.host
+      if(route){
+        payload[route.host.id] = route.host.answer(q)
       }
     }
-    return null;
+    return payload
   }
+
+  this.answer = function(q)
+  {
+    return this.request(q)
+  }
+
+  //
+
+  
 
   this.install = function(port_id,port_type)
   {
     this.ports.push(new Port(this,port_id,port_type))
   }
 
-
-  this.request = function(node)
-  {
-    console.log("Leeching")
-  }
-
-  this.answer = function(query)
-  {
-    return "missing answer"
-  }
 
   this.port = function(target)
   {
@@ -243,4 +255,11 @@ function Mesh(id,rect)
     this.rect.w = bounds.x+4;
     this.rect.h = bounds.y+5;
   }
+}
+
+var PORT_TYPES = {default:"default",input:"input",output:"output",request:"request",answer:"answer"}
+var ROUTE_TYPES = {default:"default",request:"request"}
+var NODE_GLYPHS = {
+  router:"M60,60 L60,60 L240,60 M120,120 A30,30 0 0,1 150,150 M150,150 A30,30 0 0,0 180,180 M180,180 L180,180 L240,180 M120,120 L120,120 L60,120 M60,240 L60,240 L240,240 M240,120 L240,120 L180,120 M60,180 L60,180 L120,180",
+  entry:"M60,150 L60,150 L240,150 L240,150 L150,240 M150,60 L150,60 L240,150"
 }

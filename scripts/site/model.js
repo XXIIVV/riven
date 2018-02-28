@@ -1,13 +1,23 @@
 function Model()
 {
-  this.home = function(id,rect)
+  this.parser = function(id,rect)
   {
     Node.call(this,id,rect);
-    
-    this.setup = function()
+
+    this.receive = function(q)
     {
-      this.install("in",PORT_TYPES.input)
-      this.install("out",PORT_TYPES.output)
+      var db = this.request();
+      console.log(db)
+    }
+  }
+
+  this.database = function(id,rect)
+  {
+    Node.call(this,id,rect);
+
+    this.answer = function(q)
+    {
+      return {hello:"world"}
     }
   }
 }

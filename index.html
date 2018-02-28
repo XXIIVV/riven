@@ -33,9 +33,9 @@
 
     var model = new Model();
     Ø("model").mesh({x:14,y:2},[
-      Ø("parser").cast(entry.router,{x:2,y:4}),
-      Ø("ingredients").create({x:2,y:12}),
-      Ø("recipes").create({x:5,y:12}),
+      Ø("parser").cast(model.parser,{x:2,y:4}),
+      Ø("ingredients").cast(model.database,{x:2,y:12}),
+      Ø("recipes").cast(model.database,{x:5,y:12}),
       Ø("model_home").create({x:14,y:2}),
       Ø("model_about").create({x:14,y:6}),
       Ø("model_ingredients").create({x:14,y:10}),
@@ -43,7 +43,7 @@
       Ø("model_404").create({x:14,y:18})
     ])
 
-    Ø("parser").connect(["console error","model_home","model_about","model_ingredients","model_recipes","model_404"])
+    // Ø("parser").connect(["console error","model_home","model_about","model_ingredients","model_recipes","model_404"])
     Ø("parser").connect("recipes",ROUTE_TYPES.request)
     Ø("parser").connect("ingredients",ROUTE_TYPES.request)
 

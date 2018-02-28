@@ -15,7 +15,6 @@ function Entry()
   this.mouse = function(id,rect)
   {
     Node.call(this,id,rect);
-    
   }
 
   this.router = function(id,rect)
@@ -26,7 +25,6 @@ function Entry()
       
     this.receive = function(q)
     {
-      console.log(q)
       var hash = q;
       var target = hash.substring(1).replace(/[^0-9a-z]/gi," ").trim().toLowerCase()
       var payload = {hash:hash,target:target}
