@@ -12,6 +12,8 @@ svg text.output { text-anchor: start }
 svg g.node text { text-anchor: middle }
 svg g.node .port.input, svg g.node .port.answer { fill:white; }
 svg g.node.mesh rect { stroke:#333; }
+svg g.node .glyph { stroke-width:10; stroke:#999; }
+svg g.node rect { stroke:#ccc; }
 svg path.route { stroke:#555; stroke-width:2;  }
 svg path.route.request { stroke-dasharray: 5,5;  }
 

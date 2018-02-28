@@ -35,6 +35,7 @@ function Ø(s,network = RIVEN.network)
 
 function Node(id,rect={x:0,y:0,w:2,h:2},ports=[])
 {
+  this.glyph = "M150,60 L150,60 L60,150 L150,240 L240,150 Z"
   this.id = id;
   this.ports = ports
   this.rect = rect;
@@ -61,9 +62,11 @@ function Node(id,rect={x:0,y:0,w:2,h:2},ports=[])
     return this
   }
 
-  this.cast = function(type,rect)
+  this.cast = function(type,pos)
   {
     var node = new type(this.id,rect)  
+    this.rect.x = pos.x
+    this.rect.y = pos.y
     RIVEN.add(node);
     return node
   }

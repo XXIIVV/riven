@@ -7,6 +7,7 @@
   <script src="scripts/riven.nodes.js"></script>
   <script src="scripts/site/entry.js"></script>
   <script src="scripts/site/model.js"></script>
+  <script src="scripts/site/view.js"></script>
   <link rel="stylesheet" type="text/css" href="links/reset.css"/>
   <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
   <link rel="stylesheet" type="text/css" href="links/main.css"/>
@@ -21,8 +22,8 @@
     var entry = new Entry();
 
     Ø("entry").mesh({x:2,y:2},[
-      Ø("request").create({x:1,y:3}),
-      Ø("router").create({x:8,y:6}),
+      Ø("request").cast(entry.request,{x:1,y:3}),
+      Ø("router").cast(entry.router,{x:8,y:6}),
       Ø("mouse").create({x:2,y:8})
     ])
 
@@ -31,9 +32,9 @@
 
     // Model
 
-    // var model = new Model();
+    var model = new Model();
     Ø("model").mesh({x:14,y:2},[
-      Ø("parser").create({x:2,y:4}),
+      Ø("parser").cast(entry.router,{x:2,y:4}),
       Ø("ingredients").create({x:2,y:12}),
       Ø("recipes").create({x:5,y:12}),
       Ø("model_home").create({x:14,y:2}),
@@ -52,18 +53,19 @@
     // Ø("router").connect("parser")
 
     // // View
+    var view = new View();
     Ø("view").mesh({x:32,y:2},[
-      Ø("templater").create({x:12,y:4}),
-      Ø("header").create({x:14,y:12}),
-      Ø("footer").create({x:10,y:12}),
-      Ø("view_home").create({x:2,y:2}),
-      Ø("view_about").create({x:2,y:6}),
-      Ø("view_ingredients").create({x:2,y:10}),
-      Ø("view_recipes").create({x:2,y:14}),
-      Ø("view_404").create({x:2,y:18})
+      Ø("templater").cast(view.templater,{x:12,y:4}),
+      Ø("header").cast(view.element,{x:14,y:12}),
+      Ø("footer").cast(view.element,{x:10,y:12}),
+      Ø("view_home").cast(view.element,{x:2,y:2}),
+      Ø("view_about").cast(view.element,{x:2,y:6}),
+      Ø("view_ingredients").cast(view.element,{x:2,y:10}),
+      Ø("view_recipes").cast(view.element,{x:2,y:14}),
+      Ø("view_404").cast(view.element,{x:2,y:18})
     ])
 
-    Ø("render").create({x:52,y:6})
+    Ø("render").cast(view.render,{x:52,y:6})
     Ø("console").create({x:52,y:14})
 
     Ø("templater").connect("header",ROUTE_TYPES.request)
@@ -84,9 +86,6 @@
     Ø("view_404").connect("templater")
 
     Ø("templater").connect("render")
-
-    // Ø("request").connect("router")
-    // Ø("mouse").connect("router")
 
     document.body.appendChild(RIVEN.el)
 

@@ -50,7 +50,15 @@ function Riven_Graph()
       <rect rx='2' ry='2' x=${rect.x} y=${rect.y-(GRID_SIZE/2)} width="${rect.w}" height="${rect.h}" class='${node.children.length == 0 ? "fill" : ""}'/>
       <text x="${rect.x+(rect.w/2)}" y="${rect.y+rect.h+(GRID_SIZE/2)}">${node.id}</text>
       ${html}
+      ${draw_glyph(node)}
     </g>`
+  }
+
+  function draw_glyph(node)
+  {
+    if(node.is_mesh){ return "" }
+    var rect = get_rect(node);
+    return `<path class='glyph' transform="translate(${rect.x+(GRID_SIZE/4)},${rect.y-(GRID_SIZE/4)}) scale(0.1)" d='${node.glyph}'/>`
   }
 
   function draw_port(port)
