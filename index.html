@@ -43,10 +43,9 @@
       Ø("model_404").create({x:14,y:18})
     ])
 
-    // Ø("parser").connect(["console error","model_home","model_about","model_ingredients","model_recipes","model_404"])
+    Ø("parser").connect(["console error","model_home","model_about","model_ingredients","model_recipes","model_404"])
     Ø("parser").connect("recipes",ROUTE_TYPES.request)
     Ø("parser").connect("ingredients",ROUTE_TYPES.request)
-
 
     Ø("router").connect("parser")
 
