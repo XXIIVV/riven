@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <script src="scripts/riven.js"></script>
   <script src="scripts/riven.graph.js"></script>
-  <script src="scripts/riven.nodes.js"></script>
   <script src="scripts/site/entry.js"></script>
   <script src="scripts/site/model.js"></script>
   <script src="scripts/site/view.js"></script>
@@ -17,6 +16,9 @@
   <script>
     var RIVEN = new Riven_Graph();
     
+    Ø("render").cast(view.render,{x:52,y:6})
+    Ø("console").create({x:52,y:14})
+
     // Entry
 
     var entry = new Entry();
@@ -50,9 +52,9 @@
 
 
     Ø("router").connect("parser")
-    // Ø("router").connect("parser")
 
-    // // View
+    // View
+
     var view = new View();
     Ø("view").mesh({x:32,y:2},[
       Ø("templater").cast(view.templater,{x:12,y:4}),
@@ -65,8 +67,7 @@
       Ø("view_404").cast(view.element,{x:2,y:18})
     ])
 
-    Ø("render").cast(view.render,{x:52,y:6})
-    Ø("console").create({x:52,y:14})
+    // Connections
 
     Ø("templater").connect("header",ROUTE_TYPES.request)
     Ø("templater").connect("footer",ROUTE_TYPES.request)
