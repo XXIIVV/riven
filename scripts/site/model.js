@@ -15,7 +15,7 @@ function Model()
   {
     Node.call(this,id,rect);
 
-    this.listen = function(q)
+    this.answer = function(q)
     {
       return {hello:"world"}
     }

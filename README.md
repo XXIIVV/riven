@@ -57,15 +57,15 @@ You can group nodes into scopes with `.mesh()`, it visually groups the nodes int
 
 ### Request()
 
-`Ø("template").request("cake")` will request *"cake"* from all listening connected nodes.
+`Ø("template").request("cake")` will request *"cake"* from all answering connected nodes.
 
-### Listen()
+### Answer()
 
-`Ø("template").listen("cake")` will listen for *"cake"*, method is triggered by request().
+`Ø("template").answer("cake")` will answer for *"cake"*, method is triggered by request().
 
 ### Signal()
 
-To signal a target connected receiving/listening node, use `Ø("template").signal("parser").send("hello")`.
+To signal a target connected receiving/answering node, use `Ø("template").signal("parser").send("hello")`.
 
 # That's it!
 

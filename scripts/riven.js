@@ -45,7 +45,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
   {
     this.ports.input = new Port(this,"in",PORT_TYPES.input)
     this.ports.output = new Port(this,"out",PORT_TYPES.output)
-    this.ports.listen = new Port(this,"listen",PORT_TYPES.listen)
+    this.ports.answer = new Port(this,"answer",PORT_TYPES.answer)
     this.ports.request = new Port(this,"request",PORT_TYPES.request)
   }
 
@@ -96,7 +96,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
       }
     }
     else{
-      this.ports[type == ROUTE_TYPES.request ? "request" : "output"].connect(`${q} ${type == ROUTE_TYPES.request ? "listen" : "input"}`,type);  
+      this.ports[type == ROUTE_TYPES.request ? "request" : "output"].connect(`${q} ${type == ROUTE_TYPES.request ? "answer" : "input"}`,type);  
     }
   }
 
@@ -142,7 +142,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
 
   // REQUEST/ANSWER
 
-  this.listen = function(q)
+  this.answer = function(q)
   {
     return this.request(q)
   }
@@ -153,7 +153,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
     for(route_id in this.ports.request.routes){
       var route = this.ports.request.routes[route_id];
       if(!route){ continue; }
-      var answer = route.host.listen(q)
+      var answer = route.host.answer(q)
       if(!answer){ continue; }
       payload[route.host.id] = answer
       
@@ -200,7 +200,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
   }
 }
 
-var PORT_TYPES = {default:"default",input:"input",output:"output",request:"request",listen:"listen"}
+var PORT_TYPES = {default:"default",input:"input",output:"output",request:"request",answer:"answer"}
 var ROUTE_TYPES = {default:"default",request:"request"}
 var NODE_GLYPHS = {
   default: "M150,60 L150,60 L60,150 L150,240 L240,150 Z",
