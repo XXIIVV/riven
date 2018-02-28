@@ -13,6 +13,7 @@ svg g.node text { text-anchor: middle }
 svg g.node .port.input, svg g.node .port.answer { fill:white; }
 
 svg path.route { stroke:#fff; stroke-width:2;  }
+svg path.route.request { stroke-dasharray: 5,5 }
 
 svg g:hover text { fill:red; cursor: pointer; }
 

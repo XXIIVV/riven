@@ -87,7 +87,8 @@ function Riven_Graph()
     path += `Q ${pos_c2.x},${pos_c2.y} ${pos_b.x-GRID_SIZE},${pos_b.y}`
     path += `L${pos_b.x},${pos_b.y}`
 
-    return `<path d="${path}" class='route output'/>`
+    return `<path d="${path}" class='route output'/>
+    <circle cx='${pos_m.x}' cy='${pos_m.y}' r='2' fill='white'></circle>`
   }
 
   function draw_connection_request(a,b)
@@ -95,20 +96,18 @@ function Riven_Graph()
     var pos_a = get_port_position(a)
     var pos_b = get_port_position(b)
     var pos_m = middle(pos_a,pos_b)
-    var pos_c1 = {x:(pos_m.x+(pos_a.x+GRID_SIZE))/2,y:pos_a.y}
-    var pos_c2 = {x:(pos_m.x+(pos_b.x-GRID_SIZE))/2,y:pos_b.y}
+    var pos_c1 = {x:pos_a.x,y:(pos_m.y+(pos_a.y+GRID_SIZE))/2}
+    var pos_c2 = {x:pos_b.x,y:(pos_m.y+(pos_b.y-GRID_SIZE))/2}
 
     var path = ""
 
-    path += `M${pos_a.x},${pos_a.y} L${pos_a.x+GRID_SIZE},${pos_a.y} `
+    path += `M${pos_a.x},${pos_a.y} L${pos_a.x},${pos_a.y+GRID_SIZE} `
     path += `Q${pos_c1.x},${pos_c1.y} ${pos_m.x},${pos_m.y} `
-    path += `Q ${pos_c2.x},${pos_c2.y} ${pos_b.x-GRID_SIZE},${pos_b.y}`
+    path += `Q ${pos_c2.x},${pos_c2.y} ${pos_b.x},${pos_b.y-GRID_SIZE}`
     path += `L${pos_b.x},${pos_b.y}`
 
     return `<path d="${path}" class='route request'/>
-    <circle cx='${pos_c1.x}' cy='${pos_c1.y}' r='2' fill='red'></circle>
-    <circle cx='${pos_m.x}' cy='${pos_m.y}' r='2' fill='green'></circle>
-    <circle cx='${pos_c2.x}' cy='${pos_c2.y}' r='2' fill='red'></circle>`
+    <circle cx='${pos_m.x}' cy='${pos_m.y}' r='2' fill='white'></circle>`
   }
 
   function get_port_position(port)
