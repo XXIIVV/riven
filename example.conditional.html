@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="scripts/riven.js"></script>
+  <script src="scripts/riven.graph.js"></script>
+  <link rel="stylesheet" type="text/css" href="links/reset.css"/>
+  <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
+  <link rel="stylesheet" type="text/css" href="links/main.css"/>
+  <title>Riven</title>
+</head>
+<body>
+  <script>
+    var RIVEN = new Riven_Graph();
+
+    // Create custom nodes
+
+    function BangNode(id,rect)
+    {
+      Node.call(this,id,rect);
+
+      this.glyph = NODE_GLYPHS.bang
+    }
+
+    function HashNode(id,rect)
+    {
+      Node.call(this,id,rect);
+
+      this.glyph = NODE_GLYPHS.entry
+
+      this.receive = function()
+      {
+        var hash = window.location.hash.substring(1).replace(/[^0-9a-z]/gi," ").trim().toLowerCase()
+        this.label = hash ? "hash="+hash : "Add hash to url"
+        this.send(hash)
+      }
+    }
+
+    function ChoiceNode(id,rect)
+    {
+      Node.call(this,id,rect);
+
+      this.glyph = NODE_GLYPHS.router
+
+      this.receive = function(q)
+      {
+        var signal = this.signal(q)
+        if(signal){
+          signal.receive()
+        }
+        else{
+          this.signal("else").receive()
+        }
+      }
+    }
+
+    function ValueNode(id,rect,param)
+    {
+      Node.call(this,id,rect);
+
+      this.glyph = NODE_GLYPHS.value
+      this.label = param
+      this.param = param
+
+      this.answer = function()
+      {
+        return this.param
+      }
+    }
+
+    function PrintNode(id,rect)
+    {
+      Node.call(this,id,rect);
+      this.glyph = NODE_GLYPHS.render
+      this.label = ""
+
+      this.receive = function(q)
+      {
+        this.label = "true";
+      }
+    }
+
+    function AddNode(id,rect)
+    {
+      Node.call(this,id,rect);
+
+      this.glyph = NODE_GLYPHS.equal
+      this.label = "add"
+
+      this.add = function()
+      {
+        var sum = 0;
+        var values = this.request();
+        for(id in values){
+          sum += values[id];
+        }
+        return sum
+      }
+
+      this.receive = function(q)
+      {
+        this.send(this.add())
+      }
+
+      this.answer = function()
+      {
+        return this.add()
+      }
+    }
+
+    // Build tree
+
+    Ø("bang").cast({x:2,y:4},BangNode)
+    Ø("hash").cast({x:6,y:4},HashNode)
+    Ø("print_red").cast({x:30,y:2},PrintNode)
+    Ø("print_green").cast({x:30,y:6},PrintNode)
+    Ø("print_blue").cast({x:30,y:10},PrintNode)
+    Ø("print_else").cast({x:30,y:14},PrintNode)
+
+    Ø("example").mesh({x:10,y:0},[
+      Ø("choice").cast({x:4,y:8},ChoiceNode),
+      Ø("red").cast({x:12,y:2},ValueNode,"red"),
+      Ø("green").cast({x:12,y:6},ValueNode,"green"),
+      Ø("blue").cast({x:12,y:10},ValueNode,"blue"),
+      Ø("else").cast({x:12,y:14},ValueNode,"else"),
+    ])
+
+    Ø("bang").connect("hash")
+    Ø("hash").connect("choice")
+    Ø("choice").connect(["red","green","blue","else"])
+    Ø("red").connect("print_red")
+    Ø("green").connect("print_green")
+    Ø("blue").connect("print_blue")
+    Ø("else").connect("print_else")
+    Ø("bang").bang()
+
+    document.body.appendChild(RIVEN.el)
+
+    RIVEN.graph();
+  </script>
+</body>
+</html>
