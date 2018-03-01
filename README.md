@@ -72,4 +72,5 @@ To signal a target connected receiving/answering node, use `Ø("template").signa
 # That's it!
 
 This framework does nothing else, but it does this well.
-Enjoy. [MIT License](LICENSE.md)
+
+Enjoy.
