@@ -42,7 +42,7 @@ function Riven_Graph()
     return `
     <g class='node ${node.is_mesh ? 'mesh' : ''}' id='node_${node.id}'>
       <rect rx='2' ry='2' x=${rect.x} y=${rect.y-(GRID_SIZE/2)} width="${rect.w}" height="${rect.h}" class='${node.children.length == 0 ? "fill" : ""}'/>
-      <text x="${rect.x+(rect.w/2)}" y="${rect.y+rect.h+(GRID_SIZE/2)}">${node.id}</text>
+      <text x="${rect.x+(rect.w/2)}" y="${rect.y+rect.h+(GRID_SIZE/2)}">${node.label}</text>
       ${draw_ports(node)}
       ${draw_glyph(node)}
     </g>`

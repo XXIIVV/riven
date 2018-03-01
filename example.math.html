@@ -21,23 +21,74 @@
       Node.call(this,id,rect);
       this.glyph = NODE_GLYPHS.bang
     }
+
+    function ValueNode(id,rect,param)
+    {
+      Node.call(this,id,rect);
+      this.param = param;
+      this.glyph = NODE_GLYPHS.value
+      this.label = param
+
+      this.answer = function()
+      {
+        return this.param
+      }
+    }
+
+    function PrintNode(id,rect)
+    {
+      Node.call(this,id,rect);
+
+      this.receive = function(q)
+      {
+        this.label = q;
+      }
+    }
+
+    function AddNode(id,rect)
+    {
+      Node.call(this,id,rect);
+      this.glyph = NODE_GLYPHS.equal
+      this.label = "add"
+
+      this.add = function()
+      {
+        var sum = 0;
+        var values = this.request();
+        for(id in values){
+          sum += values[id];
+        }
+        return sum
+      }
+
+      this.receive = function(q)
+      {
+        this.send(this.add())
+      }
+
+      this.answer = function()
+      {
+        return this.add()
+      }
+    }
+
     // Entry
 
-    Ø("bang").cast(BangNode,{x:2,y:4})
-    Ø("print").create({x:20,y:4})
+    Ø("bang").cast({x:2,y:4},BangNode)
+    Ø("print").cast({x:20,y:4},PrintNode)
 
-    Ø("example").mesh({x:6,y:2},[
-      Ø("value1").create({x:2,y:8}),
-      Ø("equal2").create({x:6,y:8}),
-      Ø("equal1").create({x:4,y:2}),
-      Ø("value3").create({x:8,y:14}),
-      Ø("value4").create({x:4,y:14}),
+    Ø("example").mesh({x:6,y:0},[
+      Ø("add1").cast({x:4,y:2},AddNode),
+      Ø("add2").cast({x:6,y:8},AddNode),
+      Ø("value1").cast({x:2,y:8},ValueNode,5),
+      Ø("value2").cast({x:8,y:14},ValueNode,6),
+      Ø("value3").cast({x:4,y:14},ValueNode,7),
     ])
 
-    Ø("bang").connect("equal1")
-    Ø("equal1").connect("print")
-    Ø("equal1").connect(["value1","equal2"],ROUTE_TYPES.request)
-    Ø("equal2").connect(["value3","value4"],ROUTE_TYPES.request)
+    Ø("bang").connect("add1")
+    Ø("add1").connect("print")
+    Ø("add1").connect(["value1","add2"],ROUTE_TYPES.request)
+    Ø("add2").connect(["value2","value3"],ROUTE_TYPES.request)
 
     Ø("bang").bang()
 

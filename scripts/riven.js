@@ -41,6 +41,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
   this.rect = rect;
   this.parent = null;
   this.children = [];
+  this.label = id;
 
   this.setup = function()
   {
@@ -58,9 +59,9 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
     return this
   }
 
-  this.cast = function(type,pos = {x:0,y:0})
+  this.cast = function(pos = {x:0,y:0},type,param)
   {
-    var node = new type(this.id,rect)  
+    var node = new type(this.id,rect,param)  
     this.rect.x = pos.x
     this.rect.y = pos.y
     RIVEN.add(node);
@@ -208,4 +209,6 @@ var NODE_GLYPHS = {
   router:"M60,60 L60,60 L240,60 M120,120 A30,30 0 0,1 150,150 M150,150 A30,30 0 0,0 180,180 M180,180 L180,180 L240,180 M120,120 L120,120 L60,120 M60,240 L60,240 L240,240 M240,120 L240,120 L180,120 M60,180 L60,180 L120,180",
   entry:"M60,150 L60,150 L240,150 L240,150 L150,240 M150,60 L150,60 L240,150",
   bang:"M150,60 L150,60 L150,180 M150,240 L150,240 L150,240",
+  value:"M60,60 L60,60 L240,60 L240,240 L60,240 Z M60,150 L60,150 L240,150",
+  equal:"M60,60 L60,60 L240,60 M60,120 L60,120 L240,120 M60,180 L60,180 L240,180 M60,240 L60,240 L240,240",
 }
