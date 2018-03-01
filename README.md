@@ -1,6 +1,6 @@
 # Ø(Riven)
 
-Riven is meant to be the bare minimum to a flow-based programming framework. Nodes have 2 ways of communicating with each other, one is a send/receive pattern, the other, a request/answer pattern.
+[Riven](http://wiki.xxiivv.com/Riven) is meant to be the bare minimum to a flow-based programming framework. Nodes have 2 ways of communicating with each other, one is a send/receive pattern, the other, a request/answer pattern.
 
 <img src='https://raw.githubusercontent.com/XXIIVV/Riven/master/PREVIEW.png' width="600"/>
 
@@ -72,5 +72,4 @@ To signal a target connected receiving/answering node, use `Ø("template").signa
 # That's it!
 
 This framework does nothing else, but it does this well.
-Enjoy.
-
+Enjoy. [MIT License](LICENSE.md)
