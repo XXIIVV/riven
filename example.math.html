@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="scripts/riven.js"></script>
+  <script src="scripts/riven.graph.js"></script>
+  <script src="scripts/site/entry.js"></script>
+  <script src="scripts/site/model.js"></script>
+  <script src="scripts/site/view.js"></script>
+  <link rel="stylesheet" type="text/css" href="links/reset.css"/>
+  <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
+  <link rel="stylesheet" type="text/css" href="links/main.css"/>
+  <title>Riven</title>
+</head>
+<body>
+  <script>
+    var RIVEN = new Riven_Graph();
+
+    function BangNode(id,rect)
+    {
+      Node.call(this,id,rect);
+      this.glyph = NODE_GLYPHS.bang
+    }
+    // Entry
+
+    Ø("bang").cast(BangNode,{x:2,y:4})
+    Ø("print").create({x:20,y:4})
+
+    Ø("example").mesh({x:6,y:2},[
+      Ø("value1").create({x:2,y:8}),
+      Ø("equal2").create({x:6,y:8}),
+      Ø("equal1").create({x:4,y:2}),
+      Ø("value3").create({x:8,y:14}),
+      Ø("value4").create({x:4,y:14}),
+    ])
+
+    Ø("bang").connect("equal1")
+    Ø("equal1").connect("print")
+    Ø("equal1").connect(["value1","equal2"],ROUTE_TYPES.request)
+    Ø("equal2").connect(["value3","value4"],ROUTE_TYPES.request)
+
+    Ø("bang").bang()
+
+    document.body.appendChild(RIVEN.el)
+
+    RIVEN.graph();
+  </script>
+</body>
+</html>

@@ -111,6 +111,12 @@ function Riven_Graph()
     return `<path d="${path}" class='route request'/>
     <circle cx='${pos_m.x}' cy='${pos_m.y}' r='2' fill='white'></circle>`
   }
+  
+  function draw_diamond(pos)
+  {
+    var r = GRID_SIZE/6
+    return `M${pos.x-(r)},${pos.y} L${pos.x},${pos.y-(r)} L${pos.x+(r)},${pos.y} L${pos.x},${pos.y+(r)} Z`
+  }
 
   function get_port_position(port)
   {
@@ -160,11 +166,5 @@ function Riven_Graph()
   function middle(a,b)
   {
     return {x:(a.x+b.x)/2,y:(a.y+b.y)/2}
-  }
-
-  function draw_diamond(pos)
-  {
-    var r = GRID_SIZE/6
-    return `M${pos.x-(r)},${pos.y} L${pos.x},${pos.y-(r)} L${pos.x+(r)},${pos.y} L${pos.x},${pos.y+(r)} Z`
   }
 }
