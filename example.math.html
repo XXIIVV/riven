@@ -4,9 +4,6 @@
   <meta charset="utf-8">
   <script src="scripts/riven.js"></script>
   <script src="scripts/riven.graph.js"></script>
-  <script src="scripts/site/entry.js"></script>
-  <script src="scripts/site/model.js"></script>
-  <script src="scripts/site/view.js"></script>
   <link rel="stylesheet" type="text/css" href="links/reset.css"/>
   <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
   <link rel="stylesheet" type="text/css" href="links/main.css"/>
@@ -16,18 +13,22 @@
   <script>
     var RIVEN = new Riven_Graph();
 
+    // Create custom nodes
+
     function BangNode(id,rect)
     {
       Node.call(this,id,rect);
+
       this.glyph = NODE_GLYPHS.bang
     }
 
     function ValueNode(id,rect,param)
     {
       Node.call(this,id,rect);
-      this.param = param;
+
       this.glyph = NODE_GLYPHS.value
       this.label = param
+      this.param = param
 
       this.answer = function()
       {
@@ -38,6 +39,7 @@
     function PrintNode(id,rect)
     {
       Node.call(this,id,rect);
+      this.glyph = NODE_GLYPHS.render
 
       this.receive = function(q)
       {
@@ -48,6 +50,7 @@
     function AddNode(id,rect)
     {
       Node.call(this,id,rect);
+
       this.glyph = NODE_GLYPHS.equal
       this.label = "add"
 
@@ -72,7 +75,7 @@
       }
     }
 
-    // Entry
+    // Build tree
 
     Ø("bang").cast({x:2,y:4},BangNode)
     Ø("print").cast({x:20,y:4},PrintNode)
@@ -89,7 +92,6 @@
     Ø("add1").connect("print")
     Ø("add1").connect(["value1","add2"],ROUTE_TYPES.request)
     Ø("add2").connect(["value2","value3"],ROUTE_TYPES.request)
-
     Ø("bang").bang()
 
     document.body.appendChild(RIVEN.el)
