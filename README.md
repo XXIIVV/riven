@@ -1,12 +1,12 @@
 # Ø(Riven)
 
-[Riven](http://wiki.xxiivv.com/Riven) is meant to be the bare minimum to a flow-based programming framework. Nodes have 2 ways of communicating with each other, one is a send/receive pattern, the other, a request/answer pattern.
+[Riven](http://wiki.xxiivv.com/Riven) is meant to be the bare minimum to a [flow-based programming framework](https://rawgit.com/XXIIVV/Riven/master/example.math.html). Nodes have 2 ways of communicating with each other, one is a send/receive pattern, the other, a request/answer pattern.
 
 <img src='https://raw.githubusercontent.com/XXIIVV/Riven/master/PREVIEW.png' width="600"/>
 
 ## Selector
 
-You are given a node selection tool `Ø()`, you can type the character with `alt+shift+O`.
+You are given a node selection tool `Ø()`, you can type the character with `alt+shift+O`(Alt +0216). If you are on Windows, or cannot easily type this character, try wrapping this function into a character of your choosing, like `function R(a){ return Ø(a); }`.
 
 ### Selecting a node
 
