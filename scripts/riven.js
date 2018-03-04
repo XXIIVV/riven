@@ -1,6 +1,5 @@
 
-// Don't forget, the portal combination's in my journal. Good luck. — Catherine
-// NETWORK MANAGER
+// "Don't forget, the portal combination's in my journal."" — Catherine
 
 function Riven()
 {
@@ -26,7 +25,6 @@ function Ø(s,network = RIVEN.network)
     return network[s];
   }
   else{
-    console.warn(`Init node ${s}`)
     return new Node(s);
   }
 }

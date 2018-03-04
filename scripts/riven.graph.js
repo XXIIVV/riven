@@ -5,7 +5,7 @@ function Riven_Graph()
   var GRID_SIZE = 20
 
   this.el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-
+  
   this.graph = function()
   {
     var html = "";
@@ -167,4 +167,48 @@ function Riven_Graph()
   {
     return {x:(a.x+b.x)/2,y:(a.y+b.y)/2}
   }
+
+  // Cursor
+
+  this.cursor = {
+    host:null,
+    el:document.createElement("cursor"),
+    pos:{x:0,y:0},
+    offset:{x:0,y:0},
+    origin:null,
+    install: function(host){
+      this.host = host;
+      document.body.appendChild(this.el)
+      document.addEventListener('mousedown',(e)=>{ this.touch({x:e.clientX,y:e.clientY},true); e.preventDefault(); });
+      document.addEventListener('mousemove',(e)=>{ this.touch({x:e.clientX,y:e.clientY},false); e.preventDefault(); });
+      document.addEventListener('mouseup',  (e)=>{ this.touch({x:e.clientX,y:e.clientY}); e.preventDefault(); });
+    },
+    update: function(){
+      this.host.el.style.left = `${parseInt(this.offset.x)}px`;
+      this.host.el.style.top = `${parseInt(this.offset.y)}px`;
+      document.body.style.backgroundPosition = `${this.offset.x/2}px ${this.offset.y/2}px`;
+    },
+    touch: function(pos,click = null){
+      if(click == true){
+        this.origin = pos;
+        return;
+      }
+      if(this.origin){
+        this.offset.x += (pos.x - this.origin.x)/2;
+        this.offset.y += (pos.y - this.origin.y)/2;
+        this.update();
+        this.origin = pos;
+      }
+      if(click == null){
+        this.origin = null;
+        return;
+      }
+      this.pos = pos;
+    },
+    magnet: function(val){
+      return (parseInt(val/GRID_SIZE)*GRID_SIZE)+(GRID_SIZE/2);
+    }
+  }
+
+  this.cursor.install(this);
 }
