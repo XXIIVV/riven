@@ -5,6 +5,7 @@ function Riven_Graph()
   var GRID_SIZE = 20
 
   this.el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  document.body.appendChild(this.el)
   
   this.graph = function()
   {
@@ -71,7 +72,25 @@ function Riven_Graph()
 
   function draw_connection(a,b,type)
   {
+    if(is_bidirectional(a.host,b.host)){
+      return a.type != PORT_TYPES.output ? draw_connection_bidirectional(a,b) : ""
+    }
+    
     return a.type == PORT_TYPES.output ? draw_connection_output(a,b) : draw_connection_request(a,b)
+  }
+
+  function is_bidirectional(a,b)
+  {
+    for(id in a.ports.output.routes){
+      var route_a = a.ports.output.routes[id]
+      for(id in a.ports.request.routes){
+        var route_b = a.ports.request.routes[id]
+        if(route_a.host.id == route_b.host.id){
+          return true;
+        }
+      }
+    }
+    return false
   }
 
   function draw_connection_output(a,b)
@@ -110,6 +129,23 @@ function Riven_Graph()
 
     return `<path d="${path}" class='route request'/>
     <circle cx='${pos_m.x}' cy='${pos_m.y}' r='2' fill='white'></circle>`
+  }
+
+  function draw_connection_bidirectional(a,b)
+  {
+    var pos_a = get_port_position(a)
+    var pos_b = get_port_position(b)
+    var pos_m = middle(pos_a,pos_b)
+    var pos_c1 = {x:pos_a.x,y:(pos_m.y+(pos_a.y+GRID_SIZE))/2}
+    var pos_c2 = {x:pos_b.x,y:(pos_m.y+(pos_b.y-GRID_SIZE))/2}
+
+    var path = ""
+
+    path += `M${pos_a.x},${pos_a.y} L${pos_a.x},${pos_a.y+GRID_SIZE} `
+    path += `L${pos_a.x},${pos_m.y} L${pos_b.x},${pos_m.y}`
+    path += `L${pos_b.x},${pos_b.y-GRID_SIZE} L${pos_b.x},${pos_b.y}`
+
+    return `<path d="${path}" class='route bidirectional'/>`
   }
   
   function draw_diamond(pos)
@@ -186,7 +222,7 @@ function Riven_Graph()
     update: function(){
       this.host.el.style.left = `${parseInt(this.offset.x)}px`;
       this.host.el.style.top = `${parseInt(this.offset.y)}px`;
-      document.body.style.backgroundPosition = `${this.offset.x/2}px ${this.offset.y/2}px`;
+      document.body.style.backgroundPosition = `${parseInt(this.offset.x/2)}px ${parseInt(this.offset.y/2)}px`;
     },
     touch: function(pos,click = null){
       if(click == true){
