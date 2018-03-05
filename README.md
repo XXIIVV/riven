@@ -20,17 +20,13 @@ You are given a node selection tool `Ø()`, you can type the character with `alt
 
 ### Creating a basic node
 
-`Ø("parser").create()` will create a new node at 0,0. 
-
-### Creating a custom node
-
-`Ø("parser").cast(ParserNode)` will create a **ParserNode** at 0,0.
+`Ø("parser").create({x:2,y:2},ParserNode)` will create a **ParserNode** at 2,2. 
 
 ### Connecting nodes
 
 `Ø("template").connect("parser")` will connect the **template** node to the **parser** node. You can also connect to multiple nodes at once with `Ø("template").connect(["parser","console"])`. 
 
-The `Ø("template").connect("parser")` command is equivalent to `Ø("template output").connect("parser input")`, and the `Ø("template").connect("parser", ROUTE_TYPES.template)` is equivalent to `Ø("template request").connect("parser answer")`.
+The `Ø("template").connect("parser")` command is equivalent to `Ø("template output").connect("parser input")`, and the `Ø("template").syphon("parser")` is equivalent to `Ø("template request").connect("parser answer")`. The `Ø("template").bind("parser")` will create a connection and a syphon between the 2 nodes.
 
 ### Meshing nodes
 

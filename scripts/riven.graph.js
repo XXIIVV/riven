@@ -61,7 +61,7 @@ function Riven_Graph()
   function draw_glyph(node)
   {
     var rect = get_rect(node);
-    return !node.is_mesh ? `<path class='glyph' transform="translate(${rect.x+(GRID_SIZE/4)},${rect.y-(GRID_SIZE/4)}) scale(0.1)" d='${node.glyph}'/>` : ""
+    return !node.is_mesh && node.glyph ? `<path class='glyph' transform="translate(${rect.x+(GRID_SIZE/4)},${rect.y-(GRID_SIZE/4)}) scale(0.1)" d='${node.glyph}'/>` : ""
   }
 
   function draw_port(port)

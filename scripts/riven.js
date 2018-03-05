@@ -4,12 +4,6 @@
 function Riven()
 {
   this.network = {}
-
-  this.add = function(node)
-  {
-    node.setup();
-    this.network[node.id] = node
-  }
 }
 
 // QUERY
@@ -48,20 +42,13 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
     this.ports.request = new Port(this,"request",PORT_TYPES.request)
   }
 
-  this.create = function(pos = {x:0,y:0})
-  {
-    this.rect.x = pos.x
-    this.rect.y = pos.y
-    RIVEN.add(this);
-    return this
-  }
-
-  this.cast = function(pos = {x:0,y:0},type,param)
+  this.create = function(pos = {x:0,y:0},type = Node,param)
   {
     var node = new type(this.id,rect,param)  
     this.rect.x = pos.x
     this.rect.y = pos.y
-    RIVEN.add(node);
+    node.setup();
+    RIVEN.network[node.id] = node
     return node
   }
 
@@ -70,7 +57,8 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
     var node = new Mesh(this.id,pos)  
     node.rect.x = pos.x
     node.rect.y = pos.y
-    RIVEN.add(node);
+    node.setup();
+    RIVEN.network[node.id] = node
 
     if(n instanceof Array){
       for(id in n){
@@ -87,7 +75,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
     return node;
   }
 
-  // Connection
+  // Connect
 
   this.connect = function(q,type = ROUTE_TYPES.output)
   {
@@ -101,7 +89,7 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
     }
   }
 
-  this.syphon = function(q,type)
+  this.syphon = function(q)
   {
     this.connect(q,ROUTE_TYPES.request)
   }
@@ -111,6 +99,8 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
     this.connect(q)
     this.syphon(q)
   }
+
+  // Target
 
   this.signal = function(target)
   {
@@ -126,11 +116,6 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
   }
 
   // SEND/RECEIVE
-
-  this.bang = function()
-  {
-    this.send(true)
-  }
 
   this.send = function(payload)
   {
@@ -150,6 +135,11 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
         route.host.receive(q)  
       }
     }
+  }
+
+  this.bang = function()
+  {
+    this.send(true)
   }
 
   // REQUEST/ANSWER

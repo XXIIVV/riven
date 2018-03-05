@@ -110,19 +110,19 @@
 
     // Build tree
 
-    Ø("bang").cast({x:2,y:4},BangNode)
-    Ø("hash").cast({x:6,y:4},HashNode)
-    Ø("print_red").cast({x:30,y:2},PrintNode)
-    Ø("print_green").cast({x:30,y:6},PrintNode)
-    Ø("print_blue").cast({x:30,y:10},PrintNode)
-    Ø("print_else").cast({x:30,y:14},PrintNode)
+    Ø("bang").create({x:2,y:4},BangNode)
+    Ø("hash").create({x:6,y:4},HashNode)
+    Ø("print_red").create({x:30,y:2},PrintNode)
+    Ø("print_green").create({x:30,y:6},PrintNode)
+    Ø("print_blue").create({x:30,y:10},PrintNode)
+    Ø("print_else").create({x:30,y:14},PrintNode)
 
     Ø("example").mesh({x:10,y:0},[
-      Ø("choice").cast({x:4,y:8},ChoiceNode),
-      Ø("red").cast({x:12,y:2},ValueNode,"red"),
-      Ø("green").cast({x:12,y:6},ValueNode,"green"),
-      Ø("blue").cast({x:12,y:10},ValueNode,"blue"),
-      Ø("else").cast({x:12,y:14},ValueNode,"else"),
+      Ø("choice").create({x:4,y:8},ChoiceNode),
+      Ø("red").create({x:12,y:2},ValueNode,"red"),
+      Ø("green").create({x:12,y:6},ValueNode,"green"),
+      Ø("blue").create({x:12,y:10},ValueNode,"blue"),
+      Ø("else").create({x:12,y:14},ValueNode,"else"),
     ])
 
     Ø("bang").connect("hash")

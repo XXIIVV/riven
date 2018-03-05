@@ -77,15 +77,17 @@
 
     // Build tree
 
-    Ø("bang").cast({x:2,y:4},BangNode)
-    Ø("print").cast({x:20,y:4},PrintNode)
+    Ø("222").create({x:0,y:4})
+
+    Ø("bang").create({x:2,y:4},BangNode)
+    Ø("print").create({x:20,y:4},PrintNode)
 
     Ø("example").mesh({x:6,y:0},[
-      Ø("add1").cast({x:4,y:2},AddNode),
-      Ø("add2").cast({x:6,y:8},AddNode),
-      Ø("value1").cast({x:2,y:8},ValueNode,5),
-      Ø("value2").cast({x:8,y:14},ValueNode,6),
-      Ø("value3").cast({x:4,y:14},ValueNode,7),
+      Ø("add1").create({x:4,y:2},AddNode),
+      Ø("add2").create({x:6,y:8},AddNode),
+      Ø("value1").create({x:2,y:8},ValueNode,5),
+      Ø("value2").create({x:8,y:14},ValueNode,6),
+      Ø("value3").create({x:4,y:14},ValueNode,7),
     ])
 
     Ø("bang").connect("add1")
