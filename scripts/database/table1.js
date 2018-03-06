@@ -3,6 +3,9 @@ root
   sky
     color : blue
     experiment : test
+    collection
+      part1
+      part2
   leave1
     bug1
     bug2

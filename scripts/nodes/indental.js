@@ -15,13 +15,7 @@ function IndentalNode(id,rect)
 
   function Parser(data)
   {
-    this.result = parse(data)
-
-    function parse(d)
-    {
-      var refs = refs_tree(d)
-      return build(0,refs)
-    }
+    this.result = build(0,refs_tree(data))
 
     function build(target,tree)
     {
@@ -31,7 +25,6 @@ function IndentalNode(id,rect)
       var attributes = {}
       for(id in tree.lines){
         if(tree.refs[id]-1 != target){ continue; }
-        
         if(tree.lines[id].indexOf(" : ") > -1){
           var parts = tree.lines[id].split(" : ");
           if(!pack){ pack = {}; }
@@ -42,15 +35,14 @@ function IndentalNode(id,rect)
           leaves.push(build(id,tree));
         }
       }
+      return pack ? pack : nip(target,tree,leaves)
+    }
 
-      var test = {}
-      test[tree.lines[target]] = leaves
-
-      if(Object.values(test)[0].length == 0){
-        test = Object.keys(test)[0]
-      }
-
-      return pack ? pack : test
+    function nip(target,tree,leaves)
+    {
+      var tips = {}
+      tips[tree.lines[target]] = leaves
+      return Object.values(tips)[0].length == 0 ? Object.keys(tips)[0] : tips
     }
 
     function refs_tree(d)
