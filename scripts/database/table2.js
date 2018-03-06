@@ -1,14 +1,12 @@
 DATABASE.table2 = `
-
+tree
+  branch1
+    leaf
+      flower
+        bug
+  branch2
+    apple
+      worm
+      caterpillar
 `;
 
-// root
-//   leave1
-//     flower
-//       bug
-//   leave2
-//     apple
-//       worm
-//     flower
-//       worm
-//       caterpillar

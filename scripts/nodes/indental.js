@@ -22,13 +22,12 @@ function IndentalNode(id,rect)
       var pack = null
       var leaves = []
       var name = tree.lines[target]
-      var attributes = {}
       for(id in tree.lines){
         if(tree.refs[id]-1 != target){ continue; }
         if(tree.lines[id].indexOf(" : ") > -1){
-          var parts = tree.lines[id].split(" : ");
           if(!pack){ pack = {}; }
           if(!pack[name]){ pack[name] = {}; }
+          var parts = tree.lines[id].split(" : ");
           pack[name][parts[0]] = parts[1]
         }
         else{
@@ -51,18 +50,18 @@ function IndentalNode(id,rect)
       var stash = {};
       var prev = {indent:-1};
       var refs = []
-      var tree = [];
+      var lines = [];
       var i = 0
       for(id in l){
         var line = liner(l[id]); 
         if(line.skip){ continue; }
         stash[line.indent] = line.indent > prev.indent ? i : stash[line.indent];
         refs.push(stash[line.indent]);
-        tree.push(line.content)
+        lines.push(line.content)
         prev = line
         i += 1
       }
-      return {refs:refs,lines:tree};
+      return {refs:refs,lines:lines};
     }
 
     function liner(line)

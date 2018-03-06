@@ -4,9 +4,12 @@ function DatabaseNode(id,rect)
 
   this.glyph = NODE_GLYPHS.builder
 
+  this.cache = null;
+
   this.receive = function(q)
   {
-    this.send(this.request())
+    this.cache = this.cache ? this.cache : this.request();
+    this.send(this.cache);
   }
 }
 
