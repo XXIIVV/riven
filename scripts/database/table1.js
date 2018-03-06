@@ -2,6 +2,7 @@ DATABASE.table1 = `
 root
   sky
     color : blue
+    experiment : test
   leave1
     bug1
     bug2
