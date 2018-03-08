@@ -9,8 +9,6 @@ function DatabaseNode(id,rect)
   this.receive = function(q)
   {
     this.cache = this.cache ? this.cache : this.request();
-    this.send(this.cache);
+    this.send(this.request(this.cache))
   }
 }
-
-var DATABASE = {};

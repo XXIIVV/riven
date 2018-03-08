@@ -1,12 +1,17 @@
-function DomNode(id,rect)
+function DomNode(id,rect,...params)
 {
   Node.call(this,id,rect);
 
+  this.type = params[0] ? params[0] : "yu";
   this.glyph = NODE_GLYPHS.dom
-
-  this.el = document.createElement("yu")
+  this.label = `${this.id}:${this.type}`
+  this.el = document.createElement(this.type)
   this.el.id = this.id
   this.is_installed = false;
+
+  if(params[1]){
+    this.el.innerHTML = params[1]
+  }
 
   this.receive = function(content)
   {    
@@ -30,7 +35,6 @@ function DomNode(id,rect)
     for(id in elements){
       this.el.appendChild(elements[id])
     }
-    document.body.appendChild(this.el)
   }
 
   this.update = function(content)

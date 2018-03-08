@@ -15,58 +15,56 @@ function IndentalNode(id,rect)
 
   function Parser(data)
   {
-    this.result = build(0,refs_tree(data))
+    this.result = build(data.split("\n").map(liner))
 
-    function build(target,tree)
+    function build(lines)
     {
-      var pack = null
-      var leaves = []
-      var name = tree.lines[target]
-      for(id in tree.lines){
-        if(tree.refs[id]-1 != target){ continue; }
-        if(tree.lines[id].indexOf(" : ") > -1){
-          if(!pack){ pack = {}; }
-          if(!pack[name]){ pack[name] = {}; }
-          var parts = tree.lines[id].split(" : ");
-          pack[name][parts[0]] = parts[1]
-        }
-        else{
-          leaves.push(build(id,tree));
-        }
-      }
-      return pack ? pack : nip(target,tree,leaves)
-    }
-
-    function nip(target,tree,leaves)
-    {
-      var tips = {}
-      tips[tree.lines[target]] = leaves
-      return Object.values(tips)[0].length == 0 ? Object.keys(tips)[0] : tips
-    }
-
-    function refs_tree(d)
-    {
-      var l = d.split("\n");
-      var stash = {};
-      var prev = {indent:-1};
-      var refs = []
-      var lines = [];
-      var i = 0
-      for(id in l){
-        var line = liner(l[id]); 
+      // Assoc lines
+      var stack = {}
+      var target = lines[0]
+      for(id in lines){
+        var line = lines[id]
         if(line.skip){ continue; }
-        stash[line.indent] = line.indent > prev.indent ? i : stash[line.indent];
-        refs.push(stash[line.indent]);
-        lines.push(line.content)
-        prev = line
-        i += 1
+        target = stack[line.indent-2];
+        if(target){ target.children.push(line) }
+        stack[line.indent] = line
       }
-      return {refs:refs,lines:lines};
+
+      // Format
+      var h = {}
+      for(id in lines){
+        var line = lines[id];
+        if(line.skip || line.indent > 0){ continue; }
+        h[line.content.toUpperCase()] = format(line)
+      }
+      return h
+    }
+
+    function format(line)
+    {
+      var a = [];
+      var h = {};
+      for(id in line.children){
+        var child = line.children[id];
+        if(child.key){ h[child.key.toUpperCase()] = child.value }
+        else if(child.children.length == 0){ a.push(child.content) }
+        else{ h[child.content.toUpperCase()] = format(child) }
+      }
+      return a.length > 0 ? a : h
     }
 
     function liner(line)
     {
-      return {indent:line.search(/\S|$/),content:line.trim(),skip:line == "" || line.substr(0,1) == "~"}
+      return {
+        indent:line.search(/\S|$/),
+        content:line.trim(),
+        skip:line == "" || line.substr(0,1) == "~",
+        key:line.indexOf(" : ") > -1 ? line.split(" : ")[0].trim() : null,
+        value:line.indexOf(" : ") > -1 ? line.split(" : ")[1].trim() : null,
+        children:[]
+      }
     }
   }
 }
+
+var DATABASE = {};
