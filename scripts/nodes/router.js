@@ -11,7 +11,7 @@ function RouterNode(id,rect)
 
     var type = find(q,db)
 
-    this.label = `${type}/${q}`
+    this.label = `router:${type}/${q}`
     this.send({
       name:q,
       type:type,

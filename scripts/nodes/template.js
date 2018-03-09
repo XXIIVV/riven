@@ -8,11 +8,12 @@ function TemplateNode(id,rect)
 
   this.receive = function(q)
   {
-    // Select the right signal
-    var assoc = this.signal(q.type.slice(0, -1));
+    var assoc = this.signal(q.type ? q.type.slice(0, -1) : "page");  
     var payload = assoc.answer(q)
-    this.send({view:payload})
 
+    this.send(payload)
+    this.label = `template:${assoc.id}`
+  
     // Install Dom
     document.body.appendChild(this.signal("view").answer())
   }
