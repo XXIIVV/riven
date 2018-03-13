@@ -1,5 +1,5 @@
 body { padding:20px; background-image: url(../media/assets/grid.svg); background-color:#111; font-family: 'input_mono_medium'; font-size:9px; background-size:20px 20px;}
-svg { padding:50px 10px; width:100%; height:100%; position: fixed; left:0px; top:0px; }
+svg { padding:50px 10px; width:200%; height:150%; position: fixed; left:0px; top:0px; }
 svg.magnet { transition: all 250ms }
 svg g.node { fill:#777; }
 svg g.node text { text-anchor: middle }
@@ -12,7 +12,10 @@ svg path { stroke:white; fill:none; stroke-width:1;stroke-linejoin: round; strok
 svg rect { stroke:#fff;  stroke-width:1; fill:none; }
 svg rect.fill { fill:#111; }
 svg text { fill:white;  text-transform: uppercase; }
-svg path.route { stroke:#555; stroke-width:2;  }
+svg path.route { stroke:#555; stroke-width:2; stroke-dasharray: 50,3; }
 svg path.route.request { stroke-dasharray: 5,5;  }
-svg path.route.bidirectional { stroke:#33; stroke-dasharray: 0,3;  }
+svg path.route.bidirectional { stroke:#33; stroke-dasharray: 0,4;  }
+path.route { stroke-dashoffset: 100; animation: dash 5s linear infinite; }
+path.route.request { stroke-dashoffset: -50; animation: dash 5s linear infinite; }
+@keyframes dash { to { stroke-dashoffset: 0;} }
 svg g:hover text { fill:#72dec2; cursor: pointer; }
