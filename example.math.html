@@ -19,14 +19,14 @@
     {
       Node.call(this,id,rect);
 
-      this.glyph = NODE_GLYPHS.bang
+      this.glyph = "M150,60 L150,60 L150,180 M150,240 L150,240 L150,240"
     }
 
     function ValueNode(id,rect,param)
     {
       Node.call(this,id,rect);
 
-      this.glyph = NODE_GLYPHS.value
+      this.glyph = "M60,60 L60,60 L240,60 L240,240 L60,240 Z M60,150 L60,150 L240,150"
       this.label = param
       this.param = param
 
@@ -39,7 +39,7 @@
     function PrintNode(id,rect)
     {
       Node.call(this,id,rect);
-      this.glyph = NODE_GLYPHS.render
+      this.glyph = "M60,60 L60,60 L240,60 L240,240 L60,240 Z M240,150 L240,150 L150,150 L150,240"
 
       this.receive = function(q)
       {
@@ -51,7 +51,7 @@
     {
       Node.call(this,id,rect);
 
-      this.glyph = NODE_GLYPHS.equal
+      this.glyph = "M60,60 L60,60 L240,60 M60,120 L60,120 L240,120 M60,180 L60,180 L240,180 M60,240 L60,240 L240,240"
       this.label = "add"
 
       this.add = function()
@@ -90,8 +90,8 @@
 
     Ø("bang").connect("add1")
     Ø("add1").connect("print")
-    Ø("add1").connect(["value1","add2"],ROUTE_TYPES.request)
-    Ø("add2").connect(["value2","value3"],ROUTE_TYPES.request)
+    Ø("add1").syphon(["value1","add2"])
+    Ø("add2").syphon(["value2","value3"])
     Ø("bang").bang()
 
     document.body.appendChild(RIVEN.el)
