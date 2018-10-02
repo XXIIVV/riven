@@ -1,6 +1,6 @@
 # Ø(Riven)
 
-[Riven](http://wiki.xxiivv.com/Riven) is meant to be the bare minimum to a [flow-based programming framework](https://rawgit.com/XXIIVV/Riven/master/example.math.html). Nodes have 2 ways of communicating with each other, one is a send/receive pattern, the other, a request/answer pattern.
+[Riven](http://wiki.xxiivv.com/Riven) is meant to be the bare minimum to a **flow-based programming framework** (eg: [math](https://rawgit.com/XXIIVV/Riven/master/example.math.html), [parser](https://rawgit.com/XXIIVV/Riven/master/example.parser.html), [conditional](https://rawgit.com/XXIIVV/Riven/master/example.conditional.html)). Nodes have 2 ways of communicating with each other, one is a send/receive pattern, the other, a request/answer pattern.
 
 <img src='https://raw.githubusercontent.com/XXIIVV/Riven/master/PREVIEW.png' width="600"/>
 
