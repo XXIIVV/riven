@@ -40,6 +40,8 @@ You can also connect to **multiple nodes** at once with `Ø("template").connect(
 
 `Ø("template").answer("cake")`, method is triggered by request().
 
+## Extras
+
 ### .Bang()
 
 `Ø("template").bang()`, is a convenience method equivalent to `.send(true)`, will send *true* to all receiving connected nodes.
@@ -48,9 +50,9 @@ You can also connect to **multiple nodes** at once with `Ø("template").connect(
 
 Looks for a connected node(receiving/answering) with the parameter id, `Ø("template").signal("parser").send("hello")`. Will send *"hello"*, directly to the *parser* node.
 
-## Mesh
+### Mesh
 
-You can group nodes into scopes with `.mesh()`, it visually groups the nodes into a single element that can be moved as one.
+You can group nodes into scopes with `.mesh(pos,[nodes])` to visually groups the nodes into a single element that can be moved as one.
 
 ```
 Ø("template").mesh({x:2,y:2},[
