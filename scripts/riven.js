@@ -77,10 +77,9 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
       for (const id in q) {
         this.connect(q[id], syphon)
       }
-    } else if(Ø(q)){
+    } else if (Ø(q)) {
       (syphon ? this.ports.request : this.ports.output).connect(syphon ? Ø(q).ports.answer : Ø(q).ports.input)
-    }
-    else{
+    } else {
       console.warn(`Unknown ${q}`)
     }
   }
