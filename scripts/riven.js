@@ -1,167 +1,152 @@
 
 // "Don't forget, the portal combination's in my journal."" — Catherine
 
-function Riven()
-{
-  this.is_graph = false;
+'use strict'
+
+function Riven () {
+  this.lib = {}
   this.network = {}
 }
 
+const RIVEN = new Riven()
+
 // QUERY
 
-function Ø(s,network = RIVEN.network)
-{
-  let id = s.toLowerCase();
-  if(id.indexOf(" ") > -1){
-    let node_id = id.split(" ")[0];
-    let port_id = id.split(" ")[1];
-    return network[node_id] && network[node_id].ports[port_id] ? network[node_id].ports[port_id] : null;
-  }
-  else if(network[id]){
-    return network[id];
-  }
-  else{
-    return new Node(id);
+function Ø (s) {
+  const id = s.toLowerCase()
+  if (id.indexOf(' ') > -1) {
+    const nodeId = id.split(' ')[0]
+    const portId = id.split(' ')[1]
+    return RIVEN.network[nodeId] && RIVEN.network[nodeId].ports[portId] ? RIVEN.network[nodeId].ports[portId] : null
+  } else if (RIVEN.network[id]) {
+    return RIVEN.network[id]
+  } else {
+    return new RIVEN.Node(id)
   }
 }
 
 // NODE
 
-function Node(id,rect={x:0,y:0,w:2,h:2})
-{
-  const PORT_TYPES = {default:0,input:1,output:2,request:3,answer:4}
-  const ROUTE_TYPES = {default:0,request:1}
-  
-  this.id = id;
-  this.ports = {}
-  this.rect = rect;
-  this.parent = null;
-  this.children = [];
-  this.label = id;
+RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
+  const PORT_TYPES = { default: 0, input: 1, output: 2, request: 3, answer: 4 }
+  const ROUTE_TYPES = { default: 0, request: 1 }
 
-  this.setup = function()
-  {
-    this.ports.input = new Port(this,"in",PORT_TYPES.input)
-    this.ports.output = new Port(this,"out",PORT_TYPES.output)
-    this.ports.answer = new Port(this,"answer",PORT_TYPES.answer)
-    this.ports.request = new Port(this,"request",PORT_TYPES.request)
+  this.id = id
+  this.ports = {}
+  this.rect = rect
+  this.parent = null
+  this.children = []
+  this.label = id
+
+  this.setup = function () {
+    this.ports.input = new Port(this, 'in', PORT_TYPES.input)
+    this.ports.output = new Port(this, 'out', PORT_TYPES.output)
+    this.ports.answer = new Port(this, 'answer', PORT_TYPES.answer)
+    this.ports.request = new Port(this, 'request', PORT_TYPES.request)
   }
 
-  this.create = function(pos = {x:0,y:0},type = Node,...params)
-  {
-    let node = new type(this.id,rect,...params)  
+  this.create = function (pos = { x: 0, y: 0 }, Type = this.Node, ...params) {
+    const node = new Type(this.id, rect, ...params)
     this.rect.x = pos.x
     this.rect.y = pos.y
-    node.setup();
+    node.setup()
     RIVEN.network[node.id] = node
     return node
   }
 
-  this.mesh = function(pos,n)
-  {
-    let node = new Mesh(this.id,pos)  
+  this.mesh = function (pos, n) {
+    const node = new Mesh(this.id, pos)
     node.rect.x = pos.x
     node.rect.y = pos.y
-    node.setup();
+    node.setup()
     RIVEN.network[node.id] = node
 
-    if(n instanceof Array){
-      for(let id in n){
-        n[id].parent = node;
-        node.children.push(n[id]);  
-        node.update();
+    if (n instanceof Array) {
+      for (const id in n) {
+        n[id].parent = node
+        node.children.push(n[id])
+        node.update()
       }
+    } else {
+      n.parent = node
+      node.children.push(n)
+      node.update()
     }
-    else{
-      n.parent = node;
-      node.children.push(n);  
-      node.update();
-    }
-    return node;
+    return node
   }
 
   // Connect
 
-  this.connect = function(q,type = ROUTE_TYPES.output)
-  {
-    if(q instanceof Array){
-      for(let id in q){
-        this.connect(q[id],type)
+  this.connect = function (q, type = ROUTE_TYPES.output) {
+    if (q instanceof Array) {
+      for (const id in q) {
+        this.connect(q[id], type)
       }
-    }
-    else{
-      this.ports[type == ROUTE_TYPES.request ? "request" : "output"].connect(`${q} ${type == ROUTE_TYPES.request ? "answer" : "input"}`,type);  
+    } else {
+      this.ports[type === ROUTE_TYPES.request ? 'request' : 'output'].connect(`${q} ${type === ROUTE_TYPES.request ? 'answer' : 'input'}`, type)
     }
   }
 
-  this.syphon = function(q)
-  {
-    this.connect(q,ROUTE_TYPES.request)
+  this.syphon = function (q) {
+    this.connect(q, ROUTE_TYPES.request)
   }
 
-  this.bind = function(q)
-  {
+  this.bind = function (q) {
     this.connect(q)
     this.syphon(q)
   }
 
   // Target
 
-  this.signal = function(target)
-  {
-    for(port_id in this.ports){
-      let port = this.ports[port_id]
-      for(route_id in port.routes){
-        let route = port.routes[route_id];
-        if(!route || !route.host || route.host.id != target.toLowerCase()){ continue; }
+  this.signal = function (target) {
+    for (const portId in this.ports) {
+      const port = this.ports[portId]
+      for (const routeId in port.routes) {
+        const route = port.routes[routeId]
+        if (!route || !route.host || route.host.id !== target.toLowerCase()) { continue }
         return route.host
       }
     }
-    return null;
+    return null
   }
 
   // SEND/RECEIVE
 
-  this.send = function(payload)
-  {
-    for(route_id in this.ports.output.routes){
-      let route = this.ports.output.routes[route_id];
-      if(!route){ continue; }
+  this.send = function (payload) {
+    for (const routeId in this.ports.output.routes) {
+      const route = this.ports.output.routes[routeId]
+      if (!route) { continue }
       route.host.receive(payload)
     }
   }
-  
-  this.receive = function(q)
-  {
-    let port = this.ports.output
-    for(route_id in port.routes){
-      let route = port.routes[route_id];
-      if(route){
-        route.host.receive(q)  
+
+  this.receive = function (q) {
+    const port = this.ports.output
+    for (const routeId in port.routes) {
+      const route = port.routes[routeId]
+      if (route) {
+        route.host.receive(q)
       }
     }
   }
 
-  this.bang = function()
-  {
+  this.bang = function () {
     this.send(true)
   }
 
   // REQUEST/ANSWER
 
-  this.answer = function(q)
-  {
+  this.answer = function (q) {
     return this.request(q)
   }
 
-  this.request = function(q)
-  {
-    let payload = {};
-    for(route_id in this.ports.request.routes){
-      let route = this.ports.request.routes[route_id];
-      if(!route){ continue; }
-      let answer = route.host.answer(q)
-      if(!answer){ continue; }
+  this.request = function (q) {
+    const payload = {}
+    for (const routeId in this.ports.request.routes) {
+      const route = this.ports.request.routes[routeId]
+      if (!route) { continue }
+      const answer = route.host.answer(q)
+      if (!answer) { continue }
       payload[route.host.id] = answer
     }
     return payload
@@ -169,39 +154,248 @@ function Node(id,rect={x:0,y:0,w:2,h:2})
 
   // PORT
 
-  function Port(host,id,type = PORT_TYPES.default)
-  {
-    this.host = host;
-    this.id = id;
-    this.type = type;
-    this.routes = [];
+  function Port (host, id, type = PORT_TYPES.default) {
+    this.host = host
+    this.id = id
+    this.type = type
+    this.routes = []
 
-    this.connect = function(b,type = "transit")
-    {
+    this.connect = function (b, type = 'transit') {
       this.routes.push(Ø(b))
     }
   }
 
   // MESH
 
-  function Mesh(id,rect) 
-  {
-    Node.call(this,id,rect);
+  function Mesh (id, rect) {
+    RIVEN.Node.call(this, id, rect)
 
-    this.is_mesh = true;
+    this.is_mesh = true
 
-    this.setup = function(){}
+    this.setup = function () {}
 
-    this.update = function()
-    {
-      let bounds = {x:0,y:0};
-      for(let id in this.children){
-        let node = this.children[id];
+    this.update = function () {
+      const bounds = { x: 0, y: 0 }
+      for (const id in this.children) {
+        const node = this.children[id]
         bounds.x = node.rect.x > bounds.x ? node.rect.x : bounds.x
         bounds.y = node.rect.y > bounds.y ? node.rect.y : bounds.y
       }
-      this.rect.w = bounds.x+4;
-      this.rect.h = bounds.y+5;
+      this.rect.w = bounds.x + 4
+      this.rect.h = bounds.y + 5
     }
   }
+}
+
+// GRAPH
+
+RIVEN.graph = () => {
+  const network = RIVEN.network
+  const GRID_SIZE = 20
+  const PORT_TYPES = { default: 0, input: 1, output: 2, request: 3, answer: 4 }
+
+  this.el = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  document.body.appendChild(this.el)
+
+  const _routes = Object.keys(network).reduce((acc, val, id) => {
+    return `${acc}${drawRoutes(network[val])}`
+  }, '')
+  const _nodes = Object.keys(network).reduce((acc, val, id) => {
+    return `${acc}${drawNode(network[val])}`
+  }, '')
+  this.el.innerHTML = `${_routes}${_nodes}`
+
+  function drawRoutes (node) {
+    let html = ''
+    for (const id in node.ports) {
+      const port = node.ports[id]
+      for (const routeId in port.routes) {
+        const route = port.routes[routeId]
+        if (!route) { continue }
+        html += route ? drawConnection(port, route) : ''
+      }
+    }
+    return `<g id='routes'>${html}</g>`
+  }
+
+  function drawNode (node) {
+    const rect = getRect(node)
+    return `
+    <g class='node ${node.is_mesh ? 'mesh' : ''}' id='node_${node.id}'>
+      <rect rx='2' ry='2' x=${rect.x} y=${rect.y - (GRID_SIZE / 2)} width="${rect.w}" height="${rect.h}" class='${node.children.length === 0 ? 'fill' : ''}'/>
+      <text x="${rect.x + (rect.w / 2)}" y="${rect.y + rect.h + (GRID_SIZE / 2)}">${node.label}</text>
+      ${drawPorts(node)}
+      ${drawGlyph(node)}
+    </g>`
+  }
+
+  function drawPorts (node) {
+    return Object.keys(node.ports).reduce((acc, val, id) => {
+      return `${acc}${drawPort(node.ports[val])}`
+    }, '')
+  }
+
+  function drawGlyph (node) {
+    const rect = getRect(node)
+    return !node.is_mesh && node.glyph ? `<path class='glyph' transform="translate(${rect.x + (GRID_SIZE / 4)},${rect.y - (GRID_SIZE / 4)}) scale(0.1)" d='${node.glyph}'/>` : ''
+  }
+
+  function drawPort (port) {
+    const pos = port ? getPortPosition(port) : { x: 0, y: 0 }
+    return `<g id='${port.host.id}_port_${port.id}'>${(port.type === PORT_TYPES.request || port.type === PORT_TYPES.answer) ? `<path d='${drawDiamond(pos)}' class='port ${port.type} ${port.host.ports[port.id] && port.host.ports[port.id].route ? 'route' : ''}' />` : `<circle cx='${pos.x}' cy="${pos.y}" r="${parseInt(GRID_SIZE / 6)}" class='port ${port.type} ${port.host.ports[port.id] && port.host.ports[port.id].route ? 'route' : ''}'/>`}</g>`
+  }
+
+  function drawConnection (a, b, type) {
+    if (isBidirectional(a.host, b.host)) {
+      return a.type !== PORT_TYPES.output ? drawConnectionBidirectional(a, b) : ''
+    }
+
+    return a.type === PORT_TYPES.output ? drawConnectionOutput(a, b) : drawConnectionRequest(a, b)
+  }
+
+  function isBidirectional (a, b) {
+    for (const id in a.ports.output.routes) {
+      const routeA = a.ports.output.routes[id]
+      for (const id in a.ports.request.routes) {
+        const routeB = a.ports.request.routes[id]
+        if (routeA.host.id === routeB.host.id) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  function drawConnectionOutput (a, b) {
+    const posA = getPortPosition(a)
+    const posB = getPortPosition(b)
+    const posM = middle(posA, posB)
+    const posC1 = { x: (posM.x + (posA.x + GRID_SIZE)) / 2, y: posA.y }
+    const posC2 = { x: (posM.x + (posB.x - GRID_SIZE)) / 2, y: posB.y }
+
+    let path = ''
+
+    path += `M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y} `
+    path += `Q${posC1.x},${posC1.y} ${posM.x},${posM.y} `
+    path += `Q ${posC2.x},${posC2.y} ${posB.x - GRID_SIZE},${posB.y}`
+    path += `L${posB.x},${posB.y}`
+
+    return `<path d="${path}" class='route output'/>
+    <circle cx='${posM.x}' cy='${posM.y}' r='2' fill='white'></circle>`
+  }
+
+  function drawConnectionRequest (a, b) {
+    const posA = getPortPosition(a)
+    const posB = getPortPosition(b)
+    const posM = middle(posA, posB)
+    const posC1 = { x: posA.x, y: (posM.y + (posA.y + GRID_SIZE)) / 2 }
+    const posC2 = { x: posB.x, y: (posM.y + (posB.y - GRID_SIZE)) / 2 }
+
+    let path = ''
+
+    path += `M${posA.x},${posA.y} L${posA.x},${posA.y + GRID_SIZE} `
+    path += `Q${posC1.x},${posC1.y} ${posM.x},${posM.y} `
+    path += `Q ${posC2.x},${posC2.y} ${posB.x},${posB.y - GRID_SIZE}`
+    path += `L${posB.x},${posB.y}`
+
+    return `<path d="${path}" class='route request'/>
+    <circle cx='${posM.x}' cy='${posM.y}' r='2' fill='white'></circle>`
+  }
+
+  function drawConnectionBidirectional (a, b) {
+    const posA = getPortPosition(a)
+    const posB = getPortPosition(b)
+    const posM = middle(posA, posB)
+
+    let path = ''
+
+    path += `M${posA.x},${posA.y} L${posA.x},${posA.y + GRID_SIZE} `
+    path += `L${posA.x},${posM.y} L${posB.x},${posM.y}`
+    path += `L${posB.x},${posB.y - GRID_SIZE} L${posB.x},${posB.y}`
+
+    return `<path d="${path}" class='route bidirectional'/>`
+  }
+
+  function drawDiamond (pos) {
+    const r = GRID_SIZE / 6
+    return `M${pos.x - (r)},${pos.y} L${pos.x},${pos.y - (r)} L${pos.x + (r)},${pos.y} L${pos.x},${pos.y + (r)} Z`
+  }
+
+  function getPortPosition (port) {
+    const rect = getRect(port.host)
+    let offset = { x: 0, y: 0 }
+
+    if (port.type === PORT_TYPES.output) {
+      offset = { x: GRID_SIZE * 2, y: GRID_SIZE / 2 }
+    } else if (port.type === PORT_TYPES.input) {
+      offset = { x: 0, y: GRID_SIZE / 2 }
+    } else if (port.type === PORT_TYPES.answer) {
+      offset = { x: GRID_SIZE, y: -GRID_SIZE * 0.5 }
+    } else if (port.type === PORT_TYPES.request) {
+      offset = { x: GRID_SIZE, y: GRID_SIZE * 1.5 }
+    }
+    return { x: rect.x + offset.x, y: rect.y + offset.y }
+  }
+
+  function getRect (node) {
+    const w = node.rect.w * GRID_SIZE
+    const h = node.rect.h * GRID_SIZE
+    let x = node.rect.x * GRID_SIZE
+    let y = node.rect.y * GRID_SIZE
+
+    if (node.parent) {
+      const offset = getRect(node.parent)
+      x += offset.x
+      y += offset.y
+    }
+    return { x: x, y: y, w: w, h: h }
+  }
+
+  function middle (a, b) {
+    return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }
+  }
+
+  // Cursor
+
+  this.cursor = {
+    host: null,
+    el: document.createElement('cursor'),
+    pos: { x: 0, y: 0 },
+    offset: { x: 0, y: 0 },
+    origin: null,
+    install: function (host) {
+      this.host = host
+      document.body.appendChild(this.el)
+      document.addEventListener('mousedown', (e) => { this.touch({ x: e.clientX, y: e.clientY }, true); e.preventDefault() })
+      document.addEventListener('mousemove', (e) => { this.touch({ x: e.clientX, y: e.clientY }, false); e.preventDefault() })
+      document.addEventListener('mouseup', (e) => { this.touch({ x: e.clientX, y: e.clientY }); e.preventDefault() })
+    },
+    update: function () {
+      this.host.el.style.left = `${parseInt(this.offset.x)}px`
+      this.host.el.style.top = `${parseInt(this.offset.y)}px`
+      document.body.style.backgroundPosition = `${parseInt(this.offset.x / 2)}px ${parseInt(this.offset.y / 2)}px`
+    },
+    touch: function (pos, click = null) {
+      if (click === true) {
+        this.origin = pos
+        return
+      }
+      if (this.origin) {
+        this.offset.x += (pos.x - this.origin.x) / 2
+        this.offset.y += (pos.y - this.origin.y) / 2
+        this.update()
+        this.origin = pos
+      }
+      if (click === null) {
+        this.origin = null
+        return
+      }
+      this.pos = pos
+    },
+    magnet: function (val) {
+      return (parseInt(val / GRID_SIZE) * GRID_SIZE) + (GRID_SIZE / 2)
+    }
+  }
+
+  this.cursor.install(this)
 }

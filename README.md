@@ -8,27 +8,29 @@
 
 You are given a node selection tool `Ø()`, you can type the character with `alt+shift+O`(Alt +0216). If you are on Windows, or cannot easily type this character, try wrapping this function into a character of your choosing, like `function R(a){ return Ø(a); }`.
 
+### Creating a basic node
+
+`Ø("template").create({x:2,y:2})` will create a **template** node at 2,2. 
+
 ### Selecting a node
 
-`Ø("template")` will select the template node.
+`Ø("template")` will select the **template** node.
 
 ### Selecting a port
 
-`Ø("template output")` will select the output port of the template node.
-
-## Node
-
-### Creating a basic node
-
-`Ø("parser").create({x:2,y:2},ParserNode)` will create a **ParserNode** at 2,2. 
+`Ø("template output")` will select the **output port**, of the template node.
 
 ### Connecting nodes
 
-`Ø("template").connect("parser")` will connect the **template** node to the **parser** node. You can also connect to multiple nodes at once with `Ø("template").connect(["parser","console"])`. 
+`Ø("template").connect("parser")` will connect the **template** node to the **parser** node. 
 
-The `Ø("template").connect("parser")` command is equivalent to `Ø("template output").connect("parser input")`, and the `Ø("template").syphon("parser")` is equivalent to `Ø("template request").connect("parser answer")`. The `Ø("template").bind("parser")` will create a connection and a syphon between the 2 nodes.
+#### Extras 
 
-### Meshing nodes
+You can also connect to multiple nodes at once with `Ø("template").connect(["parser","console"])`. The `Ø("template").bind("parser")` will create a connection and a syphon between the 2 nodes.
+
+The `Ø("template").connect("parser")` command is equivalent to `Ø("template output").connect("parser input")`, and the `Ø("template").syphon("parser")` is equivalent to `Ø("template request").connect("parser answer")`.
+
+## Mesh
 
 You can group nodes into scopes with `.mesh()`, it visually groups the nodes into a single element that can be moved as one.
 

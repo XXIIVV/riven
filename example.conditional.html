@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <script src="scripts/riven.js"></script>
-  <script src="scripts/riven.graph.js"></script>
+  <script src="scripts/nodes/bang.js"></script>
   <link rel="stylesheet" type="text/css" href="links/reset.css"/>
   <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
   <link rel="stylesheet" type="text/css" href="links/main.css"/>
@@ -11,21 +11,11 @@
 </head>
 <body>
   <script>
-    var RIVEN = new Riven_Graph();
+    'use strict'
 
-    // Create custom nodes
-
-    function BangNode(id,rect)
+    RIVEN.lib.Hash = function(id,rect)
     {
-      Node.call(this,id,rect);
-
-      this.glyph = "M150,60 L150,60 L150,180 M150,240 L150,240 L150,240"
-    }
-
-    function HashNode(id,rect)
-    {
-      Node.call(this,id,rect);
-
+      RIVEN.Node.call(this,id,rect);
       this.glyph = "M60,150 L60,150 L240,150 L240,150 L150,240 M150,60 L150,60 L240,150"
 
       this.receive = function()
@@ -36,10 +26,9 @@
       }
     }
 
-    function ChoiceNode(id,rect)
+    RIVEN.lib.Choice = function(id,rect)
     {
-      Node.call(this,id,rect);
-
+      RIVEN.Node.call(this,id,rect);
       this.glyph = "M60,120 L60,120 L150,120 L240,60 M60,150 L60,150 L240,150 M60,180 L60,180 L150,180 L240,240"
 
       this.receive = function(q)
@@ -54,10 +43,9 @@
       }
     }
 
-    function ValueNode(id,rect,param)
+    RIVEN.lib.Value = function(id,rect,param)
     {
-      Node.call(this,id,rect);
-
+      RIVEN.Node.call(this,id,rect);
       this.glyph = "M60,60 L60,60 L240,60 L240,240 L60,240 Z M60,150 L60,150 L240,150"
       this.label = param
       this.param = param
@@ -68,9 +56,9 @@
       }
     }
 
-    function PrintNode(id,rect)
+    RIVEN.lib.Print = function(id,rect)
     {
-      Node.call(this,id,rect);
+      RIVEN.Node.call(this,id,rect);
       this.glyph = "M60,60 L60,60 L240,60 L240,240 L60,240 Z M240,150 L240,150 L150,150 L150,240"
       this.label = ""
 
@@ -80,10 +68,9 @@
       }
     }
 
-    function AddNode(id,rect)
+    RIVEN.lib.Add = function(id,rect)
     {
-      Node.call(this,id,rect);
-
+      RIVEN.Node.call(this,id,rect);
       this.glyph = "M60,60 L60,60 L240,60 M60,120 L60,120 L240,120 M60,180 L60,180 L240,180 M60,240 L60,240 L240,240"
       this.label = "add"
 
@@ -109,34 +96,36 @@
     }
 
     // Build tree
+    const lib = RIVEN.lib
 
-    Ø("bang").create({x:2,y:4},BangNode)
-    Ø("hash").create({x:6,y:4},HashNode)
-    Ø("print_red").create({x:30,y:2},PrintNode)
-    Ø("print_green").create({x:30,y:6},PrintNode)
-    Ø("print_blue").create({x:30,y:10},PrintNode)
-    Ø("print_else").create({x:30,y:14},PrintNode)
+    RIVEN.create = (append = true) => {
+      Ø("bang").create({x:2,y:4},lib.Bang)
+      Ø("hash").create({x:6,y:4},lib.Hash)
+      Ø("print_red").create({x:30,y:2},lib.Print)
+      Ø("print_green").create({x:30,y:6},lib.Print)
+      Ø("print_blue").create({x:30,y:10},lib.Print)
+      Ø("print_else").create({x:30,y:14},lib.Print)
 
-    Ø("example").mesh({x:10,y:0},[
-      Ø("choice").create({x:4,y:8},ChoiceNode),
-      Ø("red").create({x:12,y:2},ValueNode,"red"),
-      Ø("green").create({x:12,y:6},ValueNode,"green"),
-      Ø("blue").create({x:12,y:10},ValueNode,"blue"),
-      Ø("else").create({x:12,y:14},ValueNode,"else"),
-    ])
+      Ø("example").mesh({x:10,y:0},[
+        Ø("choice").create({x:4,y:8},lib.Choice),
+        Ø("red").create({x:12,y:2},lib.Value,"red"),
+        Ø("green").create({x:12,y:6},lib.Value,"green"),
+        Ø("blue").create({x:12,y:10},lib.Value,"blue"),
+        Ø("else").create({x:12,y:14},lib.Value,"else"),
+      ])
 
-    Ø("bang").connect("hash")
-    Ø("hash").connect("choice")
-    Ø("choice").connect(["red","green","blue","else"])
-    Ø("red").connect("print_red")
-    Ø("green").connect("print_green")
-    Ø("blue").connect("print_blue")
-    Ø("else").connect("print_else")
-    Ø("bang").bang()
+      Ø("bang").connect("hash")
+      Ø("hash").connect("choice")
+      Ø("choice").connect(["red","green","blue","else"])
+      Ø("red").connect("print_red")
+      Ø("green").connect("print_green")
+      Ø("blue").connect("print_blue")
+      Ø("else").connect("print_else")
+      Ø("bang").bang()
+    }
 
-    document.body.appendChild(RIVEN.el)
-
-    RIVEN.graph();
+    RIVEN.create(true);
+    RIVEN.graph()
   </script>
 </body>
 </html>
