@@ -3,16 +3,17 @@ svg { padding:50px 10px; width:200%; height:150%; position: fixed; left:0px; top
 svg.magnet { transition: all 250ms }
 svg g.node { fill:#777; }
 svg g.node text { text-anchor: middle }
-svg g.node .port { fill:#111; stroke:white; stroke-width:1; }
+svg g.node .port { fill:#fff; stroke-width:0; }
 svg g.node .port.input, svg g.node .port.answer { fill:white; }
 svg g.node.mesh rect { stroke:#333; }
-svg g.node .glyph { stroke-width:10; stroke:#999; }
-svg g.node rect { stroke:#ccc; }
-svg path { stroke:white; fill:none; stroke-width:1;stroke-linejoin: round; stroke-linecap: round  }
-svg rect { stroke:#fff;  stroke-width:1; fill:none; }
+svg g.node .glyph { stroke-width:20; stroke:#000; }
+svg g.node rect { stroke:none; fill:#fff;}
+svg g.node rect.outline { stroke:#000; fill:none; stroke-width:2; }
+svg path { stroke:white; fill:none; stroke-width:2;stroke-linejoin: round; stroke-linecap: round  }
+svg rect { stroke:#fff;  stroke-width:2; fill:#fff; }
 svg rect.fill { fill:#111; }
 svg text { fill:white;  text-transform: uppercase; }
-svg path.route { stroke:#555; stroke-width:2; stroke-dasharray: 50,3; }
+svg path.route { stroke:#fff; stroke-width:2; stroke-dasharray: 50,5; }
 svg path.route.request { stroke-dasharray: 5,5;  }
 svg path.route.bidirectional { stroke:#33; stroke-dasharray: 0,4;  }
 path.route { stroke-dashoffset: 100; animation: dash 5s linear infinite; }

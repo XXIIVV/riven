@@ -1,9 +1,9 @@
 RIVEN.lib.Console = function (id, rect) {
   RIVEN.Node.call(this, id, rect)
 
-  this.glyph = 'M60,60 L60,60 L240,60 L240,240 L60,240 Z M240,150 L240,150 L150,150 L150,240'
+  this.glyph = 'M65,65 L65,65 L245,65 M65,125 L65,125 L245,125 M65,185 L65,185 L245,185 M65,245 L65,245 L245,245 '
 
   this.receive = function (q) {
-    console.log(q)
+    console.log(this.id,q)
   }
 }

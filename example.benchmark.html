@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="scripts/riven.js"></script>
+  <script src="scripts/nodes/messenger.js"></script>
+  <script src="scripts/nodes/console.js"></script>
+  <script src="scripts/nodes/print.js"></script>
+  <link rel="stylesheet" type="text/css" href="links/reset.css"/>
+  <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
+  <link rel="stylesheet" type="text/css" href="links/main.css"/>
+  <title>Riven</title>
+</head>
+<body>
+  <script>
+    'use strict'
+
+    // Build tree
+    const lib = RIVEN.lib
+
+    RIVEN.create = (append = true) => {
+      Ø("bang").create({x:2,y:4},lib.Messenger,"hello")
+      Ø("console").create({x:8,y:4},lib.Console)
+      Ø("print").create({x:8,y:8},lib.Print)
+
+      Ø("bang").connect(["console","print"])
+    }
+
+    RIVEN.create(true);
+
+    Ø("bang").send("hello");
+
+    RIVEN.graph()
+  </script>
+</body>
+</html>

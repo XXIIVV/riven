@@ -18,7 +18,7 @@ You are given a node selection tool `Ø()`, you can type the character with `alt
 
 ### Selecting a port
 
-`Ø("template output")` will select the **output port**, of the template node.
+`Ø("template")` will select the **output port**, of the template node.
 
 ### Connecting nodes
 
