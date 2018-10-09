@@ -26,7 +26,6 @@ function Ø (id) {
 
 RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
   const PORT_TYPES = { default: 0, input: 1, output: 2, request: 3, answer: 4 }
-  const ROUTE_TYPES = { default: 0, request: 1 }
 
   this.id = id
   this.ports = {}
@@ -46,7 +45,7 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
   }
 
   this.create = function (pos = { x: 0, y: 0 }, Type, ...params) {
-    if(!Type){ console.warn(`Unknown NodeType for #${this.id}`); return this }
+    if (!Type) { console.warn(`Unknown NodeType for #${this.id}`); return this }
     const node = new Type(this.id, rect, ...params)
     node.setup(pos)
     RIVEN.add(node)
@@ -78,12 +77,11 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
       for (const id in q) {
         this.connect(q[id], syphon)
       }
-    } 
-    else if(syphon){
-      this.ports.request.connect(Ø(q).ports.answer)
+    } else if(Ø(q)){
+      (syphon ? this.ports.request : this.ports.output).connect(syphon ? Ø(q).ports.answer : Ø(q).ports.input)
     }
-    else {
-      this.ports.output.connect(Ø(q).ports.input)
+    else{
+      console.warn(`Unknown ${q}`)
     }
   }
 
@@ -161,7 +159,7 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
     this.routes = []
 
     this.connect = function (port) {
-      if(!port){ console.warn(`Unknown port: ${this.host.id}`); return; }
+      if (!port) { console.warn(`Unknown port: ${this.host.id}`); return }
       console.log(`Connect ${this.host.id}.${this.id} -> ${port.host.id}.${port.id}`)
       this.routes.push(port)
     }
@@ -231,7 +229,7 @@ RIVEN.graph = () => {
       <rect rx='2' ry='2' x=${rect.x} y=${rect.y - (GRID_SIZE / 2)} width="${rect.w}" height="${rect.h}" class='${node.children.length === 0 ? 'fill' : ''}'/>
       <text x="${rect.x + (rect.w / 2) + (GRID_SIZE * 0.3)}" y="${rect.y + rect.h + (GRID_SIZE * 0.2)}">${node.label}</text>
       ${drawPorts(node)}
-      <rect rx='2' ry='2' x=${rect.x+(pad/2)} y=${(rect.y - (GRID_SIZE / 2))+(pad/2)} width="${rect.w-pad}" height="${rect.h-pad}" class='outline'/>
+      <rect rx='2' ry='2' x=${rect.x + (pad / 2)} y=${(rect.y - (GRID_SIZE / 2)) + (pad / 2)} width="${rect.w - pad}" height="${rect.h - pad}" class='outline'/>
       ${drawGlyph(node)}
     </g>`
   }

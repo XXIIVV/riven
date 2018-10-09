@@ -3,7 +3,10 @@
 <head>
   <meta charset="utf-8">
   <script src="scripts/riven.js"></script>
-  <script src="scripts/riven.graph.js"></script>
+  <script src="scripts/nodes/print.js"></script>
+  <script src="scripts/nodes/value.js"></script>
+  <script src="scripts/nodes/add.js"></script>
+  <script src="scripts/nodes/concat.js"></script>
   <link rel="stylesheet" type="text/css" href="links/reset.css"/>
   <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
   <link rel="stylesheet" type="text/css" href="links/main.css"/>
@@ -11,92 +14,37 @@
 </head>
 <body>
   <script>
-    var RIVEN = new Riven_Graph();
+    'use strict'
 
-    // Create custom nodes
+    const lib = RIVEN.lib
 
-    function BangNode(id,rect)
-    {
-      Node.call(this,id,rect);
+    RIVEN.create = (append = true) => {
+      Ø("bang").create({x:4,y:12},RIVEN.Node)
 
-      this.glyph = "M150,60 L150,60 L150,180 M150,240 L150,240 L150,240"
+      // Int nodes
+      Ø("add").create({x:14,y:4},lib.Add)
+      Ø("int1").create({x:12,y:8},lib.Value,2)
+      Ø("int2").create({x:16,y:8},lib.Value,5)
+      Ø("print_int").create({x:20,y:4},lib.Print)
+
+      // Str nodes
+      Ø("concat").create({x:14,y:12},lib.Concat)
+      Ø("str1").create({x:12,y:16},lib.Value,"hello")
+      Ø("str2").create({x:16,y:16},lib.Value,"world")
+      Ø("print_str").create({x:20,y:12},lib.Print)
+
+      Ø("bang").connect(["add","concat"])
+      Ø("add").connect(["print_int"])
+      Ø("add").syphon(["int1","int2"])
+      Ø("concat").syphon(["str1","str2"])
+      Ø("concat").connect(["print_str"])
     }
 
-    function ValueNode(id,rect,param)
-    {
-      Node.call(this,id,rect);
+    RIVEN.create(true);
 
-      this.glyph = "M60,60 L60,60 L240,60 L240,240 L60,240 Z M60,150 L60,150 L240,150"
-      this.label = param
-      this.param = param
+    Ø("bang").bang();
 
-      this.answer = function()
-      {
-        return this.param
-      }
-    }
-
-    function PrintNode(id,rect)
-    {
-      Node.call(this,id,rect);
-      this.glyph = "M60,60 L60,60 L240,60 L240,240 L60,240 Z M240,150 L240,150 L150,150 L150,240"
-
-      this.receive = function(q)
-      {
-        this.label = q;
-      }
-    }
-
-    function AddNode(id,rect)
-    {
-      Node.call(this,id,rect);
-
-      this.glyph = "M60,60 L60,60 L240,60 M60,120 L60,120 L240,120 M60,180 L60,180 L240,180 M60,240 L60,240 L240,240"
-      this.label = "add"
-
-      this.add = function()
-      {
-        var sum = 0;
-        var values = this.request();
-        for(id in values){
-          sum += values[id];
-        }
-        return sum
-      }
-
-      this.receive = function(q)
-      {
-        this.send(this.add())
-      }
-
-      this.answer = function()
-      {
-        return this.add()
-      }
-    }
-
-    // Build tree
-
-    Ø("bang").create({x:2,y:4},BangNode)
-    Ø("print").create({x:20,y:4},PrintNode)
-
-    Ø("example").mesh({x:6,y:0},[
-      Ø("add1").create({x:4,y:2},AddNode),
-      Ø("add2").create({x:6,y:8},AddNode),
-      Ø("value1").create({x:2,y:8},ValueNode,5),
-      Ø("value2").create({x:8,y:14},ValueNode,6),
-      Ø("value3").create({x:4,y:14},ValueNode,7),
-    ])
-
-    Ø("bang").connect("add1")
-    Ø("add1").connect("print")
-    Ø("add1").syphon(["value1","add2"])
-    Ø("add2").syphon(["value2","value3"])
-    Ø("bang").bang()
-
-    document.body.appendChild(RIVEN.el)
-
-    RIVEN.graph();
+    RIVEN.graph()
   </script>
 </body>
 </html>
