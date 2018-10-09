@@ -96,6 +96,7 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
   // Target
 
   this.signal = function (target) {
+    console.log('signal', target)
     for (const portId in this.ports) {
       const port = this.ports[portId]
       for (const routeId in port.routes) {

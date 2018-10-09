@@ -6,10 +6,11 @@
   <script src="scripts/nodes/value.js"></script>
   <script src="scripts/nodes/equals.js"></script>
   <script src="scripts/nodes/bang.js"></script>
+  <script src="scripts/nodes/console.js"></script>
   <link rel="stylesheet" type="text/css" href="links/reset.css"/>
   <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
   <link rel="stylesheet" type="text/css" href="links/main.css"/>
-  <title>Riven</title>
+  <title>Riven — Conditional</title>
 </head>
 <body>
   <script>
@@ -18,21 +19,26 @@
     const lib = RIVEN.lib
 
     RIVEN.create = (append = true) => {
-      Ø("val1").create({x:4,y:4},lib.Value,10)
-      Ø("if").mesh({x:8,y:0},[
-        Ø("val2").create({x:2,y:8},lib.Value,5),
-        Ø("equals").create({x:2,y:4},lib.Equals)
-      ])
-      Ø("true").create({x:16,y:4},lib.Bang)
-      Ø("false").create({x:16,y:8},lib.Bang)
+      Ø("val1").create({x:4,y:10},lib.Value,"blue")
+      Ø("equals").create({x:10,y:10},lib.Equals)
+      Ø("console").create({x:26,y:10},lib.Console)
+
+      Ø("red").create({x:18,y:4},lib.Bang)
+      Ø("green").create({x:18,y:8},lib.Bang)
+      Ø("blue").create({x:18,y:12},lib.Bang)
+      Ø("else").create({x:18,y:16},lib.Bang)
+
       Ø("val1").connect("equals")
-      Ø("equals").syphon("val2")
-      Ø("equals").connect(["true","false"])
+      Ø("equals").connect(["red","green","blue","else"])
+      Ø("red").connect("console")
+      Ø("green").connect("console")
+      Ø("blue").connect("console")
+      Ø("else").connect("console")
     }
 
     RIVEN.create(true);
 
-    Ø("val1").send(10)
+    Ø("val1").send("blue")
 
     RIVEN.graph()
   </script>

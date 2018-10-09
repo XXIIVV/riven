@@ -6,5 +6,6 @@ RIVEN.lib.Bang = function (id, rect) {
 
   this.receive = function (q) {
     this.label = `${this.id}(bang!)`
+    this.send(this)
   }
 }
