@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <script src="scripts/riven.js"></script>
-  <script src="scripts/nodes/messenger.js"></script>
   <script src="scripts/nodes/console.js"></script>
   <script src="scripts/nodes/print.js"></script>
+  <script src="scripts/nodes/concat.js"></script>
+  <script src="scripts/nodes/value.js"></script>
   <link rel="stylesheet" type="text/css" href="links/reset.css"/>
   <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
   <link rel="stylesheet" type="text/css" href="links/main.css"/>
@@ -15,20 +16,25 @@
   <script>
     'use strict'
 
-    // Build tree
     const lib = RIVEN.lib
 
     RIVEN.create = (append = true) => {
-      Ø("bang").create({x:2,y:4},lib.Messenger,"hello")
-      Ø("console").create({x:8,y:4},lib.Console)
-      Ø("print").create({x:8,y:8},lib.Print)
+      Ø("bang").create({x:8,y:4},RIVEN.Node)
+      Ø("console").create({x:20,y:4},lib.Console)
+      Ø("print").create({x:20,y:8},lib.Print)
 
-      Ø("bang").connect(["console","print"])
+      Ø("concat").create({x:14,y:4},lib.Concat)
+      Ø("str1").create({x:12,y:8},lib.Value,"hello")
+      Ø("str2").create({x:16,y:8},lib.Value,"world")
+
+      Ø("bang").connect("concat")
+      Ø("concat").connect(["console","print"])
+      Ø("concat").syphon(["str1","str2"])
     }
 
     RIVEN.create(true);
 
-    Ø("bang").send("hello");
+    Ø("bang").bang();
 
     RIVEN.graph()
   </script>

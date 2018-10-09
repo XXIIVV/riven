@@ -73,18 +73,22 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
 
   // Connect
 
-  this.connect = function (q, type = ROUTE_TYPES.output) {
+  this.connect = function (q, syphon) {
     if (q instanceof Array) {
       for (const id in q) {
-        this.connect(q[id], type)
+        this.connect(q[id], syphon)
       }
-    } else {
+    } 
+    else if(syphon){
+      this.ports.request.connect(Ø(q).ports.answer)
+    }
+    else {
       this.ports.output.connect(Ø(q).ports.input)
     }
   }
 
   this.syphon = function (q) {
-    this.connect(q, ROUTE_TYPES.request)
+    this.connect(q, true)
   }
 
   this.bind = function (q) {
@@ -157,6 +161,7 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
     this.routes = []
 
     this.connect = function (port) {
+      if(!port){ console.warn(`Unknown port: ${this.host.id}`); return; }
       console.log(`Connect ${this.host.id}.${this.id} -> ${port.host.id}.${port.id}`)
       this.routes.push(port)
     }
@@ -192,6 +197,7 @@ RIVEN.graph = () => {
   const PORT_TYPES = { default: 0, input: 1, output: 2, request: 3, answer: 4 }
 
   this.el = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  this.el.id = 'riven'
   document.body.appendChild(this.el)
 
   const _routes = Object.keys(network).reduce((acc, val, id) => {
@@ -223,10 +229,10 @@ RIVEN.graph = () => {
     return `
     <g class='node ${node.is_mesh ? 'mesh' : ''}' id='node_${node.id}'>
       <rect rx='2' ry='2' x=${rect.x} y=${rect.y - (GRID_SIZE / 2)} width="${rect.w}" height="${rect.h}" class='${node.children.length === 0 ? 'fill' : ''}'/>
-      <text x="${rect.x + (rect.w / 2)}" y="${rect.y + rect.h + (GRID_SIZE / 2)}">${node.label}</text>
+      <text x="${rect.x + (rect.w / 2) + (GRID_SIZE * 0.3)}" y="${rect.y + rect.h + (GRID_SIZE * 0.2)}">${node.label}</text>
       ${drawPorts(node)}
-      ${drawGlyph(node)}
       <rect rx='2' ry='2' x=${rect.x+(pad/2)} y=${(rect.y - (GRID_SIZE / 2))+(pad/2)} width="${rect.w-pad}" height="${rect.h-pad}" class='outline'/>
+      ${drawGlyph(node)}
     </g>`
   }
 
