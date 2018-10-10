@@ -21,14 +21,15 @@
     RIVEN.create = (append = true) => {
       Ø("bang").create({x:2,y:2},RIVEN.Node)
 
-      Ø("mesh").create({x:6,y:0},lib.Mesh,[
-        Ø("item1").create({x:2,y:2},RIVEN.Node),
-        Ø("item2").create({x:6,y:2},RIVEN.Node)
-      ])
+      Ø("mesh").create({x:8,y:0},lib.Mesh,[
+        Ø("item1").create({x:0,y:0},RIVEN.Node),
+        Ø("item2").create({x:4,y:0},RIVEN.Node)
+      ], "item1", "item2")
 
-      Ø("output").create({x:18,y:2},RIVEN.Node)
+      Ø("output").create({x:26,y:2},RIVEN.Node)
 
       Ø("bang").connect("mesh")
+      Ø("item1").connect("item2")
       Ø("mesh").connect("output")
     }
 
