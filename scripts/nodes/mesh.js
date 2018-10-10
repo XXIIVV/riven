@@ -10,8 +10,8 @@ RIVEN.lib.Mesh = function (id, rect, children, entry, exit) {
   this.ports.entry = new this.Port(this, 'entry', PORT_TYPES.entry)
   this.ports.exit = new this.Port(this, 'exit', PORT_TYPES.exit)
 
-  this.ports.entry.connect(Ø(entry).ports.input)
-  Ø(exit).ports.output.connect(this.ports.exit)
+  if (RIVEN.network[entry]) { this.ports.entry.connect(Ø(entry).ports.input) }
+  if (RIVEN.network[exit]) { Ø(exit).ports.output.connect(this.ports.exit) }
 
   this.update = function () {
     const bounds = { x: 0, y: 0 }
@@ -20,7 +20,7 @@ RIVEN.lib.Mesh = function (id, rect, children, entry, exit) {
       bounds.x = node.rect.x > bounds.x ? node.rect.x : bounds.x
       bounds.y = node.rect.y > bounds.y ? node.rect.y : bounds.y
     }
-    this.rect.w = bounds.x + 10
+    this.rect.w = bounds.x + 8
     this.rect.h = bounds.y + 6
   }
 

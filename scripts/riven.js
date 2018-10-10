@@ -60,7 +60,10 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
         this.connect(q[id], syphon)
       }
     } else if (Ø(q)) {
-      (syphon ? this.ports.request : this.ports.output).connect(syphon ? Ø(q).ports.answer : Ø(q).ports.input)
+      const port = (syphon ? this.ports.request : this.ports.output)
+      const target = syphon ? Ø(q).ports.answer : Ø(q).ports.input
+      if (!port) { console.warn(`Unknown: ${q}`); return }
+      port.connect(target)
     } else {
       console.warn(`Unknown ${q}`)
     }
@@ -140,7 +143,7 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
     this.routes = []
 
     this.connect = function (port) {
-      if (!port) { console.warn(`Unknown port: ${this.host.id}`); return }
+      if (!port) { console.warn(`Unknown port from: ${this.host.id}`); return }
       console.log(`Connect ${this.host.id}.${this.id} -> ${port.host.id}.${port.id}`)
       this.routes.push(port)
     }
@@ -213,7 +216,13 @@ RIVEN.graph = () => {
     if (isBidirectional(a.host, b.host)) {
       return a.type !== PORT_TYPES.output ? drawConnectionBidirectional(a, b) : ''
     }
-    return a.type === PORT_TYPES.output || a.type === PORT_TYPES.entry || a.type === PORT_TYPES.output ? drawConnectionOutput(a, b) : drawConnectionRequest(a, b)
+    if (a.type === PORT_TYPES.entry) {
+      return drawConnectionEntry(a, b)
+    }
+    if (b.type === PORT_TYPES.exit) {
+      return drawConnectionExit(a, b)
+    }
+    return a.type === PORT_TYPES.output || a.type === PORT_TYPES.output ? drawConnectionOutput(a, b) : drawConnectionRequest(a, b)
   }
 
   function isBidirectional (a, b) {
@@ -244,6 +253,38 @@ RIVEN.graph = () => {
       L${posB.x},${posB.y}
     " class='route output'/>
     <circle cx='${posM.x}' cy='${posM.y}' r='2' fill='white'></circle>`
+  }
+
+  function drawConnectionEntry (a, b) {
+    const posA = getPortPosition(a)
+    const posB = getPortPosition(b)
+    const posM = middle(posA, posB)
+    const posC1 = { x: (posM.x + (posA.x + GRID_SIZE)) / 2, y: posA.y }
+    const posC2 = { x: (posM.x + (posB.x - GRID_SIZE)) / 2, y: posB.y }
+
+    return `
+    <path d="
+      M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y} 
+      L${posA.x + GRID_SIZE},${posA.y} 
+      L${posA.x + GRID_SIZE},${posB.y} 
+      L${posB.x},${posB.y}
+    " class='route entry'/>`
+  }
+
+  function drawConnectionExit (a, b) {
+    const posA = getPortPosition(a)
+    const posB = getPortPosition(b)
+    const posM = middle(posA, posB)
+    const posC1 = { x: (posM.x + (posA.x + GRID_SIZE)) / 2, y: posA.y }
+    const posC2 = { x: (posM.x + (posB.x - GRID_SIZE)) / 2, y: posB.y }
+
+    return `
+    <path d="
+      M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y} 
+      L${posB.x - GRID_SIZE},${posA.y} 
+      L${posB.x - GRID_SIZE},${posB.y} 
+      L${posB.x},${posB.y}
+    " class='route exit'/>`
   }
 
   function drawConnectionRequest (a, b) {
@@ -280,18 +321,14 @@ RIVEN.graph = () => {
     const rect = getRect(port.host)
     let offset = { x: 0, y: 0 }
 
-    if (port.type === PORT_TYPES.output) {
+    if (port.type === PORT_TYPES.output || port.type === PORT_TYPES.exit) {
       offset = { x: rect.w, y: (rect.h - (GRID_SIZE * 1.5)) }
-    } else if (port.type === PORT_TYPES.input) {
+    } else if (port.type === PORT_TYPES.input || port.type === PORT_TYPES.entry) {
       offset = { x: 0, y: GRID_SIZE / 2 }
     } else if (port.type === PORT_TYPES.answer) {
       offset = { x: GRID_SIZE, y: -GRID_SIZE * 0.5 }
     } else if (port.type === PORT_TYPES.request) {
       offset = { x: (rect.w - (GRID_SIZE)), y: (rect.h - (GRID_SIZE / 2)) }
-    } else if (port.type === PORT_TYPES.entry) {
-      offset = { x: 0, y: (rect.h - (GRID_SIZE * 1.5)) }
-    } else if (port.type === PORT_TYPES.exit) {
-      offset = { x: rect.w, y: GRID_SIZE * 0.5 }
     }
     return { x: rect.x + offset.x, y: rect.y + offset.y }
   }
@@ -304,7 +341,7 @@ RIVEN.graph = () => {
 
     if (node.parent) {
       const offset = getRect(node.parent)
-      x += offset.x + (4 * GRID_SIZE)
+      x += offset.x + (2 * GRID_SIZE)
       y += offset.y + (2 * GRID_SIZE)
     }
     return { x: x, y: y, w: w, h: h }

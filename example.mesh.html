@@ -6,7 +6,6 @@
   <script src="scripts/nodes/print.js"></script>
   <script src="scripts/nodes/value.js"></script>
   <script src="scripts/nodes/add.js"></script>
-  <script src="scripts/nodes/concat.js"></script>
   <script src="scripts/nodes/mesh.js"></script>
   <link rel="stylesheet" type="text/css" href="links/reset.css"/>
   <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
@@ -21,16 +20,14 @@
 
     RIVEN.create = (append = true) => {
       Ø("bang").create({x:2,y:2},RIVEN.Node)
-
       Ø("mesh").create({x:8,y:0},lib.Mesh,[
-        Ø("item1").create({x:0,y:0},lib.Print),
-        Ø("item2").create({x:4,y:0},lib.Print)
-      ], "item1", "item2")
-
-      Ø("output").create({x:26,y:2},lib.Print)
-
+        Ø("add").create({x:2,y:0},lib.Add),
+        Ø("val1").create({x:0,y:4},lib.Value,5),
+        Ø("val2").create({x:4,y:4},lib.Value,10),
+      ], "add", "add")
+      Ø("output").create({x:26,y:6},lib.Print)
+      Ø("add").syphon(["val1","val2"])
       Ø("bang").connect("mesh")
-      Ø("item1").connect("item2")
       Ø("mesh").connect("output")
     }
 
