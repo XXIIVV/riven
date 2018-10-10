@@ -131,24 +131,6 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
     return null
   }
 
-  this.mesh = function (pos, n) {
-    const node = new Mesh(this.id, pos)
-    node.setup()
-    RIVEN.add(node)
-    if (n instanceof Array) {
-      for (const id in n) {
-        n[id].parent = node
-        node.children.push(n[id])
-        node.update()
-      }
-    } else {
-      n.parent = node
-      node.children.push(n)
-      node.update()
-    }
-    return node
-  }
-
   // PORT
 
   function Port (host, id, type = PORT_TYPES.default) {
@@ -163,26 +145,27 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
       this.routes.push(port)
     }
   }
+}
 
-  // MESH(TODO)
+RIVEN.lib.Mesh = function(id, rect, children)
+{
+  RIVEN.Node.call(this, id, rect)
 
-  function Mesh (id, rect) {
-    RIVEN.Node.call(this, id, rect)
-
-    this.is_mesh = true
-
-    this.setup = function () {}
-
-    this.update = function () {
-      const bounds = { x: 0, y: 0 }
-      for (const id in this.children) {
-        const node = this.children[id]
-        bounds.x = node.rect.x > bounds.x ? node.rect.x : bounds.x
-        bounds.y = node.rect.y > bounds.y ? node.rect.y : bounds.y
-      }
-      this.rect.w = bounds.x + 4
-      this.rect.h = bounds.y + 5
+  this.update = function () {
+    const bounds = { x: 0, y: 0 }
+    for (const id in this.children) {
+      const node = this.children[id]
+      bounds.x = node.rect.x > bounds.x ? node.rect.x : bounds.x
+      bounds.y = node.rect.y > bounds.y ? node.rect.y : bounds.y
     }
+    this.rect.w = bounds.x + 4
+    this.rect.h = bounds.y + 5
+  }
+
+  for (const cid in children) {
+    children[cid].parent = this
+    this.children.push(children[cid])
+    this.update()
   }
 }
 
@@ -323,13 +306,13 @@ RIVEN.graph = () => {
     let offset = { x: 0, y: 0 }
 
     if (port.type === PORT_TYPES.output) {
-      offset = { x: GRID_SIZE * 2, y: GRID_SIZE / 2 }
+      offset = { x: rect.w, y: (rect.h-(GRID_SIZE*1.5)) }
     } else if (port.type === PORT_TYPES.input) {
       offset = { x: 0, y: GRID_SIZE / 2 }
     } else if (port.type === PORT_TYPES.answer) {
       offset = { x: GRID_SIZE, y: -GRID_SIZE * 0.5 }
     } else if (port.type === PORT_TYPES.request) {
-      offset = { x: GRID_SIZE, y: GRID_SIZE * 1.5 }
+      offset = { x: (rect.w - (GRID_SIZE)), y: (rect.h-(GRID_SIZE/2)) }
     }
     return { x: rect.x + offset.x, y: rect.y + offset.y }
   }

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="scripts/riven.js"></script>
+  <script src="scripts/nodes/print.js"></script>
+  <script src="scripts/nodes/value.js"></script>
+  <script src="scripts/nodes/add.js"></script>
+  <script src="scripts/nodes/concat.js"></script>
+  <link rel="stylesheet" type="text/css" href="links/reset.css"/>
+  <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
+  <link rel="stylesheet" type="text/css" href="links/main.css"/>
+  <title>Riven — Math</title>
+</head>
+<body>
+  <script>
+    'use strict'
+
+    const lib = RIVEN.lib
+
+    RIVEN.create = (append = true) => {
+      Ø("bang").create({x:2,y:2},RIVEN.Node)
+
+      Ø("mesh").create({x:6,y:0},lib.Mesh,[
+        Ø("item1").create({x:2,y:2},RIVEN.Node),
+        Ø("item2").create({x:6,y:2},RIVEN.Node)
+      ])
+
+      Ø("output").create({x:18,y:2},RIVEN.Node)
+
+      Ø("bang").connect("mesh")
+      Ø("mesh").connect("output")
+    }
+
+    RIVEN.create(true);
+
+    RIVEN.graph()
+  </script>
+</body>
+</html>
