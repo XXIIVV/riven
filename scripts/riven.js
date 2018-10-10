@@ -36,10 +36,10 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
   this.glyph = 'M155,65 A90,90 0 0,1 245,155 A90,90 0 0,1 155,245 A90,90 0 0,1 65,155 A90,90 0 0,1 155,65 Z'
 
   this.setup = function (pos) {
-    this.ports.input = new Port(this, 'in', PORT_TYPES.input)
-    this.ports.output = new Port(this, 'out', PORT_TYPES.output)
-    this.ports.answer = new Port(this, 'answer', PORT_TYPES.answer)
-    this.ports.request = new Port(this, 'request', PORT_TYPES.request)
+    this.ports.input = new this.Port(this, 'in', PORT_TYPES.input)
+    this.ports.output = new this.Port(this, 'out', PORT_TYPES.output)
+    this.ports.answer = new this.Port(this, 'answer', PORT_TYPES.answer)
+    this.ports.request = new this.Port(this, 'request', PORT_TYPES.request)
     this.rect.x = pos.x
     this.rect.y = pos.y
   }
@@ -81,16 +81,16 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
     for (const routeId in this.ports.output.routes) {
       const route = this.ports.output.routes[routeId]
       if (!route) { continue }
-      route.host.receive(payload)
+      route.host.receive(payload, this, route)
     }
   }
 
-  this.receive = function (q) {
+  this.receive = function (q, origin, route) {
     const port = this.ports.output
     for (const routeId in port.routes) {
       const route = port.routes[routeId]
       if (route) {
-        route.host.receive(q)
+        route.host.receive(q, this, route)
       }
     }
   }
@@ -106,14 +106,14 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
     for (const routeId in this.ports.request.routes) {
       const route = this.ports.request.routes[routeId]
       if (!route) { continue }
-      const answer = route.host.answer(q)
+      const answer = route.host.answer(q, this, route)
       if (!answer) { continue }
       payload[route.host.id] = answer
     }
     return payload
   }
 
-  this.answer = function (q) {
+  this.answer = function (q, origin, route) {
     return this.request(q)
   }
 
@@ -133,7 +133,7 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
 
   // PORT
 
-  function Port (host, id, type = PORT_TYPES.default) {
+  this.Port = function (host, id, type = PORT_TYPES.default) {
     this.host = host
     this.id = id
     this.type = type
@@ -143,35 +143,6 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
       if (!port) { console.warn(`Unknown port: ${this.host.id}`); return }
       console.log(`Connect ${this.host.id}.${this.id} -> ${port.host.id}.${port.id}`)
       this.routes.push(port)
-    }
-  }
-
-  RIVEN.lib.Mesh = function(id, rect, children, entry, exit)
-  {
-    RIVEN.Node.call(this, id, rect)
-    this.glyph = ""
-
-    this.ports.entry = new Port(this, 'entry', PORT_TYPES.entry)
-    this.ports.exit = new Port(this, 'exit', PORT_TYPES.exit)
-
-    this.ports.entry.connect(Ø(entry).ports.input)
-    Ø(exit).ports.output.connect(this.ports.exit)
-
-    this.update = function () {
-      const bounds = { x: 0, y: 0 }
-      for (const id in this.children) {
-        const node = this.children[id]
-        bounds.x = node.rect.x > bounds.x ? node.rect.x : bounds.x
-        bounds.y = node.rect.y > bounds.y ? node.rect.y : bounds.y
-      }
-      this.rect.w = bounds.x + 10
-      this.rect.h = bounds.y + 6
-    }
-
-    for (const cid in children) {
-      children[cid].parent = this
-      this.children.push(children[cid])
-      this.update()
     }
   }
 }
@@ -212,7 +183,6 @@ RIVEN.graph = () => {
 
   function drawNode (node) {
     const rect = getRect(node)
-    const pad = 6
     return `
     <g class='node' id='node_${node.id}'>
       <rect rx='2' ry='2' x=${rect.x} y=${rect.y - (GRID_SIZE / 2)} width="${rect.w}" height="${rect.h}" class='${node.children.length === 0 ? 'fill' : ''}'/>
@@ -243,8 +213,6 @@ RIVEN.graph = () => {
     if (isBidirectional(a.host, b.host)) {
       return a.type !== PORT_TYPES.output ? drawConnectionBidirectional(a, b) : ''
     }
-
-    console.log(a,b)
     return a.type === PORT_TYPES.output || a.type === PORT_TYPES.entry || a.type === PORT_TYPES.output ? drawConnectionOutput(a, b) : drawConnectionRequest(a, b)
   }
 
@@ -313,17 +281,17 @@ RIVEN.graph = () => {
     let offset = { x: 0, y: 0 }
 
     if (port.type === PORT_TYPES.output) {
-      offset = { x: rect.w, y: (rect.h-(GRID_SIZE*1.5)) }
+      offset = { x: rect.w, y: (rect.h - (GRID_SIZE * 1.5)) }
     } else if (port.type === PORT_TYPES.input) {
       offset = { x: 0, y: GRID_SIZE / 2 }
     } else if (port.type === PORT_TYPES.answer) {
       offset = { x: GRID_SIZE, y: -GRID_SIZE * 0.5 }
     } else if (port.type === PORT_TYPES.request) {
-      offset = { x: (rect.w - (GRID_SIZE)), y: (rect.h-(GRID_SIZE/2)) }
+      offset = { x: (rect.w - (GRID_SIZE)), y: (rect.h - (GRID_SIZE / 2)) }
     } else if (port.type === PORT_TYPES.entry) {
-      offset = { x: 0, y: (rect.h-(GRID_SIZE * 1.5)) }
+      offset = { x: 0, y: (rect.h - (GRID_SIZE * 1.5)) }
     } else if (port.type === PORT_TYPES.exit) {
-      offset = { x: rect.w, y: GRID_SIZE * 0.5  }
+      offset = { x: rect.w, y: GRID_SIZE * 0.5 }
     }
     return { x: rect.x + offset.x, y: rect.y + offset.y }
   }
@@ -336,8 +304,8 @@ RIVEN.graph = () => {
 
     if (node.parent) {
       const offset = getRect(node.parent)
-      x += offset.x + (4*GRID_SIZE)
-      y += offset.y + (2*GRID_SIZE)
+      x += offset.x + (4 * GRID_SIZE)
+      y += offset.y + (2 * GRID_SIZE)
     }
     return { x: x, y: y, w: w, h: h }
   }

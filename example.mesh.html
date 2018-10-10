@@ -7,6 +7,7 @@
   <script src="scripts/nodes/value.js"></script>
   <script src="scripts/nodes/add.js"></script>
   <script src="scripts/nodes/concat.js"></script>
+  <script src="scripts/nodes/mesh.js"></script>
   <link rel="stylesheet" type="text/css" href="links/reset.css"/>
   <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
   <link rel="stylesheet" type="text/css" href="links/main.css"/>
@@ -22,19 +23,19 @@
       Ø("bang").create({x:2,y:2},RIVEN.Node)
 
       Ø("mesh").create({x:8,y:0},lib.Mesh,[
-        Ø("item1").create({x:0,y:0},RIVEN.Node),
-        Ø("item2").create({x:4,y:0},RIVEN.Node)
+        Ø("item1").create({x:0,y:0},lib.Print),
+        Ø("item2").create({x:4,y:0},lib.Print)
       ], "item1", "item2")
 
-      Ø("output").create({x:26,y:2},RIVEN.Node)
+      Ø("output").create({x:26,y:2},lib.Print)
 
       Ø("bang").connect("mesh")
       Ø("item1").connect("item2")
       Ø("mesh").connect("output")
     }
 
-    RIVEN.create(true);
-
+    RIVEN.create(true)
+    Ø("bang").send("foo bar")
     RIVEN.graph()
   </script>
 </body>

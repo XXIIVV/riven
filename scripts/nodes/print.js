@@ -7,5 +7,6 @@ RIVEN.lib.Print = function (id, rect) {
 
   this.receive = function (q) {
     this.label = `${q}`
+    this.send(q)
   }
 }
