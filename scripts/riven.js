@@ -247,9 +247,9 @@ RIVEN.graph = () => {
 
     return `
     <path d="
-      M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y} 
-      Q${posC1.x},${posC1.y} ${posM.x},${posM.y} 
-      Q ${posC2.x},${posC2.y} ${posB.x - GRID_SIZE},${posB.y} 
+      M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y}
+      Q${posC1.x},${posC1.y} ${posM.x},${posM.y}
+      Q ${posC2.x},${posC2.y} ${posB.x - GRID_SIZE},${posB.y}
       L${posB.x},${posB.y}
     " class='route output'/>
     <circle cx='${posM.x}' cy='${posM.y}' r='2' fill='white'></circle>`
@@ -261,9 +261,9 @@ RIVEN.graph = () => {
 
     return `
     <path d="
-      M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y} 
-      L${posA.x + GRID_SIZE},${posA.y} 
-      L${posA.x + GRID_SIZE},${posB.y} 
+      M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y}
+      L${posA.x + GRID_SIZE},${posA.y}
+      L${posA.x + GRID_SIZE},${posB.y}
       L${posB.x},${posB.y}
     " class='route entry'/>`
   }
@@ -274,9 +274,9 @@ RIVEN.graph = () => {
 
     return `
     <path d="
-      M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y} 
-      L${posB.x - GRID_SIZE},${posA.y} 
-      L${posB.x - GRID_SIZE},${posB.y} 
+      M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y}
+      L${posB.x - GRID_SIZE},${posA.y}
+      L${posB.x - GRID_SIZE},${posB.y}
       L${posB.x},${posB.y}
     " class='route exit'/>`
   }
@@ -289,8 +289,8 @@ RIVEN.graph = () => {
     const posC2 = { x: posB.x, y: (posM.y + (posB.y - GRID_SIZE)) / 2 }
 
     return `<path d="
-      M${posA.x},${posA.y} L${posA.x},${posA.y + GRID_SIZE} 
-      Q${posC1.x},${posC1.y} ${posM.x},${posM.y} 
+      M${posA.x},${posA.y} L${posA.x},${posA.y + GRID_SIZE}
+      Q${posC1.x},${posC1.y} ${posM.x},${posM.y}
       Q ${posC2.x},${posC2.y} ${posB.x},${posB.y - GRID_SIZE}
       L${posB.x},${posB.y}
     " class='route request'/>
@@ -359,6 +359,7 @@ RIVEN.graph = () => {
       document.addEventListener('mousedown', (e) => { this.touch({ x: e.clientX, y: e.clientY }, true); e.preventDefault() })
       document.addEventListener('mousemove', (e) => { this.touch({ x: e.clientX, y: e.clientY }, false); e.preventDefault() })
       document.addEventListener('mouseup', (e) => { this.touch({ x: e.clientX, y: e.clientY }); e.preventDefault() })
+      document.addEventListener('contextmenu', (e) => { this.touch({ x: e.clientX, y: e.clientY }) })
     },
     update: function () {
       this.host.el.style.left = `${parseInt(this.offset.x)}px`
