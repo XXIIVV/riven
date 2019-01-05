@@ -1,4 +1,3 @@
-
 // "Don't forget, the portal combination's in my journal."" — Catherine
 
 'use strict'
@@ -33,6 +32,7 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
   this.parent = null
   this.children = []
   this.label = id
+  this.name = this.constructor.name.toLowerCase()
   this.glyph = 'M155,65 A90,90 0 0,1 245,155 A90,90 0 0,1 155,245 A90,90 0 0,1 65,155 A90,90 0 0,1 155,65 Z'
 
   this.setup = function (pos) {
@@ -144,7 +144,6 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
 
     this.connect = function (port) {
       if (!port) { console.warn(`Unknown port from: ${this.host.id}`); return }
-      console.log(`Connect ${this.host.id}.${this.id} -> ${port.host.id}.${port.id}`)
       this.routes.push(port)
     }
   }
@@ -169,7 +168,7 @@ RIVEN.graph = () => {
     return `${acc}${drawNode(network[val])}`
   }, '')
 
-  this.el.innerHTML = `${_routes}${_nodes}`
+  this.el.innerHTML = `<g id='routes'>${_routes}</g><g id='nodes'>${_nodes}</g>`
 
   function drawRoutes (node) {
     let html = ''
@@ -181,13 +180,13 @@ RIVEN.graph = () => {
         html += route ? drawConnection(port, route) : ''
       }
     }
-    return html ? `<g id='routes'>${html}</g>` : ''
+    return html
   }
 
   function drawNode (node) {
     const rect = getRect(node)
     return `
-    <g class='node' id='node_${node.id}'>
+    <g class='node ${node.name}' id='node_${node.id}'>
       <rect rx='2' ry='2' x=${rect.x} y=${rect.y - (GRID_SIZE / 2)} width="${rect.w}" height="${rect.h}" class='${node.children.length === 0 ? 'fill' : ''}'/>
       <text x="${rect.x + (rect.w / 2) + (GRID_SIZE * 0.3)}" y="${rect.y + rect.h + (GRID_SIZE * 0.2)}">${node.label}</text>
       ${drawPorts(node)}
@@ -209,7 +208,7 @@ RIVEN.graph = () => {
   function drawPort (port) {
     const pos = port ? getPortPosition(port) : { x: 0, y: 0 }
     const r = GRID_SIZE / 6
-    return `<g id='${port.host.id}_port_${port.id}'><path d='M${pos.x - (r)},${pos.y} L${pos.x},${pos.y - (r)} L${pos.x + (r)},${pos.y} L${pos.x},${pos.y + (r)} Z' class='port ${port.type} ${port.host.ports[port.id] && port.host.ports[port.id].route ? 'route' : ''}' /></g>`
+    return `<g class='port ${port.id}' id='${port.host.id}_port_${port.id}'><path d='M${pos.x - (r)},${pos.y} L${pos.x},${pos.y - (r)} L${pos.x + (r)},${pos.y} L${pos.x},${pos.y + (r)} Z'/></g>`
   }
 
   function drawConnection (a, b) {
@@ -247,12 +246,11 @@ RIVEN.graph = () => {
 
     return `
     <path d="
-      M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y}
-      Q${posC1.x},${posC1.y} ${posM.x},${posM.y}
-      Q ${posC2.x},${posC2.y} ${posB.x - GRID_SIZE},${posB.y}
+      M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y} 
+      Q${posC1.x},${posC1.y} ${posM.x},${posM.y} 
+      Q ${posC2.x},${posC2.y} ${posB.x - GRID_SIZE},${posB.y} 
       L${posB.x},${posB.y}
-    " class='route output'/>
-    <circle cx='${posM.x}' cy='${posM.y}' r='2' fill='white'></circle>`
+    " class='route output'/>`
   }
 
   function drawConnectionEntry (a, b) {
@@ -261,9 +259,9 @@ RIVEN.graph = () => {
 
     return `
     <path d="
-      M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y}
-      L${posA.x + GRID_SIZE},${posA.y}
-      L${posA.x + GRID_SIZE},${posB.y}
+      M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y} 
+      L${posA.x + GRID_SIZE},${posA.y} 
+      L${posA.x + GRID_SIZE},${posB.y} 
       L${posB.x},${posB.y}
     " class='route entry'/>`
   }
@@ -274,9 +272,9 @@ RIVEN.graph = () => {
 
     return `
     <path d="
-      M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y}
-      L${posB.x - GRID_SIZE},${posA.y}
-      L${posB.x - GRID_SIZE},${posB.y}
+      M${posA.x},${posA.y} L${posA.x + GRID_SIZE},${posA.y} 
+      L${posB.x - GRID_SIZE},${posA.y} 
+      L${posB.x - GRID_SIZE},${posB.y} 
       L${posB.x},${posB.y}
     " class='route exit'/>`
   }
@@ -284,17 +282,13 @@ RIVEN.graph = () => {
   function drawConnectionRequest (a, b) {
     const posA = getPortPosition(a)
     const posB = getPortPosition(b)
-    const posM = middle(posA, posB)
-    const posC1 = { x: posA.x, y: (posM.y + (posA.y + GRID_SIZE)) / 2 }
-    const posC2 = { x: posB.x, y: (posM.y + (posB.y - GRID_SIZE)) / 2 }
 
     return `<path d="
-      M${posA.x},${posA.y} L${posA.x},${posA.y + GRID_SIZE}
-      Q${posC1.x},${posC1.y} ${posM.x},${posM.y}
-      Q ${posC2.x},${posC2.y} ${posB.x},${posB.y - GRID_SIZE}
+      M${posA.x},${posA.y} 
+      L${posA.x},${posA.y + GRID_SIZE} 
+      L${posB.x},${posA.y + GRID_SIZE} 
       L${posB.x},${posB.y}
-    " class='route request'/>
-    <circle cx='${posM.x}' cy='${posM.y}' r='2' fill='white'></circle>`
+    " class='route request'/>`
   }
 
   function drawConnectionBidirectional (a, b) {
@@ -359,12 +353,9 @@ RIVEN.graph = () => {
       document.addEventListener('mousedown', (e) => { this.touch({ x: e.clientX, y: e.clientY }, true); e.preventDefault() })
       document.addEventListener('mousemove', (e) => { this.touch({ x: e.clientX, y: e.clientY }, false); e.preventDefault() })
       document.addEventListener('mouseup', (e) => { this.touch({ x: e.clientX, y: e.clientY }); e.preventDefault() })
-      document.addEventListener('contextmenu', (e) => { this.touch({ x: e.clientX, y: e.clientY }) })
     },
     update: function () {
-      this.host.el.style.left = `${parseInt(this.offset.x)}px`
-      this.host.el.style.top = `${parseInt(this.offset.y)}px`
-      document.body.style.backgroundPosition = `${parseInt(this.offset.x / 2)}px ${parseInt(this.offset.y / 2)}px`
+      this.host.el.style.transform = `translate(${parseInt(this.offset.x)}px,${parseInt(this.offset.y)}px)`
     },
     touch: function (pos, click = null) {
       if (click === true) {
