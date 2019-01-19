@@ -40,7 +40,7 @@ svg#riven g#nodes g.node path.glyph { stroke:var(--f_med); fill:none; stroke-wid
 svg#riven g#nodes g.node text { fill:var(--f_high); }
 
 /* Route */
-svg#riven g#routes {}
+svg#riven g#routes { fill:transparent; }
 svg#riven g#routes path.route { stroke-width:2; stroke:var(--f_low) }
 svg#riven g#routes path.route.request { stroke-dasharray: 0,5; stroke-dashoffset: -250; animation: dash 20s linear infinite; }
 svg#riven g#routes path.route.output { stroke:var(--f_high); stroke-dasharray: 20,5; stroke-dashoffset: 250; animation: dash 20s linear infinite; }
