@@ -149,7 +149,33 @@ RIVEN.Node = function (id, rect = { x: 0, y: 0, w: 2, h: 2 }) {
   }
 }
 
-// GRAPH
+// Mesh
+
+RIVEN.lib.Mesh = function (id, rect, children) {
+  RIVEN.Node.call(this, id, rect)
+
+  this.glyph = ''
+  this.name = 'meshnode'
+
+  this.update = function () {
+    const bounds = { x: 0, y: 0 }
+    for (const id in this.children) {
+      const node = this.children[id]
+      bounds.x = node.rect.x > bounds.x ? node.rect.x : bounds.x
+      bounds.y = node.rect.y > bounds.y ? node.rect.y : bounds.y
+    }
+    this.rect.w = bounds.x + 7
+    this.rect.h = bounds.y + 6
+  }
+
+  for (const cid in children) {
+    children[cid].parent = this
+    this.children.push(children[cid])
+    this.update()
+  }
+}
+
+// Graph
 
 RIVEN.graph = () => {
   const network = RIVEN.network
@@ -168,7 +194,7 @@ RIVEN.graph = () => {
     return `${acc}${drawNode(network[val])}`
   }, '')
 
-  this.el.innerHTML = `<g id='routes'>${_routes}</g><g id='nodes'>${_nodes}</g>`
+  this.el.innerHTML = `<g id='viewport'><g id='routes'>${_routes}</g><g id='nodes'>${_nodes}</g></g>`
 
   function drawRoutes (node) {
     let html = ''
@@ -329,10 +355,10 @@ RIVEN.graph = () => {
 
     if (node.parent) {
       const offset = getRect(node.parent)
-      x += offset.x + (2 * GRID_SIZE)
-      y += offset.y + (2 * GRID_SIZE)
+      x += offset.x
+      y += offset.y
     }
-    return { x: x, y: y, w: w, h: h }
+    return { x: x + (2 * GRID_SIZE), y: y + (2 * GRID_SIZE), w: w, h: h }
   }
 
   function middle (a, b) {
@@ -344,18 +370,21 @@ RIVEN.graph = () => {
   this.cursor = {
     host: null,
     el: document.createElement('cursor'),
+    target: null,
     pos: { x: 0, y: 0 },
     offset: { x: 0, y: 0 },
     origin: null,
     install: function (host) {
       this.host = host
+      this.target = document.getElementById('viewport')
       document.body.appendChild(this.el)
       document.addEventListener('mousedown', (e) => { this.touch({ x: e.clientX, y: e.clientY }, true); e.preventDefault() })
       document.addEventListener('mousemove', (e) => { this.touch({ x: e.clientX, y: e.clientY }, false); e.preventDefault() })
       document.addEventListener('mouseup', (e) => { this.touch({ x: e.clientX, y: e.clientY }); e.preventDefault() })
     },
     update: function () {
-      this.host.el.style.transform = `translate(${parseInt(this.offset.x)}px,${parseInt(this.offset.y)}px)`
+      this.target.style.transform = `translate(${parseInt(this.offset.x)}px,${parseInt(this.offset.y)}px)`
+      document.body.style.backgroundPosition = `${parseInt(this.offset.x * 0.75)}px ${parseInt(this.offset.y * 0.75)}px`
     },
     touch: function (pos, click = null) {
       if (click === true) {
