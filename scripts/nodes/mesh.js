@@ -6,6 +6,7 @@ RIVEN.lib.Mesh = function (id, rect, children, entry, exit) {
   const PORT_TYPES = { default: 0, input: 1, output: 2, request: 3, answer: 4, entry: 5, exit: 6 }
 
   this.glyph = ''
+  this.name = 'meshnode'
 
   this.ports.entry = new this.Port(this, 'entry', PORT_TYPES.entry)
   this.ports.exit = new this.Port(this, 'exit', PORT_TYPES.exit)
